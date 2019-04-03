@@ -1,0 +1,44 @@
+- import_tasks: nginx.yml
+
+- import_tasks: install.yml
+
+- import_tasks: dokku-daemon.yml
+
+- import_tasks: ssh-keys.yml
+  when: dokku_users is defined
+
+- name: dokku plugin:list
+  command: dokku plugin
+  changed_when: False
+  register: installed_dokku_plugins
+  tags:
+    - dokku
+    - dokku-plugins
+
+- name: install moreutils for plugin updates
+  apt:
+    name: moreutils
+  tags:
+    - dokku-plugins
+
+- name: dokku:plugin install
+  command: dokku plugin:install {{ item.url }} --name {{ item.name }}
+  tags:
+    - dokku
+    - dokku-plugins
+  when: dokku_plugins is defined and installed_dokku_plugins.stdout.find(item.name) == -1
+  with_items: "{{ dokku_plugins }}"
+
+- name: dokku plugin:update
+  cron:
+    name: "dokku plugin:update {{ item.name }}"
+    minute: 0
+    hour: 12
+    user: "root"
+    job: "/usr/bin/chronic /usr/bin/dokku plugin:update {{ item.name }}"
+    cron_file: "dokku-plugin-update-{{ item.name }}"
+  when: dokku_plugins is defined and not item.url.endswith(".tar.gz")
+  with_items: "{{ dokku_plugins }}"
+  tags:
+    - dokku
+    - dokku-plugins

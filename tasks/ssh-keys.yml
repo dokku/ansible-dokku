@@ -1,0 +1,17 @@
+- name: sshcommand list dokku
+  command: sshcommand list dokku
+  changed_when: False
+  register: sshcommand_users
+  tags:
+    - dokku
+    - dokku-ssh-keys
+  ignore_errors: true
+
+- name: dokku ssh-keys:add
+  shell: echo "{{ item.ssh_key }}" | dokku ssh-keys:add {{ item.username }}
+  no_log: True
+  tags:
+    - dokku
+    - dokku-ssh-keys
+  when: sshcommand_users|skipped or sshcommand_users|failed or sshcommand_users.stdout.find("{{ item.username }}") == -1
+  with_items: "{{ dokku_users }}"

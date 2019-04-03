@@ -1,0 +1,14 @@
+- name: start dokku-daemon
+  service:
+    name: dokku-daemon
+    state: started
+
+- name: start nginx
+  service:
+    name: nginx
+    state: started
+
+- name: reload nginx
+  service:
+    name: nginx
+    state: reloaded

@@ -1,0 +1,14 @@
+---
+examples:
+- name: Deploying a simple word inflector
+  example: |
+    ---
+    - name: dokku apps:create inflector
+      dokku_app:
+        app: inflector
+
+    - name: dokku clone inflector
+      dokku_clone:
+        app: inflector
+        repository: https://github.com/cakephp/inflector.cakephp.org
+

@@ -1,0 +1,50 @@
+- block:
+  - name: nginx:repository
+    apt_repository:
+      repo: 'ppa:nginx/stable'
+      state: present
+    register: nginx_ppa
+    tags:
+      - dokku
+
+  - name: nginx:install
+    apt:
+      name: nginx
+    notify:
+      - start nginx
+    tags:
+      - dokku
+    when: nginx_ppa is success
+
+  - name: nginx:disable default site
+    file:
+      dest: /etc/nginx/{{ item }}/default
+      state: absent
+    notify:
+      - reload nginx
+    tags:
+      - dokku
+    with_items:
+      - sites-enabled
+      - sites-available
+
+  - name: nginx:new default
+    copy:
+      src: nginx.default
+      dest: /etc/nginx/sites-available/00-default
+      owner: root
+      group: root
+      mode: 0644
+    tags:
+      - dokku
+
+  - name: nginx:enable default
+    file:
+      src: /etc/nginx/sites-available/00-default
+      dest: /etc/nginx/sites-enabled/00-default
+      state: link
+    notify:
+      - reload nginx
+    tags:
+      - dokku
+    when: dokku_manage_nginx

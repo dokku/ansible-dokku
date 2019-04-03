@@ -1,0 +1,18 @@
+---
+docker_apt_key_sig: 58118E89F3A912897C070ADBF76221572C52609D
+docker_apt_key_url: hkp://p80.pool.sks-keyservers.net:80
+docker_download_key_sig: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+docker_download_key_url: https://download.docker.com/linux/ubuntu/gpg
+dokku_daemon_install: true
+dokku_daemon_version: f3b7b0ab1b6368d49e569de03af28e497ce0a0c9
+dokku_hostname: dokku.me
+dokku_key_file: /root/.ssh/id_rsa.pub
+dokku_manage_nginx: true
+dokku_plugins: {}
+dokku_skip_key_file: 'false'
+dokku_version: 0.14.6
+dokku_vhost_enable: 'true'
+dokku_web_config: 'false'
+herokuish_version: 0.5.0
+plugn_version: 0.3.0
+sshcommand_version: 0.7.0
