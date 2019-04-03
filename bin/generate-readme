@@ -155,6 +155,7 @@ def main():
 
     text = []
     text.append(section_header('Ansible Role: Dokku'))
+    text.append('![Ansible Role](https://img.shields.io/ansible/role/39276.svg)')
     text.append('Version: `{0}`'.format(meta['galaxy_info']['version']))
     text.append(meta['galaxy_info']['description'])
 

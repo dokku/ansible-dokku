@@ -1,5 +1,7 @@
 # Ansible Role: Dokku
 
+![Ansible Role](https://img.shields.io/ansible/role/39276.svg)
+
 Version: `2019.04.3`
 
 This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart from installing Dokku, it also provides various modules that can be used to interface with dokku from your own Ansible playbooks.
