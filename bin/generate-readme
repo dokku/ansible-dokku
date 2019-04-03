@@ -32,6 +32,19 @@ def get_libraries(role_path):
     return data
 
 
+def add_table_of_contents(text):
+    text.append(section_header('Table Of Contents', 2))
+    text.append('\n'.join([
+        "- [Requirements](#requirements)",
+        "- [Dependencies](#dependencies)",
+        "- [Role Variables](#role-variables)",
+        "- [Libraries](#libraries)",
+        "- [Example Playbooks](#example-playbooks)",
+        "- [License](#license)",
+    ]))
+    return text
+
+
 def add_libraries(text, role_path):
     libraries = get_libraries(role_path)
 
@@ -159,6 +172,7 @@ def main():
     text.append('Version: `{0}`'.format(meta['galaxy_info']['version']))
     text.append(meta['galaxy_info']['description'])
 
+    text = add_table_of_contents(text)
     text = add_requirements(text, meta)
     text = add_variables(text, role_path)
     text = add_libraries(text, role_path)

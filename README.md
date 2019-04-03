@@ -6,6 +6,15 @@ Version: `2019.04.3`
 
 This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart from installing Dokku, it also provides various modules that can be used to interface with dokku from your own Ansible playbooks.
 
+## Table Of Contents
+
+- [Requirements](#requirements)
+- [Dependencies](#dependencies)
+- [Role Variables](#role-variables)
+- [Libraries](#libraries)
+- [Example Playbooks](#example-playbooks)
+- [License](#license)
+
 ## Requirements
 
 Minimum Ansible Version: 2.2
