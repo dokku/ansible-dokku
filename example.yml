@@ -11,4 +11,3 @@ examples:
       dokku_clone:
         app: inflector
         repository: https://github.com/cakephp/inflector.cakephp.org
-
