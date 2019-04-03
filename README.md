@@ -660,9 +660,23 @@ Manage storage for dokku applications
 ```yaml
 ---
 - hosts: all
-  tasks:
-  - import_role:
-    name: dokku
+  roles:
+    - dokku
+```
+
+### Installing Plugins
+
+```yaml
+---
+- hosts: all
+  roles:
+    - dokku
+  vars:
+    dokku_plugins:
+      - name: clone
+        url: https://github.com/crisward/dokku-clone.git
+      - name: postgres
+        url: https://github.com/dokku/dokku-postgres.git
 ```
 
 ### Deploying a simple word inflector
@@ -671,14 +685,14 @@ Manage storage for dokku applications
 ---
 - hosts: all
   tasks:
-  - name: dokku apps:create inflector
-    dokku_app:
-      app: inflector
+    - name: dokku apps:create inflector
+      dokku_app:
+        app: inflector
 
-  - name: dokku clone inflector
-    dokku_clone:
-      app: inflector
-      repository: https://github.com/cakephp/inflector.cakephp.org
+    - name: dokku clone inflector
+      dokku_clone:
+        app: inflector
+        repository: https://github.com/cakephp/inflector.cakephp.org
 ```
 
 ## License
