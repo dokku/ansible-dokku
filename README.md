@@ -662,7 +662,7 @@ Manage storage for dokku applications
 - hosts: all
   tasks:
   - import_role:
-    name: myrole
+    name: dokku
 ```
 
 ### Deploying a simple word inflector

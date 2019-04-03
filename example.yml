@@ -6,7 +6,7 @@ examples:
     - hosts: all
       tasks:
       - import_role:
-        name: myrole
+        name: dokku
 
 - name: Deploying a simple word inflector
   example: |
