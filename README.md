@@ -655,18 +655,30 @@ Manage storage for dokku applications
 
 ## Example Playbooks
 
+### Installing Dokku
+
+```yaml
+---
+- hosts: all
+  tasks:
+  - import_role:
+    name: myrole
+```
+
 ### Deploying a simple word inflector
 
 ```yaml
 ---
-- name: dokku apps:create inflector
-  dokku_app:
-    app: inflector
+- hosts: all
+  tasks:
+  - name: dokku apps:create inflector
+    dokku_app:
+      app: inflector
 
-- name: dokku clone inflector
-  dokku_clone:
-    app: inflector
-    repository: https://github.com/cakephp/inflector.cakephp.org
+  - name: dokku clone inflector
+    dokku_clone:
+      app: inflector
+      repository: https://github.com/cakephp/inflector.cakephp.org
 ```
 
 ## License
