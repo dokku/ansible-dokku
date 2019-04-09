@@ -123,7 +123,7 @@ None
 
 ### dokku_version
 
-- default: `0.14.6`
+- default: `0.15.2`
 - type: `version`
 - description: The version of Dokku to install
 
