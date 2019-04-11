@@ -51,7 +51,7 @@
 - name: dokku repo
   apt_repository:
     filename: dokku
-    repo: 'deb https://packagecloud.io/dokku/dokku/ubuntu/ trusty main'
+    repo: 'deb https://packagecloud.io/dokku/dokku/ubuntu/ {{ ansible_lsb.codename|lower }} main'
     state: present
   tags:
     - dokku
