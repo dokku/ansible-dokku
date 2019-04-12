@@ -8,10 +8,21 @@ galaxy_info:
   platforms:
     - name: Ubuntu
       versions:
-       - all
+       - trusty
+       - utopic
+       - vivid
+       - wily
+       - xenial
+       - yakkety
+       - zesty
+       - artful
+       - bionic
     - name: Debian
       versions:
-       - all
+       - wheezy
+       - jessie
+       - stretch
+       - buster
   galaxy_tags:
     - networking
     - packaging
