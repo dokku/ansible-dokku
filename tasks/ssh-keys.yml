@@ -13,5 +13,5 @@
   tags:
     - dokku
     - dokku-ssh-keys
-  when: sshcommand_users|skipped or sshcommand_users|failed or sshcommand_users.stdout.find("{{ item.username }}") == -1
+  when: sshcommand_users is skipped or sshcommand_users is failed or sshcommand_users.stdout.find(item.username) == -1
   with_items: "{{ dokku_users }}"
