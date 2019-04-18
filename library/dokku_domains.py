@@ -86,12 +86,12 @@ def subprocess_check_output(command, split='\n'):
 
 
 def dokku_global_domains():
-    command = 'dokku --quiet domains'
+    command = 'dokku --quiet domains --global --domains-global-vhosts'
     return subprocess_check_output(command)
 
 
 def dokku_domains(data):
-    command = 'dokku --quiet domains {0}'.format(data['app'])
+    command = 'dokku --quiet domains:report {0} --domains-app-vhosts'.format(data['app'])
     return subprocess_check_output(command)
 
 
