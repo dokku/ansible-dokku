@@ -4,6 +4,10 @@ import os
 import yaml
 
 
+def section_header(text, level=1):
+    return '{0} {1}'.format('#' * level, text)
+
+
 def get_libraries(role_path):
     libraries_path = os.path.join(role_path, 'library')
     files = []
@@ -158,7 +162,7 @@ def add_examples(text, role_path):
     return text
 
 
-def main():
+def generate_readme():
     role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
     meta = {}
@@ -188,8 +192,29 @@ def main():
         f.write("\n\n".join(text) + "\n")
 
 
-def section_header(text, level=1):
-    return '{0} {1}'.format('#' * level, text)
+def generate_defaults():
+    role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+    defaults_base_file = os.path.join(role_path, 'defaults', 'main.yml.base')
+
+    defaults_base = {}
+    with open(defaults_base_file) as f:
+        defaults_base = yaml.load(f.read(), Loader=yaml.SafeLoader)
+
+    defaults = {}
+    if len(defaults_base) > 0:
+        for variable, config in defaults_base.items():
+            if config['default'] is None and not config['templated']:
+                continue
+            defaults[variable] = config['default']
+
+    defaults_file = os.path.join(role_path, 'defaults', 'main.yml')
+    with open(defaults_file, 'w') as f:
+        f.write(yaml.dump(defaults, explicit_start=True))
+
+
+def main():
+    generate_defaults()
+    generate_readme()
 
 
 if __name__ == "__main__":

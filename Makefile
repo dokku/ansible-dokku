@@ -10,7 +10,7 @@ release: generate
 generate: README.md defaults/main.yml
 
 README.md:
-	bin/generate-readme
+	bin/generate
 
 defaults/main.yml:
-	bin/generate-defaults
+	bin/generate

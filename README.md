@@ -23,8 +23,19 @@ Minimum Ansible Version: 2.2
 
 Supported Platforms
 
-- Ubuntu: all
-- Debian: all
+- Ubuntu: trusty
+- Ubuntu: utopic
+- Ubuntu: vivid
+- Ubuntu: wily
+- Ubuntu: xenial
+- Ubuntu: yakkety
+- Ubuntu: zesty
+- Ubuntu: artful
+- Ubuntu: bionic
+- Debian: wheezy
+- Debian: jessie
+- Debian: stretch
+- Debian: buster
 
 ## Dependencies
 
