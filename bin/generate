@@ -107,7 +107,7 @@ def add_libraries(text, role_path):
     return text
 
 
-def add_requirements(text, meta):
+def add_requirements(text, meta, defaults):
     text.append(section_header('Requirements', 2))
     text.append('Minimum Ansible Version: {0}'.format(
       meta['galaxy_info']['min_ansible_version']))
@@ -122,8 +122,12 @@ def add_requirements(text, meta):
         text.append("\n".join(platforms))
 
     text.append(section_header('Dependencies', 2))
-    if len(meta['dependencies']) == 0:
-        text.append('None')
+    dependencies = []
+    if len(meta['dependencies']) > 0:
+        dependencies = ['- {0}'.format(dependency) for dependency in defaults['dependencies']]
+    dependencies.append('- Dokku version {0} (for library usage)'.format(defaults['dokku_version']))
+    text.append("\n".join(dependencies))
+
 
     return text
 
@@ -170,6 +174,11 @@ def generate_readme():
     with open(meta_file) as f:
         meta = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
+    defaults = {}
+    defaults_file = os.path.join(role_path, 'defaults', 'main.yml')
+    with open(defaults_file) as f:
+        defaults = yaml.load(f.read(), Loader=yaml.SafeLoader)
+
     text = []
     text.append(section_header('Ansible Role: Dokku'))
     text.append('![Ansible Role](https://img.shields.io/ansible/role/39276.svg)')
@@ -177,7 +186,7 @@ def generate_readme():
     text.append(meta['galaxy_info']['description'])
 
     text = add_table_of_contents(text)
-    text = add_requirements(text, meta)
+    text = add_requirements(text, meta, defaults)
     text = add_variables(text, role_path)
     text = add_libraries(text, role_path)
     text = add_examples(text, role_path)
