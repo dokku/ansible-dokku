@@ -93,7 +93,11 @@ def subprocess_check_output(command, split='\n'):
         output = subprocess.check_output(command, shell=True)
         if isinstance(output, bytes):
             output = output.decode("utf-8")
-        output = str(output).rstrip('\n').split(split)
+        output = str(output).rstrip('\n')
+        if split is None:
+            return output, error
+
+        output = output.split(split)
         output = force_list(filter(None, output))
         output = [o.strip() for o in output]
     except subprocess.CalledProcessError as e:
