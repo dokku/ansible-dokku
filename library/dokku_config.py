@@ -81,11 +81,21 @@ def dokku_config_set(data):
     meta = {'present': False}
 
     values = []
+    invalid_values = []
     existing, error = dokku_config(data['app'])
     for key, value in data['config'].items():
+        if not isinstance(value, basestring) and not isinstance(value, str):
+            invalid_values.append(key)
+            continue
+
         if value == existing.get(key, None):
             continue
         values.append('{0}={1}'.format(key, pipes.quote(value)))
+
+    if invalid_values:
+        template = 'All values must be keys, found invalid types for {0}'
+        meta['error'] = template.format(', '.join(invalid_values))
+        return (is_error, has_changed, meta)
 
     if len(values) == 0:
         is_error = False
