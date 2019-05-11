@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 # from ansible.module_utils.basic import *
 from ansible.module_utils.basic import AnsibleModule
+import json
 import pipes
 import subprocess
 
@@ -49,7 +50,11 @@ def subprocess_check_output(command, split='\n'):
         output = subprocess.check_output(command, shell=True)
         if isinstance(output, bytes):
             output = output.decode("utf-8")
-        output = str(output).rstrip('\n').split(split)
+        output = str(output).rstrip('\n')
+        if split is None:
+            return output, error
+
+        output = output.split(split)
         output = force_list(filter(None, output))
         output = [o.strip() for o in output]
     except subprocess.CalledProcessError as e:
@@ -58,30 +63,14 @@ def subprocess_check_output(command, split='\n'):
 
 
 def dokku_config(app):
-    command = 'dokku config --export {0}'.format(app)
-    output, error = subprocess_check_output(command)
-
-
-    def parse_content(content):
-        parts = content.split('=', 1)
-        return parts[0][7:], parts[1][1:-1]
+    command = 'dokku config:export --format json {0}'.format(app)
+    output, error = subprocess_check_output(command, split=None)
 
     if error is None:
-        response = {}
-        content = ''
-        for line in output:
-            if line.startswith('export ') and content != '':
-                key, value = parse_content(content)
-                response[key] = value.strip()
-                content = ''
-
-            content += line
-
-        if len(content.strip()) != 0:
-            key, value = parse_content(content)
-            response[key] = value.strip()
-
-        output = response
+        try:
+            output = json.loads(output)
+        except ValueError as e:
+            error = str(e)
 
     return output, error
 
