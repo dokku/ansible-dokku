@@ -6,6 +6,12 @@ import json
 import pipes
 import subprocess
 
+try:
+    basestring
+except NameError:
+    basestring = str
+
+
 DOCUMENTATION = '''
 ---
 module: dokku_config
@@ -84,7 +90,7 @@ def dokku_config_set(data):
     invalid_values = []
     existing, error = dokku_config(data['app'])
     for key, value in data['config'].items():
-        if not isinstance(value, basestring) and not isinstance(value, str):
+        if not isinstance(value, basestring):
             invalid_values.append(key)
             continue
 
