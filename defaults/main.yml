@@ -10,7 +10,7 @@ dokku_key_file: /root/.ssh/id_rsa.pub
 dokku_manage_nginx: true
 dokku_plugins: {}
 dokku_skip_key_file: 'false'
-dokku_version: 0.16.2
+dokku_version: 0.17.5
 dokku_vhost_enable: 'true'
 dokku_web_config: 'false'
 herokuish_version: 0.5.0
