@@ -39,7 +39,7 @@ Supported Platforms
 
 ## Dependencies
 
-- Dokku version 0.18.1 (for library usage)
+- Dokku version 0.18.2 (for library usage)
 
 ## Role Variables
 
@@ -134,7 +134,7 @@ Supported Platforms
 
 ### dokku_version
 
-- default: `0.18.1`
+- default: `0.18.2`
 - type: `version`
 - description: The version of Dokku to install
 
@@ -164,7 +164,7 @@ Supported Platforms
 
 ### sshcommand_version
 
-- default: `0.7.0`
+- default: `0.8.0`
 - type: `version`
 - description: The version of sshcommand to install
 

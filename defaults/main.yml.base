@@ -1,6 +1,6 @@
 ---
 dokku_version:
-  default: 0.18.1
+  default: 0.18.2
   description: The version of Dokku to install
   type: version
 
@@ -42,7 +42,7 @@ herokuish_version:
   type: version
 
 sshcommand_version:
-  default: 0.7.0
+  default: 0.8.0
   description: The version of sshcommand to install
   type: version
 
