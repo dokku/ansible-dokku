@@ -39,7 +39,7 @@ Supported Platforms
 
 ## Dependencies
 
-- Dokku version 0.18.2 (for library usage)
+- Dokku version 0.18.3 (for library usage)
 
 ## Role Variables
 
@@ -134,7 +134,7 @@ Supported Platforms
 
 ### dokku_version
 
-- default: `0.18.2`
+- default: `0.18.3`
 - type: `version`
 - description: The version of Dokku to install
 
