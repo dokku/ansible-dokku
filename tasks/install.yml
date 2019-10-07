@@ -104,6 +104,7 @@
 - name: install dokku packages
   apt:
     name: "{{ item.key }}={{ item.value }}"
+    force: true
   with_dict:
     plugn: "{{ plugn_version }}"
     sshcommand: "{{ sshcommand_version }}"
