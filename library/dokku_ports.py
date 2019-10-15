@@ -8,7 +8,7 @@ import subprocess
 
 DOCUMENTATION = '''
 ---
-module: dokku_service_link
+module: dokku_ports
 short_description: Manage ports for a given dokku application
 options:
   app:
