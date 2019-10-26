@@ -1,0 +1,12 @@
+- name: "Check if {{ dokku_key_file }} exists"
+  stat:
+    path: "{{ dokku_key_file }}"
+  register: dokku_key_file
+
+- name: Ensure SSH key file is in place
+  assert:
+    that: dokku_key_file.stat.exists | bool
+    fail_msg: |
+      If 'dokku_skip_key_file' is false then the 'dokku_key_file' SSH key path
+      must exist. Please ensure that a key is generated first.
+  when: dokku_skip_key_file == 'false'
