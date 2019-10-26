@@ -1,0 +1,19 @@
+---
+
+- name: Converge
+  hosts: all
+  pre_tasks:
+    # Note(decentral1se):
+    # https://github.com/dokku/ansible-dokku/issues/2
+    - name: Install openssh-client
+      package:
+        name: openssh-client
+        state: present
+    - name: Create an SSH key for root
+      user:
+        name: root
+        generate_ssh_key: true
+        ssh_key_bits: 4096
+        ssh_key_file: .ssh/id_rsa
+  roles:
+    - role: ansible-dokku

@@ -1,0 +1,14 @@
+---
+
+sudo: required
+
+language: python
+
+services:
+  - docker
+
+install:
+  - pip install molecule==2.22
+
+script:
+  - molecule test

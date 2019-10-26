@@ -1,0 +1,25 @@
+---
+dependency:
+  name: galaxy
+
+driver:
+  name: docker
+
+lint:
+  name: yamllint
+
+# Note(decentral1se): For now, stick with one platform to get moving
+# The goal is https://github.com/dokku/ansible-dokku#platform-requirements
+platforms:
+  - name: ubuntu-bionic
+    image: ubuntu:bionic
+
+provisioner:
+  name: ansible
+  lint:
+    name: ansible-lint
+
+verifier:
+  name: goss
+  lint:
+    name: yamllint

@@ -1,1 +1,2 @@
 pyyaml>=4.2b1
+molecule[docker]==2.22
