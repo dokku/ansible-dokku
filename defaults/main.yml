@@ -13,6 +13,6 @@ dokku_skip_key_file: 'false'
 dokku_version: 0.19.5
 dokku_vhost_enable: 'true'
 dokku_web_config: 'false'
-herokuish_version: 0.5.2
+herokuish_version: 0.5.3
 plugn_version: 0.3.2
 sshcommand_version: 0.8.0

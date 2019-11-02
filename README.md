@@ -152,7 +152,7 @@ Supported Platforms
 
 ### herokuish_version
 
-- default: `0.5.2`
+- default: `0.5.3`
 - type: `version`
 - description: The version of herokuish to install
 
