@@ -18,6 +18,13 @@
     tags:
       - dokku-daemon
 
+  - name: install make for building dokku-daemon
+    apt:
+      name: make
+      state: present
+    tags:
+      - dokku-daemon
+
   - name: install dokku-daemon
     command: make install
     args:
