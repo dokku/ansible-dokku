@@ -32,8 +32,8 @@
 - name: dokku plugin:update
   cron:
     name: "dokku plugin:update {{ item.name }}"
-    minute: 0
-    hour: 12
+    minute: "0"
+    hour: "12"
     user: "root"
     job: "/usr/bin/chronic /usr/bin/dokku plugin:update {{ item.name }}"
     cron_file: "dokku-plugin-update-{{ item.name }}"
