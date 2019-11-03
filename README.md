@@ -344,8 +344,9 @@ Manages domains for a given application
 
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
-|app<br /><sup>*required*</sup>||The name of the app|
+|app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
 |domains<br /><sup>*required*</sup>||A list of domains|
+|global|*Default:* False|Whether to change the global domains or app-specific domains.|
 |state|*Choices:* <ul><li>enable</li><li>disable</li><li>clear</li><li>**present** (default)</li><li>absent</li></ul>|The state of the application's domains|
 
 #### Example

@@ -10,9 +10,14 @@ DOCUMENTATION = '''
 module: dokku_domains
 short_description: Manages domains for a given application
 options:
+  global:
+    description:
+      - Whether to change the global domains or app-specific domains.
+    default: False
+    aliases: []
   app:
     description:
-      - The name of the app
+      - The name of the app. This is required only if global is set to False.
     required: True
     default: null
     aliases: []
@@ -95,14 +100,22 @@ def dokku_global_domains():
 
 
 def dokku_domains(data):
-    command = 'dokku --quiet domains:report {0} --domains-app-vhosts'.format(data['app'])
-    return subprocess_check_output(command)
+    if data['global']:
+        command = 'dokku --quiet domains:report --global --domains-global-vhosts'
+    else:
+        command = 'dokku --quiet domains:report {0} --domains-app-vhosts'.format(data['app'])
+    return subprocess_check_output(command, split=' ')
 
 
 def dokku_domains_disable(data):
     is_error = True
     has_changed = False
     meta = {'present': True}
+
+    if data['global']:
+        is_error = True
+        meta['error'] = '"disable" state cannot be used with global domains.'
+        return (is_error, has_changed, meta)
 
     domains = dokku_domains(data)
     if 'No domain names set for plugins' in domains:
@@ -127,6 +140,11 @@ def dokku_domains_enable(data):
     is_error = True
     has_changed = False
     meta = {'present': False}
+
+    if data['global']:
+        is_error = True
+        meta['error'] = '"enable" state cannot be used with global domains.'
+        return (is_error, has_changed, meta)
 
     domains = dokku_domains(data)
     if 'No domain names set for plugins' not in domains:
@@ -165,9 +183,13 @@ def dokku_domains_absent(data):
         meta['present'] = False
         return (is_error, has_changed, meta)
 
-    command = 'dokku --quiet domains:remove {0} {1}'.format(
-        data['app'],
-        ' '.join(to_remove))
+    if data['global']:
+        command = 'dokku --quiet domains:remove-global {0}'.format(
+            ' '.join(to_remove))
+    else:
+        command = 'dokku --quiet domains:remove {0} {1}'.format(
+            data['app'],
+            ' '.join(to_remove))
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -197,9 +219,13 @@ def dokku_domains_present(data):
         meta['present'] = True
         return (is_error, has_changed, meta)
 
-    command = 'dokku --quiet domains:add {0} {1}'.format(
-        data['app'],
-        ' '.join(to_add))
+    if data['global']:
+        command = 'dokku --quiet domains:add-global {0}'.format(
+            ' '.join(to_add))
+    else:
+        command = 'dokku --quiet domains:add {0} {1}'.format(
+            data['app'],
+            ' '.join(to_add))
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -216,8 +242,11 @@ def dokku_domains_clear(data):
     has_changed = False
     meta = {'present': False}
 
-    command = 'dokku --quiet domains:clear {0}'.format(
-        data['app'])
+    if data['global']:
+        command = 'dokku --quiet domains:clear-global'
+    else:
+        command = 'dokku --quiet domains:clear {0}'.format(
+            data['app'])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -241,9 +270,13 @@ def dokku_domains_set(data):
 
     to_set = [pipes.quote(d) for d in data['domains']]
 
-    command = 'dokku --quiet domains:set {0} {1}'.format(
-        data['app'],
-        ' '.join(to_set))
+    if data['global']:
+        command = 'dokku --quiet domains:set-global {0}'.format(
+            ' '.join(to_set))
+    else:
+        command = 'dokku --quiet domains:set {0} {1}'.format(
+            data['app'],
+            ' '.join(to_set))
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -257,8 +290,13 @@ def dokku_domains_set(data):
 
 def main():
     fields = {
+        'global': {
+            'required': False,
+            'default': False,
+            'type': 'bool',
+        },
         'app': {
-            'required': True,
+            'required': False,
             'type': 'str',
         },
         'domains': {
