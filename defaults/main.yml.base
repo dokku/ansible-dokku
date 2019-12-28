@@ -1,6 +1,6 @@
 ---
 dokku_version:
-  default: 0.19.5
+  default: 0.19.11
   description: The version of Dokku to install
   type: version
 
@@ -37,7 +37,7 @@ docker_download_key_sig:
   type: string
 
 herokuish_version:
-  default: 0.5.3
+  default: 0.5.5
   description: The version of herokuish to install
   type: version
 
