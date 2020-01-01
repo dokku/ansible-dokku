@@ -101,9 +101,13 @@
   tags:
     - dokku
 
-- name: install dokku packages
-  apt:
-    name: "{{ item.key }}={{ item.value }}"
+- name: pin dokku packages
+  copy:
+    dest: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
+    content: |
+      Package: {{ item.key }}
+      Pin: version {{ item.value }}
+      Pin-Priority: 1001
   with_dict:
     plugn: "{{ plugn_version }}"
     sshcommand: "{{ sshcommand_version }}"
@@ -113,13 +117,9 @@
     - dokku
     - dokku-install
 
-- name: pin dokku packages
-  copy:
-    dest: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
-    content: |
-      Package: {{ item.key }}
-      Pin: version {{ item.value }}
-      Pin-Priority: 1001
+- name: install dokku packages
+  apt:
+    name: "{{ item.key }}={{ item.value }}"
   with_dict:
     plugn: "{{ plugn_version }}"
     sshcommand: "{{ sshcommand_version }}"
