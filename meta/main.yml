@@ -1,28 +1,31 @@
 ---
 galaxy_info:
   author: "Jose Diaz-Gonzalez"
-  description: This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart from installing Dokku, it also provides various modules that can be used to interface with dokku from your own Ansible playbooks.
+  description: |
+    This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart
+    from installing Dokku, it also provides various modules that can be
+    used to interface with dokku from your own Ansible playbooks.
   license: MIT License
   version: 2019.04.3
   min_ansible_version: 2.2
   platforms:
     - name: Ubuntu
       versions:
-       - trusty
-       - utopic
-       - vivid
-       - wily
-       - xenial
-       - yakkety
-       - zesty
-       - artful
-       - bionic
+        - trusty
+        - utopic
+        - vivid
+        - wily
+        - xenial
+        - yakkety
+        - zesty
+        - artful
+        - bionic
     - name: Debian
       versions:
-       - wheezy
-       - jessie
-       - stretch
-       - buster
+        - wheezy
+        - jessie
+        - stretch
+        - buster
   galaxy_tags:
     - networking
     - packaging

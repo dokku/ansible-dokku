@@ -1,0 +1,39 @@
+---
+# Adapted from
+# - https://github.com/drhelius/travis-ansible-demo/blob/master/.travis.yml
+# - https://github.com/geerlingguy/ansible-role-docker/blob/master/.travis.yml
+language: python
+services:
+  - docker
+
+env:
+  global:
+    - ANSIBLE_ROLE: dokku_bot.ansible_dokku
+
+matrix:
+  include:
+    - name: Ubuntu-18.04
+      env:
+        - DOCKER_IMAGE: marvelnccr/ubuntu-docker-base
+        - DOCKER_IMAGE_VERSION: 2.2
+        - ANSIBLE_USER: ubuntu
+    - name: Ubuntu-16.04
+      env:
+        - docker_image: marvelnccr/ubuntu-docker-base
+        - version: 1.1
+        - ansible_user: ubuntu
+
+install:
+  - pip install molecule docker
+
+before_script:
+  # Use actual Ansible Galaxy role name for the project directory.
+  - cd ../
+  - mv ansible-dokku $ANSIBLE_ROLE
+  - cd $ANSIBLE_ROLE
+
+script:
+  - molecule test
+
+notifications:
+  webhooks: https://galaxy.ansible.com/api/v1/notifications/

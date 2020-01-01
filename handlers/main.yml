@@ -1,3 +1,4 @@
+---
 - name: start dokku-daemon
   service:
     name: dokku-daemon
