@@ -11,17 +11,10 @@ env:
     - ANSIBLE_ROLE: dokku_bot.ansible_dokku
 
 matrix:
-  include:
-    - name: Ubuntu-18.04
-      env:
-        - DOCKER_IMAGE: marvelnccr/ubuntu-docker-base
-        - DOCKER_IMAGE_VERSION: 2.2
-        - ANSIBLE_USER: ubuntu
-    - name: Ubuntu-16.04
-      env:
-        - docker_image: marvelnccr/ubuntu-docker-base
-        - version: 1.1
-        - ansible_user: ubuntu
+  - MOLECULE_DISTRO: ubuntu1804
+  - MOLECULE_DISTRO: ubuntu1604
+  - MOLECULE_DISTRO: debian10
+  - MOLECULE_DISTRO: debian9
 
 install:
   - pip install molecule docker
