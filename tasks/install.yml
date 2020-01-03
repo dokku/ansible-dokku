@@ -1,4 +1,10 @@
 ---
+- name: packagecloud dokku apt key
+  apt_key:
+    url: https://packagecloud.io/dokku/dokku/gpgkey
+  tags:
+    - dokku
+
 - name: dokku repo
   apt_repository:
     filename: dokku

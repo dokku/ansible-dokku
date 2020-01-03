@@ -1,0 +1,5 @@
+---
+- role: geerlingguy.docker
+  vars:
+    docker_users:
+      - "dokku"

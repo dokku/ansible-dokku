@@ -30,4 +30,8 @@ galaxy_info:
     - networking
     - packaging
     - system
-dependencies: []
+dependencies:
+  - role: geerlingguy.docker
+    vars:
+      docker_users:
+        - "dokku"
