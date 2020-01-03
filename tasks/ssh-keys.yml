@@ -1,6 +1,7 @@
+---
 - name: sshcommand list dokku
   command: sshcommand list dokku
-  changed_when: False
+  changed_when: false
   register: sshcommand_users
   tags:
     - dokku
@@ -9,7 +10,7 @@
 
 - name: dokku ssh-keys:add
   shell: echo "{{ item.ssh_key }}" | dokku ssh-keys:add {{ item.username }}
-  no_log: True
+  no_log: true
   tags:
     - dokku
     - dokku-ssh-keys

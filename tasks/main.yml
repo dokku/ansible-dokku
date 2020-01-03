@@ -1,3 +1,4 @@
+---
 - import_tasks: nginx.yml
 
 - import_tasks: install.yml
@@ -9,7 +10,7 @@
 
 - name: dokku plugin:list
   command: dokku plugin
-  changed_when: False
+  changed_when: false
   register: installed_dokku_plugins
   tags:
     - dokku

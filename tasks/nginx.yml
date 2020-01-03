@@ -1,3 +1,4 @@
+---
 - block:
   - name: nginx:repository
     apt_repository:

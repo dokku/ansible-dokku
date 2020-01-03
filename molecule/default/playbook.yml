@@ -1,0 +1,16 @@
+---
+- hosts: all
+  become: true
+
+  pre_tasks:
+    - name: Update apt cache.
+      apt: update_cache=yes cache_valid_time=600
+      when: ansible_os_family == 'Debian'
+    # see https://jpetazzo.github.io/2013/10/06/policy-rc-d-do-not-start-services-automatically/
+    - name: don't start service when installing packages
+      shell: echo exit 0 > /usr/sbin/policy-rc.d
+      changed_when: false
+      when: ansible_os_family == 'Debian'
+
+  roles:
+    - role: dokku_bot.ansible_dokku
