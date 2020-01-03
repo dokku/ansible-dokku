@@ -1,4 +1,6 @@
 ---
+- import_tasks: docker.yml
+
 - import_tasks: nginx.yml
 
 - import_tasks: install.yml
