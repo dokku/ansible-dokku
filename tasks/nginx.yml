@@ -1,9 +1,12 @@
 ---
 - block:
+  # Avoiding cache update due to ansible bug
+  # see https://bugs.launchpad.net/openstack-ansible/+bug/1446339
   - name: nginx:repository
     apt_repository:
       repo: 'ppa:nginx/stable'
       state: present
+      update_cache: false
     register: nginx_ppa
     tags:
       - dokku
@@ -11,6 +14,7 @@
   - name: nginx:install
     apt:
       name: nginx
+      update_cache: true
     notify:
       - start nginx
     tags:
