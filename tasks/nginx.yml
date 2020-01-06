@@ -1,22 +1,5 @@
 ---
 - block:
-  - name: nginx:repository
-    apt_repository:
-      repo: 'ppa:nginx/stable'
-      state: present
-    register: nginx_ppa
-    tags:
-      - dokku
-
-  - name: nginx:install
-    apt:
-      name: nginx
-    notify:
-      - start nginx
-    tags:
-      - dokku
-    when: nginx_ppa is success
-
   - name: nginx:disable default site
     file:
       dest: /etc/nginx/{{ item }}/default
@@ -25,6 +8,16 @@
       - reload nginx
     tags:
       - dokku
+    with_items:
+      - sites-enabled
+      - sites-available
+
+  - name: Ensure nginx sites directories exists
+    file:
+      path: /etc/nginx/{{ item }}
+      state: directory
+      owner: root
+      group: root
     with_items:
       - sites-enabled
       - sites-available

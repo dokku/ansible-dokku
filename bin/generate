@@ -124,7 +124,7 @@ def add_requirements(text, meta, defaults):
     text.append(section_header('Dependencies', 2))
     dependencies = []
     if len(meta['dependencies']) > 0:
-        dependencies = ['- {0}'.format(dependency) for dependency in defaults['dependencies']]
+        dependencies = ['- {0} ansible role'.format(dependency) for dependency in meta['dependencies']]
     dependencies.append('- Dokku version {0} (for library usage)'.format(defaults['dokku_version']))
     text.append("\n".join(dependencies))
 

@@ -9,8 +9,10 @@ release: generate
 .PHONY: generate
 generate: clean README.md defaults/main.yml
 
+.PHONY: README.md
 README.md:
 	bin/generate
 
+.PHONY: defaults/main.yml
 defaults/main.yml:
 	bin/generate

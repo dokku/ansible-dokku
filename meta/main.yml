@@ -30,4 +30,6 @@ galaxy_info:
     - networking
     - packaging
     - system
-dependencies: []
+dependencies:
+  - geerlingguy.docker
+  - nginxinc.nginx

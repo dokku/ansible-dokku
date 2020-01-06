@@ -18,24 +18,6 @@ dokku_daemon_version:
   description: Version of dokku-daemon to install
   type: string
 
-docker_apt_key_url:
-  default: hkp://p80.pool.sks-keyservers.net:80
-  description: Location to retrieve the apt.docker key
-  type: string
-docker_apt_key_sig:
-  default: 58118E89F3A912897C070ADBF76221572C52609D
-  description: apt.docker repository key signature
-  type: string
-
-docker_download_key_url:
-  default: https://download.docker.com/linux/ubuntu/gpg
-  description: Location for download.docker key
-  type: string
-docker_download_key_sig:
-  default: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-  description: download.docker repository key signature
-  type: string
-
 herokuish_version:
   default: 0.5.5
   description: The version of herokuish to install
