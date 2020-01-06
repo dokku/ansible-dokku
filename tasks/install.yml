@@ -8,7 +8,7 @@
 - name: dokku repo
   apt_repository:
     filename: dokku
-    repo: 'deb https://packagecloud.io/dokku/dokku//{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'  # yamllint disable-line rule:line-length
+    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'  # yamllint disable-line rule:line-length
 
     state: present
   tags:

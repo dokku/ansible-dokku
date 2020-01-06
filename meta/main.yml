@@ -31,5 +31,5 @@ galaxy_info:
     - packaging
     - system
 dependencies:
-  - role: geerlingguy.docker
-  - role: nginxinc.nginx
+  - geerlingguy.docker
+  - nginxinc.nginx

@@ -26,6 +26,15 @@ before_script:
   - cd $ANSIBLE_ROLE
 
 script:
+  # Check that README etc. is up to date
+  - >
+    make generate;
+    if [[ $(git diff) ]]; then
+      echo "Please run `make generate`";
+      git status --short;
+      git diff;
+      exit 1;
+    fi
   - molecule test
 
 notifications:

@@ -1,3 +1,3 @@
 ---
-- role: geerlingguy.docker
-- role: nginxinc.nginx
+- geerlingguy.docker
+- nginxinc.nginx

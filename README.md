@@ -4,7 +4,10 @@
 
 Version: `2019.04.3`
 
-This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart from installing Dokku, it also provides various modules that can be used to interface with dokku from your own Ansible playbooks.
+This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart
+from installing Dokku, it also provides various modules that can be
+used to interface with dokku from your own Ansible playbooks.
+
 
 ## Table Of Contents
 
@@ -39,11 +42,11 @@ Supported Platforms
 
 ## Dependencies
 
+- geerlingguy.docker ansible role
+- nginxinc.nginx ansible role
 - Dokku version 0.19.11 (for library usage)
 
 ## Role Variables
-
-See also the role variables of the [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) and  [nginxinc.nginx](https://github.com/nginxinc/ansible-role-nginx) role dependencies.
 
 ### dokku_daemon_install
 
@@ -142,7 +145,7 @@ See also the role variables of the [geerlingguy.docker](https://github.com/geerl
 
 ### sshcommand_version
 
-- default: `0.9.0`
+- default: `0.8.0`
 - type: `version`
 - description: The version of sshcommand to install
 
