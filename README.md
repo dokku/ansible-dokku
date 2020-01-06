@@ -43,29 +43,7 @@ Supported Platforms
 
 ## Role Variables
 
-### docker_apt_key_sig
-
-- default: `58118E89F3A912897C070ADBF76221572C52609D`
-- type: `string`
-- description: apt.docker repository key signature
-
-### docker_apt_key_url
-
-- default: `hkp://p80.pool.sks-keyservers.net:80`
-- type: `string`
-- description: Location to retrieve the apt.docker key
-
-### docker_download_key_sig
-
-- default: `9DC858229FC7DD38854AE2D88D81803C0EBFCD88`
-- type: `string`
-- description: download.docker repository key signature
-
-### docker_download_key_url
-
-- default: `https://download.docker.com/linux/ubuntu/gpg`
-- type: `string`
-- description: Location for download.docker key
+See also the role variables of the [geerlingguy.docker](https://github.com/geerlingguy/ansible-role-docker) and  [nginxinc.nginx](https://github.com/nginxinc/ansible-role-nginx) role dependencies.
 
 ### dokku_daemon_install
 

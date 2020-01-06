@@ -32,7 +32,4 @@ galaxy_info:
     - system
 dependencies:
   - role: geerlingguy.docker
-    vars:
-      docker_users:
-        - "dokku"
   - role: nginxinc.nginx

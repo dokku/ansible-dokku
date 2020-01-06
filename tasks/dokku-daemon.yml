@@ -10,7 +10,7 @@
     tags:
       - dokku-daemon
 
-  # Needed for Debian
+  # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
   - name: install socat package
     apt:
       name: socat
