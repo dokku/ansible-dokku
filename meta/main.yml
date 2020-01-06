@@ -35,3 +35,4 @@ dependencies:
     vars:
       docker_users:
         - "dokku"
+  - role: nginxinc.nginx
