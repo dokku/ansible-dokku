@@ -11,4 +11,4 @@ dokku_vhost_enable: 'true'
 dokku_web_config: 'false'
 herokuish_version: 0.5.5
 plugn_version: 0.3.2
-sshcommand_version: 0.8.0
+sshcommand_version: 0.9.0
