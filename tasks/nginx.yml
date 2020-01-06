@@ -1,7 +1,5 @@
 ---
 - block:
-  # Avoiding cache update due to ansible bug
-  # see https://bugs.launchpad.net/openstack-ansible/+bug/1446339
   - name: nginx:disable default site
     file:
       dest: /etc/nginx/{{ item }}/default
@@ -10,6 +8,16 @@
       - reload nginx
     tags:
       - dokku
+    with_items:
+      - sites-enabled
+      - sites-available
+
+  - name: Ensure nginx sites directories exists
+    file:
+      path: /etc/nginx/{{ item }}
+      state: directory
+      owner: root
+      group: root
     with_items:
       - sites-enabled
       - sites-available
