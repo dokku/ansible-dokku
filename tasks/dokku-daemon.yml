@@ -10,6 +10,11 @@
     tags:
       - dokku-daemon
 
+  # Needed for Debian
+  - name: install socat package
+    apt:
+      name: socat
+
   - name: clone dokku-daemon
     git:
       repo: https://github.com/dokku/dokku-daemon.git
