@@ -181,8 +181,11 @@ def generate_readme():
 
     text = []
     text.append(section_header('Ansible Role: Dokku'))
-    text.append('![Ansible Role](https://img.shields.io/ansible/role/39276.svg)')
-    text.append('Version: `{0}`'.format(meta['galaxy_info']['version']))
+    text.append(
+        '[![Ansible Role](https://img.shields.io/ansible/role/39276.svg)](https://galaxy.ansible.com/dokku_bot/ansible_dokku) ' +
+        '[![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases)'
+    )
+
     text.append(meta['galaxy_info']['description'])
 
     text = add_table_of_contents(text)
