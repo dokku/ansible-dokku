@@ -661,7 +661,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku
+    - dokku_bot.ansible_dokku
 ```
 
 ### Installing Plugins
@@ -670,7 +670,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku
+    - dokku_bot.ansible_dokku
   vars:
     dokku_plugins:
       - name: clone
@@ -684,6 +684,8 @@ Manage storage for dokku applications
 ```yaml
 ---
 - hosts: all
+  roles:
+    - dokku_bot.ansible_dokku
   tasks:
     - name: dokku apps:create inflector
       dokku_app:
