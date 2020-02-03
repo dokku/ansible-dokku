@@ -5,14 +5,14 @@ examples:
       ---
       - hosts: all
         roles:
-          - dokku
+          - dokku_bot.ansible_dokku
 
   - name: Installing Plugins
     example: |
       ---
       - hosts: all
         roles:
-          - dokku
+          - dokku_bot.ansible_dokku
         vars:
           dokku_plugins:
             - name: clone
@@ -24,6 +24,8 @@ examples:
     example: |
       ---
       - hosts: all
+        roles:
+          - dokku_bot.ansible_dokku
         tasks:
           - name: dokku apps:create inflector
             dokku_app:
