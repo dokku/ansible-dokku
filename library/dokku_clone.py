@@ -9,7 +9,7 @@ import subprocess
 DOCUMENTATION = '''
 ---
 module: dokku_clone
-short_description: Deploys a repository to an undeployed application
+short_description: Deploys a repository to an undeployed application. Once a deploy has been attempted this task will not attempt another deploy.
 options:
   app:
     description:
@@ -73,12 +73,13 @@ def dokku_clone(data):
         data['app'],
         data['repository'])
     try:
-        subprocess.check_call(command, shell=True)
+        subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
         is_error = False
         has_changed = True
         meta['present'] = True
     except subprocess.CalledProcessError as e:
-        meta['error'] = str(e)
+        is_error = True
+        meta['error'] = e.output
 
     return (is_error, has_changed, meta)
 
