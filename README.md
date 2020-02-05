@@ -203,7 +203,7 @@ Manages ssl configuration for an app.
 
 ### dokku_clone
 
-Deploys a repository to an undeployed application
+Deploys a repository to an undeployed application. Once a deploy has been attempted this task will not attempt another deploy.
 
 #### Requirements
 
