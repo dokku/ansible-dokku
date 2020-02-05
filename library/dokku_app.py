@@ -37,13 +37,6 @@ EXAMPLES = '''
     state: absent
 '''
 
-
-def force_list(l):
-    if isinstance(l, list):
-        return l
-    return list(l)
-
-
 def dokku_apps_exists(app):
     exists = False
     error = None
