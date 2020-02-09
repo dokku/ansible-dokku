@@ -706,7 +706,8 @@ Manage storage for dokku applications
     - dokku_bot.ansible_dokku
     - geerlingguy.swap
   vars:
-    # If you are running dokku on a small VPS, you'll most likely need some swap to ensure you don't run out of RAM during deploys
+    # If you are running dokku on a small VPS, you'll most likely
+    # need some swap to ensure you don't run out of RAM during deploys
     swap_file_size_mb: '2048'
     dokku_version: 0.19.13
     dokku_users:
