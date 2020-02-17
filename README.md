@@ -728,19 +728,20 @@ Manage storage for dokku applications
       dokku_config:
         app: *appname
         config:
-          DOKKU_LETSENCRYPT_EMAIL: email@domain.com
+          # specify a email for dokku-letsencrypt
+          DOKKU_LETSENCRYPT_EMAIL: email@example.com
           # specify port so `domains` can setup the port mapping properly
           PORT: "5000"
     - name: git clone
       # note you'll need to add a deployment key to the GH repo if it's private!
       dokku_clone:
         app: *appname
-        repository: git@github.com:githubname/app.git
+        repository: git@github.com:heroku/python-getting-started.git
     - name: add domain
       dokku_domains:
         app: *appname
         domains:
-          - domain.com
+          - example.com
 ```
 
 ## License
