@@ -697,6 +697,53 @@ Manage storage for dokku applications
         repository: https://github.com/cakephp/inflector.cakephp.org
 ```
 
+### Setting up a Small VPS with a Dokku App
+
+```yaml
+---
+- hosts: all
+  roles:
+    - dokku_bot.ansible_dokku
+    - geerlingguy.swap
+  vars:
+    # If you are running dokku on a small VPS, you'll most likely
+    # need some swap to ensure you don't run out of RAM during deploys
+    swap_file_size_mb: '2048'
+    dokku_version: 0.19.13
+    dokku_users:
+      - name: yourname
+        username: yourname
+        ssh_key: "{{lookup('file', '~/.ssh/id_rsa.pub')}}"
+    dokku_plugins:
+      - name: clone
+        url: https://github.com/crisward/dokku-clone.git
+      - name: letsencrypt
+        url: https://github.com/dokku/dokku-letsencrypt.git
+  tasks:
+    - name: create app
+      dokku_app:
+        # change this name in your template!
+        app: &appname appname
+    - name: environment configuration
+      dokku_config:
+        app: *appname
+        config:
+          # specify a email for dokku-letsencrypt
+          DOKKU_LETSENCRYPT_EMAIL: email@example.com
+          # specify port so `domains` can setup the port mapping properly
+          PORT: "5000"
+    - name: git clone
+      # note you'll need to add a deployment key to the GH repo if it's private!
+      dokku_clone:
+        app: *appname
+        repository: git@github.com:heroku/python-getting-started.git
+    - name: add domain
+      dokku_domains:
+        app: *appname
+        domains:
+          - example.com
+```
+
 ## License
 
 MIT License
