@@ -46,7 +46,7 @@ options:
     aliases: []
 author: Jose Diaz-Gonzalez
 requirements:
-  - the `dokku-registry` plugin (_commercial_)
+  - the `dokku-registry` plugin
 '''
 
 EXAMPLES = '''
