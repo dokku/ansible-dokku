@@ -519,7 +519,7 @@ Manage the registry configuration for a given dokku application
 
 #### Requirements
 
-- the `dokku-registry` plugin (_commercial_)
+- the `dokku-registry` plugin
 
 #### Parameters
 
