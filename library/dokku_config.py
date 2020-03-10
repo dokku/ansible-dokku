@@ -99,7 +99,7 @@ def dokku_config_set(data):
         values.append('{0}={1}'.format(key, pipes.quote(value)))
 
     if invalid_values:
-        template = 'All values must be keys, found invalid types for {0}'
+        template = 'All values must be strings, found invalid types for {0}'
         meta['error'] = template.format(', '.join(invalid_values))
         return (is_error, has_changed, meta)
 
