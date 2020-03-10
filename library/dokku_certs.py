@@ -5,7 +5,7 @@ from ansible.module_utils.basic import AnsibleModule
 import re
 import subprocess
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: dokku_certs
 short_description: Manages ssl configuration for an app.
@@ -41,9 +41,9 @@ options:
     aliases: []
 author: Jose Diaz-Gonzalez
 requirements: [ ]
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Adds an ssl certificate and key to an app
   dokku_certs:
     app: hello-world
@@ -54,7 +54,7 @@ EXAMPLES = '''
   dokku_certs:
     app: hello-world
     state: absent
-'''
+"""
 
 
 def force_list(l):
@@ -64,17 +64,17 @@ def force_list(l):
 
 
 def to_bool(v):
-    return v.lower() == 'true'
+    return v.lower() == "true"
 
 
-def subprocess_check_output(command, split='\n'):
+def subprocess_check_output(command, split="\n"):
     error = None
     output = []
     try:
         output = subprocess.check_output(command, shell=True)
         if isinstance(output, bytes):
             output = output.decode("utf-8")
-        output = str(output).rstrip('\n')
+        output = str(output).rstrip("\n")
         if split is None:
             return output, error
 
@@ -87,33 +87,33 @@ def subprocess_check_output(command, split='\n'):
 
 
 def dokku_certs_report(data):
-    command = 'dokku --quiet certs:report {0}'.format(data['app'])
+    command = "dokku --quiet certs:report {0}".format(data["app"])
     output, error = subprocess_check_output(command)
     if error is not None:
         return output, error
-    output = [re.sub('\s\s+', '', line) for line in output]
+    output = [re.sub(r"\s\s+", "", line) for line in output]
     report = {}
 
     allowed_keys = [
-        'dir',
-        'enabled',
-        'hostnames',
-        'expires at',
-        'issuer',
-        'starts at',
-        'subject',
-        'verified',
+        "dir",
+        "enabled",
+        "hostnames",
+        "expires at",
+        "issuer",
+        "starts at",
+        "subject",
+        "verified",
     ]
-    RE_PREFIX = re.compile('^ssl-')
+    RE_PREFIX = re.compile("^ssl-")
     for line in output:
-        if ':' not in line:
+        if ":" not in line:
             continue
-        key, value = line.split(':', 1)
-        key = RE_PREFIX.sub(r'', key.replace(' ', '-').lower())
+        key, value = line.split(":", 1)
+        key = RE_PREFIX.sub(r"", key.replace(" ", "-").lower())
         if key not in allowed_keys:
             continue
 
-        if key == 'enabled':
+        if key == "enabled":
             value = to_bool(value)
         report[key] = value
 
@@ -123,26 +123,26 @@ def dokku_certs_report(data):
 def dokku_certs_absent(data=None):
     has_changed = False
     is_error = True
-    meta = {'present': True}
+    meta = {"present": True}
 
     report, error = dokku_certs_report(data)
     if error:
-        meta['error'] = error
+        meta["error"] = error
         return (is_error, has_changed, meta)
 
-    if not report['enabled']:
+    if not report["enabled"]:
         is_error = False
-        meta['present'] = False
+        meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = 'dokku --quiet certs:remove {0}'.format(data['app'])
+    command = "dokku --quiet certs:remove {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
         has_changed = True
-        meta['present'] = False
+        meta["present"] = False
     except subprocess.CalledProcessError as e:
-        meta['error'] = str(e)
+        meta["error"] = str(e)
 
     return (is_error, has_changed, meta)
 
@@ -150,71 +150,58 @@ def dokku_certs_absent(data=None):
 def dokku_certs_present(data):
     is_error = True
     has_changed = False
-    meta = {'present': False}
+    meta = {"present": False}
 
     report, error = dokku_certs_report(data)
     if error:
-        meta['error'] = error
+        meta["error"] = error
         return (is_error, has_changed, meta)
 
-    if report['enabled']:
+    if report["enabled"]:
         is_error = False
-        meta['present'] = False
+        meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = 'dokku certs:add {0} {1} {2}'.format(
-        data['app'], data['cert'], data['key'])
+    command = "dokku certs:add {0} {1} {2}".format(
+        data["app"], data["cert"], data["key"]
+    )
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
         has_changed = True
-        meta['present'] = True
+        meta["present"] = True
     except subprocess.CalledProcessError as e:
-        meta['error'] = str(e)
+        meta["error"] = str(e)
 
     return (is_error, has_changed, meta)
 
 
 def main():
     fields = {
-        'app': {
-            'required': True,
-            'type': 'str',
-        },
-        'key': {
-            'required': False,
-            'type': 'str',
-        },
-        'cert': {
-            'required': False,
-            'type': 'str',
-        },
-        'state': {
-            'required': False,
-            'default': 'present',
-            'choices': [
-                'present',
-                'absent'
-            ],
-            'type': 'str',
+        "app": {"required": True, "type": "str"},
+        "key": {"required": False, "type": "str"},
+        "cert": {"required": False, "type": "str"},
+        "state": {
+            "required": False,
+            "default": "present",
+            "choices": ["present", "absent"],
+            "type": "str",
         },
     }
     choice_map = {
-        'present': dokku_certs_present,
-        'absent': dokku_certs_absent,
+        "present": dokku_certs_present,
+        "absent": dokku_certs_absent,
     }
 
-    module = AnsibleModule(
-        argument_spec=fields,
-        supports_check_mode=False
+    module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
+    is_error, has_changed, result = choice_map.get(module.params["state"])(
+        module.params
     )
-    is_error, has_changed, result = choice_map.get(
-        module.params['state'])(module.params)
 
     if is_error:
-        module.fail_json(msg=result['error'], meta=result)
+        module.fail_json(msg=result["error"], meta=result)
     module.exit_json(changed=has_changed, meta=result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
