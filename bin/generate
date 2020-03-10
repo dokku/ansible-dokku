@@ -224,9 +224,22 @@ def generate_defaults():
         f.write(yaml.dump(defaults, explicit_start=True))
 
 
+def generate_requirements():
+    role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+    meta = {}
+    meta_file = os.path.join(role_path, 'meta', 'main.yml')
+    with open(meta_file) as f:
+        meta = yaml.load(f.read(), Loader=yaml.SafeLoader)
+
+    with open(os.path.join(role_path, 'ansible-role-requirements.yml'), 'w') as f:
+        documents = yaml.dump(meta['dependencies'], f, explicit_start=True)
+
+
 def main():
     generate_defaults()
     generate_readme()
+    generate_requirements()
 
 
 if __name__ == "__main__":
