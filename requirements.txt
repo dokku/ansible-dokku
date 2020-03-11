@@ -1,1 +1,8 @@
-pyyaml>=4.2b1
+ansible-lint
+black
+docker==4.2.0
+flake8
+molecule==3.0.2
+pyyaml
+testinfra==5.0.0
+yamllint

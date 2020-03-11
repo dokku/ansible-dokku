@@ -17,7 +17,7 @@ env:
     - MOLECULE_DISTRO: debian9
 
 install:
-  - pip install molecule docker
+  - pip install -r requirements.txt
 
 before_script:
   # Use actual Ansible Galaxy role name for the project directory.

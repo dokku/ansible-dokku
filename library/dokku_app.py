@@ -4,7 +4,7 @@
 from ansible.module_utils.basic import AnsibleModule
 import subprocess
 
-DOCUMENTATION = '''
+DOCUMENTATION = """
 ---
 module: dokku_app
 short_description: Create or destroy dokku apps
@@ -24,9 +24,9 @@ options:
     aliases: []
 author: Jose Diaz-Gonzalez
 requirements: [ ]
-'''
+"""
 
-EXAMPLES = '''
+EXAMPLES = """
 - name: Create a dokku app
   dokku_app:
     app: hello-world
@@ -35,12 +35,13 @@ EXAMPLES = '''
   dokku_app:
     app: hello-world
     state: absent
-'''
+"""
+
 
 def dokku_apps_exists(app):
     exists = False
     error = None
-    command = 'dokku --quiet apps:exists {0}'.format(app)
+    command = "dokku --quiet apps:exists {0}".format(app)
     try:
         subprocess.check_call(command, shell=True)
         exists = True
@@ -52,22 +53,22 @@ def dokku_apps_exists(app):
 def dokku_app_present(data):
     is_error = True
     has_changed = False
-    meta = {'present': False}
+    meta = {"present": False}
 
-    exists, error = dokku_apps_exists(data['app'])
+    exists, error = dokku_apps_exists(data["app"])
     if exists:
         is_error = False
-        meta['present'] = True
+        meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = 'dokku apps:create {0}'.format(data['app'])
+    command = "dokku apps:create {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
         has_changed = True
-        meta['present'] = True
+        meta["present"] = True
     except subprocess.CalledProcessError as e:
-        meta['error'] = str(e)
+        meta["error"] = str(e)
 
     return (is_error, has_changed, meta)
 
@@ -77,56 +78,48 @@ def dokku_app_absent(data=None):
     has_changed = False
     meta = {"present": True}
 
-    exists, error = dokku_apps_exists(data['app'])
+    exists, error = dokku_apps_exists(data["app"])
     if not exists:
         is_error = False
-        meta['present'] = False
+        meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = 'dokku --force apps:destroy {0}'.format(data['app'])
+    command = "dokku --force apps:destroy {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
         has_changed = True
-        meta['present'] = False
+        meta["present"] = False
     except subprocess.CalledProcessError as e:
-        meta['error'] = str(e)
+        meta["error"] = str(e)
 
     return (is_error, has_changed, meta)
 
 
 def main():
     fields = {
-        'app': {
-            'required': True,
-            'type': 'str',
-        },
-        'state': {
-            'required': False,
-            'default': 'present',
-            'choices': [
-                'present',
-                'absent'
-            ],
-            'type': 'str',
+        "app": {"required": True, "type": "str"},
+        "state": {
+            "required": False,
+            "default": "present",
+            "choices": ["present", "absent"],
+            "type": "str",
         },
     }
     choice_map = {
-        'present': dokku_app_present,
-        'absent': dokku_app_absent,
+        "present": dokku_app_present,
+        "absent": dokku_app_absent,
     }
 
-    module = AnsibleModule(
-        argument_spec=fields,
-        supports_check_mode=False
+    module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
+    is_error, has_changed, result = choice_map.get(module.params["state"])(
+        module.params
     )
-    is_error, has_changed, result = choice_map.get(
-        module.params['state'])(module.params)
 
     if is_error:
-        module.fail_json(msg=result['error'], meta=result)
+        module.fail_json(msg=result["error"], meta=result)
     module.exit_json(changed=has_changed, meta=result)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
