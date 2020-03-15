@@ -235,6 +235,7 @@ Manage environment variables for a given dokku application
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
 |config<br /><sup>*required*</sup>|*Default:* {}|A map of environment variables where key => value|
+|restart|*Default:* True|Whether to restart the application or not. If the task is idempotent then setting restart to true will not perform a restart.|
 
 #### Example
 
@@ -242,6 +243,14 @@ Manage environment variables for a given dokku application
 - name: set KEY=VALUE
   dokku_config:
     app: hello-world
+    config:
+      KEY: VALUE_1
+      KEY_2: VALUE_2
+
+- name: set KEY=VALUE without restart
+  dokku_config:
+    app: hello-world
+    restart: false
     config:
       KEY: VALUE_1
       KEY_2: VALUE_2
