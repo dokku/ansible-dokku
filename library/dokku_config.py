@@ -29,6 +29,12 @@ options:
     required: True
     default: {}
     aliases: []
+  restart:
+    description:
+      - Whether to restart the application or not. If the task is idempotent
+        then setting restart to true will not perform a restart.
+    required: false
+    default: true
 author: Jose Diaz-Gonzalez
 requirements: [ ]
 """
@@ -37,6 +43,14 @@ EXAMPLES = """
 - name: set KEY=VALUE
   dokku_config:
     app: hello-world
+    config:
+      KEY: VALUE_1
+      KEY_2: VALUE_2
+
+- name: set KEY=VALUE without restart
+  dokku_config:
+    app: hello-world
+    restart: false
     config:
       KEY: VALUE_1
       KEY_2: VALUE_2
@@ -108,7 +122,12 @@ def dokku_config_set(data):
         has_changed = False
         return (is_error, has_changed, meta)
 
-    command = "dokku config:set {0} {1}".format(data["app"], " ".join(values))
+    command = "dokku config:set {0}{1} {2}".format(
+        "--no-restart " if data["restart"] is False else "",
+        data["app"],
+        " ".join(values),
+    )
+
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -123,6 +142,7 @@ def main():
     fields = {
         "app": {"required": True, "type": "str"},
         "config": {"required": True, "type": "dict", "no_log": True},
+        "restart": {"required": False, "type": "bool",},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
