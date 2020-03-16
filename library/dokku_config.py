@@ -142,7 +142,7 @@ def main():
     fields = {
         "app": {"required": True, "type": "str"},
         "config": {"required": True, "type": "dict", "no_log": True},
-        "restart": {"required": False, "type": "bool",},
+        "restart": {"required": False, "type": "bool"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
