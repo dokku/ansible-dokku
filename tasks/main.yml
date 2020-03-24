@@ -9,7 +9,7 @@
   when: dokku_users is defined
 
 - name: dokku plugin:list
-  command: dokku plugin
+  command: dokku plugin:list
   changed_when: false
   register: installed_dokku_plugins
   tags:
