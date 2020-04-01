@@ -29,6 +29,11 @@
     - dokku-plugins
   when: dokku_plugins is defined and installed_dokku_plugins.stdout.find(item.name) == -1
   with_items: "{{ dokku_plugins }}"
+  register: dokku_plugin_install
+  failed_when:
+    - "'fatal: destination path' not in dokku_plugin_install.stderr"
+  changed_when:
+    - "'fatal: destination path' not in dokku_plugin_install.stderr"
 
 - name: dokku plugin:update
   cron:
