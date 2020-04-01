@@ -43,3 +43,11 @@
   tags:
     - dokku
     - dokku-plugins
+
+- name: dokku:plugin install-dependencies
+  command: dokku plugin:install-dependencies
+  tags:
+    - dokku
+    - dokku-plugins
+    - molecule-idempotence-notest
+  when: dokku_plugins is defined
