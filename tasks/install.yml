@@ -86,3 +86,12 @@
   tags:
     - dokku
     - dokku-install
+
+- name: write vhost
+  when: dokku_vhost_enable | bool
+  copy:
+    content: "{{ dokku_hostname }}"
+    dest: /home/dokku/VHOST
+  tags:
+    - dokku
+    - dokku-install
