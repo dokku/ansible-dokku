@@ -48,10 +48,10 @@ EXAMPLES = """
 """
 
 
-def force_list(l):
-    if isinstance(l, list):
-        return l
-    return list(l)
+def force_list(var):
+    if isinstance(var, list):
+        return var
+    return list(var)
 
 
 def to_bool(v):
