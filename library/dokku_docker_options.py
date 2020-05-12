@@ -45,15 +45,13 @@ EXAMPLES = """
   dokku_docker_options:
     app: hello-world
     phase: deploy
-    options:
-        - "-v /var/run/docker.sock:/var/run/docker.sock"
+    option: "-v /var/run/docker.sock:/var/run/docker.sock"
 
 - name: docker-options:remove hello-world deploy
   dokku_docker_options:
     app: hello-world
     phase: deploy
-    options:
-        - "-v /var/run/docker.sock:/var/run/docker.sock"
+    option: "-v /var/run/docker.sock:/var/run/docker.sock"
     state: absent
 """
 
