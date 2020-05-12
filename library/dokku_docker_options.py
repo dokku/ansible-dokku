@@ -56,10 +56,10 @@ EXAMPLES = """
 """
 
 
-def force_list(l):
-    if isinstance(l, list):
-        return l
-    return list(l)
+def force_list(var):
+    if isinstance(var, list):
+        return var
+    return list(var)
 
 
 def subprocess_check_output(command, split="\n"):
@@ -83,7 +83,7 @@ def subprocess_check_output(command, split="\n"):
 
 def dokku_docker_options(data):
     options = {"build": [], "deploy": [], "run": []}
-    command = "dokku --quiet docker-options {0}".format(data["app"], data["phase"])
+    command = "dokku --quiet docker-options {0}".format(data["app"])
     output, error = subprocess_check_output(command)
     if error is None:
         _type = "build"
