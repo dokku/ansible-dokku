@@ -23,7 +23,3 @@ provisioner:
   name: ansible
   playbooks:
     converge: converge.yml
-scenario:
-  name: default
-verifier:
-  name: testinfra

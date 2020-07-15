@@ -1,0 +1,12 @@
+---
+- name: Verify
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Bare include (free-form)
+      include_vars: ../../defaults/main.yml
+
+    - name: Check that dokku_global_cert module can parse output
+      dokku_global_cert:
+        state: absent
