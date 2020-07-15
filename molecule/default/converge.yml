@@ -14,3 +14,4 @@
         dokku_plugins:
           - name: global-cert
             url: https://github.com/josegonzalez/dokku-global-cert
+        dokku_hostname: test.domain
