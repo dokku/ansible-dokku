@@ -97,7 +97,7 @@ def dokku_global_cert(data):
         "subject",
         "verified",
     ]
-    RE_PREFIX = re.compile("^global cert-")
+    RE_PREFIX = re.compile("^global-cert-")
     for line in output:
         if ":" not in line:
             continue
