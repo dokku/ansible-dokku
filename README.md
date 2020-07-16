@@ -42,7 +42,7 @@ Supported Platforms
 
 - geerlingguy.docker ansible role
 - nginxinc.nginx ansible role
-- Dokku version 0.19.11 (for library usage)
+- Dokku version 0.21.1 (for library usage)
 
 ## Role Variables
 
@@ -113,7 +113,7 @@ Supported Platforms
 
 ### dokku_version
 
-- default: `0.19.11`
+- default: `0.21.1`
 - type: `version`
 - description: The version of Dokku to install
 
@@ -131,19 +131,19 @@ Supported Platforms
 
 ### herokuish_version
 
-- default: `0.5.5`
+- default: `0.5.14`
 - type: `version`
 - description: The version of herokuish to install
 
 ### plugn_version
 
-- default: `0.3.2`
+- default: `0.5.0`
 - type: `version`
 - description: The version of plugn to install
 
 ### sshcommand_version
 
-- default: `0.9.0`
+- default: `0.11.0`
 - type: `version`
 - description: The version of sshcommand to install
 
