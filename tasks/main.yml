@@ -1,12 +1,24 @@
 ---
 - import_tasks: nginx.yml
+  tags:
+    - dokku
+    - dokku-nginx
 
 - import_tasks: install.yml
+  tags:
+    - dokku
+    - dokku-install
 
 - import_tasks: dokku-daemon.yml
+  tags:
+    - dokku
+    - dokku-daemon
 
 - import_tasks: ssh-keys.yml
   when: dokku_users is defined
+  tags:
+    - dokku
+    - dokku-ssh-keys
 
 - name: dokku plugin:list
   command: dokku plugin:list
