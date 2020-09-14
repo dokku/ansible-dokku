@@ -1,6 +1,6 @@
 ---
 dokku_daemon_install: true
-dokku_daemon_version: c36a2460f9f7737bb4fb6621f6961773933a1409
+dokku_daemon_version: 0.0.2
 dokku_hostname: dokku.me
 dokku_key_file: /root/.ssh/id_rsa.pub
 dokku_manage_nginx: true
