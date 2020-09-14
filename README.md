@@ -54,7 +54,7 @@ Supported Platforms
 
 ### dokku_daemon_version
 
-- default: `f3b7b0ab1b6368d49e569de03af28e497ce0a0c9`
+- default: `0.0.2`
 - type: `string`
 - description: Version of dokku-daemon to install
 
