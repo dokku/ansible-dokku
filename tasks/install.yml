@@ -66,6 +66,7 @@
       Package: {{ item.key }}
       Pin: version {{ item.value }}
       Pin-Priority: 1001
+    mode: preserve
   with_dict:
     plugn: "{{ plugn_version }}"
     sshcommand: "{{ sshcommand_version }}"
@@ -92,6 +93,7 @@
   copy:
     content: "{{ dokku_hostname }}"
     dest: /home/dokku/VHOST
+    mode: preserve
   tags:
     - dokku
     - dokku-install

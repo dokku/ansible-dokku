@@ -18,6 +18,7 @@ env:
 
 install:
   - pip install -r requirements.txt
+  - ansible --version
 
 before_script:
   # Use actual Ansible Galaxy role name for the project directory.
