@@ -1,6 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # from ansible.module_utils.basic import *
+import pipes
+
 from ansible.module_utils.basic import AnsibleModule
 import subprocess
 
@@ -27,6 +29,12 @@ options:
     required: True
     default: null
     aliases: []
+  flags:
+    description:
+      - The flags for the service
+    required: False
+    default: {}
+    aliases: []
   state:
     description:
       - The state of the service link
@@ -44,6 +52,8 @@ EXAMPLES = """
     app: hello-world
     name: default
     service: redis
+    flags:
+      alias: BLUE_DATABASE
 
 - name: redis:unlink default hello-world
   dokku_service_link:
@@ -150,8 +160,12 @@ def dokku_service_link_present(data):
         is_error = False
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet {0}:link {1} {2}".format(
-        data["service"], data["name"], data["app"]
+    values = []
+    for key, value in data["flags"].items():
+        values.append("--{0}={1}".format(key, pipes.quote(value)))
+
+    command = "dokku --quiet {0}:link {1} {2} {3}".format(
+        data["service"], data["name"], data["app"], " ".join(values)
     )
     try:
         subprocess.check_call(command, shell=True)
@@ -169,6 +183,7 @@ def main():
         "app": {"required": True, "type": "str"},
         "name": {"required": True, "type": "str"},
         "service": {"required": True, "type": "str"},
+        "flags": {"required": False, "type": "dict"},
         "state": {
             "required": False,
             "default": "present",

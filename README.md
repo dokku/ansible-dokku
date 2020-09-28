@@ -592,6 +592,7 @@ Links and unlinks a given service to an application
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
+|flags|*Default:* {}|The flags for the service|
 |name<br /><sup>*required*</sup>||The name of the service|
 |service<br /><sup>*required*</sup>||The type of service to link|
 |state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the service link|
@@ -604,6 +605,8 @@ Links and unlinks a given service to an application
     app: hello-world
     name: default
     service: redis
+    flags:
+      alias: BLUE_DATABASE
 
 - name: redis:unlink default hello-world
   dokku_service_link:
