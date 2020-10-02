@@ -131,7 +131,7 @@ Supported Platforms
 
 ### herokuish_version
 
-- default: `0.5.14`
+- default: `0.5.18`
 - type: `version`
 - description: The version of herokuish to install
 

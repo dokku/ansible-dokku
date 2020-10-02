@@ -19,7 +19,7 @@ dokku_daemon_version:
   type: string
 
 herokuish_version:
-  default: 0.5.14
+  default: 0.5.18
   description: The version of herokuish to install
   type: version
 
