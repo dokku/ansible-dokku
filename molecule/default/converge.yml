@@ -1,5 +1,6 @@
 ---
-- hosts: all
+- name: Converge
+  hosts: all
   become: true
 
   pre_tasks:
@@ -9,3 +10,8 @@
 
   roles:
     - role: dokku_bot.ansible_dokku
+      vars:
+        dokku_plugins:
+          - name: global-cert
+            url: https://github.com/josegonzalez/dokku-global-cert
+        dokku_hostname: test.domain

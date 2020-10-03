@@ -1,6 +1,6 @@
 ---
 dokku_version:
-  default: 0.19.11
+  default: 0.21.4
   description: The version of Dokku to install
   type: version
 
@@ -14,22 +14,22 @@ dokku_daemon_install:
   description: Whether to install the dokku-daemon
   type: boolean
 dokku_daemon_version:
-  default: f3b7b0ab1b6368d49e569de03af28e497ce0a0c9
+  default: 0.0.2
   description: Version of dokku-daemon to install
   type: string
 
 herokuish_version:
-  default: 0.5.5
+  default: 0.5.18
   description: The version of herokuish to install
   type: version
 
 sshcommand_version:
-  default: 0.9.0
+  default: 0.11.0
   description: The version of sshcommand to install
   type: version
 
 plugn_version:
-  default: 0.3.2
+  default: 0.5.0
   description: The version of plugn to install
   type: version
 

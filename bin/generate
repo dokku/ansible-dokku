@@ -183,7 +183,8 @@ def generate_readme():
     text.append(section_header('Ansible Role: Dokku'))
     text.append(
         '[![Ansible Role](https://img.shields.io/ansible/role/39276.svg)](https://galaxy.ansible.com/dokku_bot/ansible_dokku) ' +
-        '[![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases)'
+        '[![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases) ' +
+        '[![Build Status](https://travis-ci.org/dokku/ansible-dokku.svg?branch=master)](https://travis-ci.org/dokku/ansible-dokku)'
     )
 
     text.append(meta['galaxy_info']['description'])
@@ -224,9 +225,22 @@ def generate_defaults():
         f.write(yaml.dump(defaults, explicit_start=True))
 
 
+def generate_requirements():
+    role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
+
+    meta = {}
+    meta_file = os.path.join(role_path, 'meta', 'main.yml')
+    with open(meta_file) as f:
+        meta = yaml.load(f.read(), Loader=yaml.SafeLoader)
+
+    with open(os.path.join(role_path, 'ansible-role-requirements.yml'), 'w') as f:
+        documents = yaml.dump(meta['dependencies'], f, explicit_start=True)
+
+
 def main():
     generate_defaults()
     generate_readme()
+    generate_requirements()
 
 
 if __name__ == "__main__":

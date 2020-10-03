@@ -1,13 +1,16 @@
 ---
 dependency:
   name: galaxy
-  requirements_file: molecule/default/requirements.yml
+  options:
+    role-file: ansible-role-requirements.yml
 driver:
   name: docker
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/default/yamllint.yml
+lint: |
+  set -e
+  ansible-lint
+  black . --check
+  flake8
+  yamllint .
 platforms:
   - name: instance
     image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu1804}-ansible:latest"
@@ -18,13 +21,5 @@ platforms:
     pre_build_image: true
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
   playbooks:
-    converge: playbook.yml
-scenario:
-  name: default
-verifier:
-  name: testinfra
-  lint:
-    name: flake8
+    converge: converge.yml

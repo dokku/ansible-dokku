@@ -1,4 +1,4 @@
 skip_list:
+- '106' # Role name does not match ``^[a-z][a-z0-9_]+$`` pattern
 - '204' # Lines should be no longer than 160 chars.
 - '306' # Shells that use pipes should set the pipefail option.
-- '102' # No Jinja2 in when

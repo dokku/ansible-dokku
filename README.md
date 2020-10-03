@@ -1,6 +1,6 @@
 # Ansible Role: Dokku
 
-[![Ansible Role](https://img.shields.io/ansible/role/39276.svg)](https://galaxy.ansible.com/dokku_bot/ansible_dokku) [![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases)
+[![Ansible Role](https://img.shields.io/ansible/role/39276.svg)](https://galaxy.ansible.com/dokku_bot/ansible_dokku) [![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases) [![Build Status](https://travis-ci.org/dokku/ansible-dokku.svg?branch=master)](https://travis-ci.org/dokku/ansible-dokku)
 
 This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart
 from installing Dokku, it also provides various modules that can be
@@ -42,7 +42,7 @@ Supported Platforms
 
 - geerlingguy.docker ansible role
 - nginxinc.nginx ansible role
-- Dokku version 0.19.11 (for library usage)
+- Dokku version 0.21.4 (for library usage)
 
 ## Role Variables
 
@@ -54,7 +54,7 @@ Supported Platforms
 
 ### dokku_daemon_version
 
-- default: `f3b7b0ab1b6368d49e569de03af28e497ce0a0c9`
+- default: `0.0.2`
 - type: `string`
 - description: Version of dokku-daemon to install
 
@@ -113,7 +113,7 @@ Supported Platforms
 
 ### dokku_version
 
-- default: `0.19.11`
+- default: `0.21.4`
 - type: `version`
 - description: The version of Dokku to install
 
@@ -131,19 +131,19 @@ Supported Platforms
 
 ### herokuish_version
 
-- default: `0.5.5`
+- default: `0.5.18`
 - type: `version`
 - description: The version of herokuish to install
 
 ### plugn_version
 
-- default: `0.3.2`
+- default: `0.5.0`
 - type: `version`
 - description: The version of plugn to install
 
 ### sshcommand_version
 
-- default: `0.9.0`
+- default: `0.11.0`
 - type: `version`
 - description: The version of sshcommand to install
 
@@ -203,7 +203,7 @@ Manages ssl configuration for an app.
 
 ### dokku_clone
 
-Deploys a repository to an undeployed application
+Deploys a repository to an undeployed application.
 
 #### Requirements
 
@@ -235,6 +235,7 @@ Manage environment variables for a given dokku application
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
 |config<br /><sup>*required*</sup>|*Default:* {}|A map of environment variables where key => value|
+|restart|*Default:* True|Whether to restart the application or not. If the task is idempotent then setting restart to true will not perform a restart.|
 
 #### Example
 
@@ -242,6 +243,14 @@ Manage environment variables for a given dokku application
 - name: set KEY=VALUE
   dokku_config:
     app: hello-world
+    config:
+      KEY: VALUE_1
+      KEY_2: VALUE_2
+
+- name: set KEY=VALUE without restart
+  dokku_config:
+    app: hello-world
+    restart: false
     config:
       KEY: VALUE_1
       KEY_2: VALUE_2
@@ -303,15 +312,13 @@ Manage docker-options for a given dokku application
   dokku_docker_options:
     app: hello-world
     phase: deploy
-    options:
-        - "-v /var/run/docker.sock:/var/run/docker.sock"
+    option: "-v /var/run/docker.sock:/var/run/docker.sock"
 
 - name: docker-options:remove hello-world deploy
   dokku_docker_options:
     app: hello-world
     phase: deploy
-    options:
-        - "-v /var/run/docker.sock:/var/run/docker.sock"
+    option: "-v /var/run/docker.sock:/var/run/docker.sock"
     state: absent
 ```
 
@@ -519,7 +526,7 @@ Manage the registry configuration for a given dokku application
 
 #### Requirements
 
-- the `dokku-registry` plugin (_commercial_)
+- the `dokku-registry` plugin
 
 #### Parameters
 
@@ -661,7 +668,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku
+    - dokku_bot.ansible_dokku
 ```
 
 ### Installing Plugins
@@ -670,7 +677,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku
+    - dokku_bot.ansible_dokku
   vars:
     dokku_plugins:
       - name: clone
@@ -684,6 +691,8 @@ Manage storage for dokku applications
 ```yaml
 ---
 - hosts: all
+  roles:
+    - dokku_bot.ansible_dokku
   tasks:
     - name: dokku apps:create inflector
       dokku_app:
@@ -693,6 +702,53 @@ Manage storage for dokku applications
       dokku_clone:
         app: inflector
         repository: https://github.com/cakephp/inflector.cakephp.org
+```
+
+### Setting up a Small VPS with a Dokku App
+
+```yaml
+---
+- hosts: all
+  roles:
+    - dokku_bot.ansible_dokku
+    - geerlingguy.swap
+  vars:
+    # If you are running dokku on a small VPS, you'll most likely
+    # need some swap to ensure you don't run out of RAM during deploys
+    swap_file_size_mb: '2048'
+    dokku_version: 0.19.13
+    dokku_users:
+      - name: yourname
+        username: yourname
+        ssh_key: "{{lookup('file', '~/.ssh/id_rsa.pub')}}"
+    dokku_plugins:
+      - name: clone
+        url: https://github.com/crisward/dokku-clone.git
+      - name: letsencrypt
+        url: https://github.com/dokku/dokku-letsencrypt.git
+  tasks:
+    - name: create app
+      dokku_app:
+        # change this name in your template!
+        app: &appname appname
+    - name: environment configuration
+      dokku_config:
+        app: *appname
+        config:
+          # specify a email for dokku-letsencrypt
+          DOKKU_LETSENCRYPT_EMAIL: email@example.com
+          # specify port so `domains` can setup the port mapping properly
+          PORT: "5000"
+    - name: git clone
+      # note you'll need to add a deployment key to the GH repo if it's private!
+      dokku_clone:
+        app: *appname
+        repository: git@github.com:heroku/python-getting-started.git
+    - name: add domain
+      dokku_domains:
+        app: *appname
+        domains:
+          - example.com
 ```
 
 ## License
