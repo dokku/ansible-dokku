@@ -48,6 +48,7 @@ def add_table_of_contents(text):
                 "- [Role Variables](#role-variables)",
                 "- [Libraries](#libraries)",
                 "- [Example Playbooks](#example-playbooks)",
+                "- [Contributing](#contributing)",
                 "- [License](#license)",
             ]
         )
@@ -215,6 +216,9 @@ def generate_readme():
     text = add_variables(text, role_path)
     text = add_libraries(text, role_path)
     text = add_examples(text, role_path)
+
+    text.append(section_header("Contributing", 2))
+    text.append("See [CONTRIBUTING.md](./CONTRIBUTING.md).")
 
     text.append(section_header("License", 2))
     text.append(meta["galaxy_info"]["license"])

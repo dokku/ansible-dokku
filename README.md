@@ -14,6 +14,7 @@ used to interface with dokku from your own Ansible playbooks.
 - [Role Variables](#role-variables)
 - [Libraries](#libraries)
 - [Example Playbooks](#example-playbooks)
+- [Contributing](#contributing)
 - [License](#license)
 
 ## Requirements
@@ -750,6 +751,10 @@ Manage storage for dokku applications
         domains:
           - example.com
 ```
+
+## Contributing
+
+See [CONTRIBUTING.md](./CONTRIBUTING.md).
 
 ## License
 
