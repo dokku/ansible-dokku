@@ -1,8 +1,8 @@
-ansible-lint
-black
-docker==4.2.0
-flake8
-molecule==3.0.2
+# for running tests
+molecule[docker]~=3.1.0
+docker~=4.3.1
+ansible~=2.10.0
+# for development
+pre-commit
+# for README generation
 pyyaml
-testinfra==5.0.0
-yamllint

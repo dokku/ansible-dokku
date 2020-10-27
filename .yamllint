@@ -1,6 +1,6 @@
----
 extends: default
 rules:
+  document-start: disable
   braces:
     max-spaces-inside: 1
     level: error
@@ -11,5 +11,8 @@ rules:
     max: 160
     level: warning
   truthy: disable
+  indentation:
+    spaces: 2
+    indent-sequences: false
 ignore: |
   default/roles

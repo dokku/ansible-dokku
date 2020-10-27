@@ -1,18 +1,17 @@
----
 - name: packagecloud dokku apt key
   apt_key:
     url: https://packagecloud.io/dokku/dokku/gpgkey
   tags:
-    - dokku
+  - dokku
 
 - name: dokku repo
   apt_repository:
     filename: dokku
-    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'  # yamllint disable-line rule:line-length
+    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'
 
     state: present
   tags:
-    - dokku
+  - dokku
 
 - name: debconf dokku/hostname
   debconf:
@@ -21,7 +20,7 @@
     value: '{{ dokku_hostname }}'
     vtype: 'string'
   tags:
-    - dokku
+  - dokku
 
 - name: debconf dokku/key_file
   debconf:
@@ -30,7 +29,7 @@
     value: '{{ dokku_key_file }}'
     vtype: 'string'
   tags:
-    - dokku
+  - dokku
 
 - name: debconf dokku/skip_key_file
   debconf:
@@ -39,7 +38,7 @@
     value: '{{ dokku_skip_key_file }}'
     vtype: 'boolean'
   tags:
-    - dokku
+  - dokku
 
 - name: debconf dokku/vhost_enable
   debconf:
@@ -48,7 +47,7 @@
     value: '{{ dokku_vhost_enable }}'
     vtype: 'boolean'
   tags:
-    - dokku
+  - dokku
 
 - name: debconf dokku/web_config
   debconf:
@@ -57,7 +56,7 @@
     value: '{{ dokku_web_config }}'
     vtype: 'boolean'
   tags:
-    - dokku
+  - dokku
 
 - name: pin dokku packages
   copy:
@@ -73,8 +72,8 @@
     herokuish: "{{ herokuish_version }}"
     dokku: "{{ dokku_version }}"
   tags:
-    - dokku
-    - dokku-install
+  - dokku
+  - dokku-install
 
 - name: install dokku packages
   apt:
@@ -85,8 +84,8 @@
     herokuish: "{{ herokuish_version }}"
     dokku: "{{ dokku_version }}"
   tags:
-    - dokku
-    - dokku-install
+  - dokku
+  - dokku-install
 
 - name: write vhost
   when: dokku_vhost_enable | bool
@@ -95,5 +94,5 @@
     dest: /home/dokku/VHOST
     mode: preserve
   tags:
-    - dokku
-    - dokku-install
+  - dokku
+  - dokku-install

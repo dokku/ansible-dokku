@@ -1,0 +1,97 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+env:
+  galaxy-name: "dokku_bot.ansible_dokku"
+
+
+jobs:
+
+  pre-commit:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - uses: pre-commit/action@v2.0.0
+
+  readme:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Install requirements
+      run: pip install --use-feature=2020-resolver -r requirements.txt
+
+    - name: Update README
+      run: |
+        set -e;
+        make generate;
+        if [[ $(git diff) ]]; then
+          echo "Please run `make generate`";
+          git status --short;
+          git diff;
+          exit 1;
+        fi
+
+  molecule:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        distro: [ubuntu1604, ubuntu1804, ubuntu2004, debian9, debian10]
+      fail-fast: false
+
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        path: ${{ env.galaxy-name }}
+
+    - name: Set up Python 3.8
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.8
+
+    - name: Upgrade pip
+      run: |
+        pip install --upgrade pip wheel
+        pip --version
+
+    - name: Install requirements
+      run: |
+        pip install --use-feature=2020-resolver -r requirements.txt
+      working-directory: ${{ env.galaxy-name }}
+
+    - name: Create role requirements
+      run: make ansible-role-requirements.yml
+      working-directory: ${{ env.galaxy-name }}
+
+    - name: Run molecule
+      run: molecule test
+      working-directory: ${{ env.galaxy-name }}
+      env:
+        MOLECULE_DISTRO: ${{ matrix.distro }}
+
+  release:
+    name: Publish to ansible-galaxy
+    if: github.event_name == 'push' && startsWith(github.event.ref, 'refs/tags')
+    needs: [pre-commit, molecule]
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: robertdebock/galaxy-action@1.0.3
+      with:
+        galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
