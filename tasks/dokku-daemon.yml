@@ -1,4 +1,3 @@
----
 - block:
   - name: ensure github.com is a known host
     lineinfile:
@@ -9,7 +8,7 @@
       regexp: "^github\\.com"
       mode: 0644
     tags:
-      - dokku-daemon
+    - dokku-daemon
 
   # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
   - name: install socat package
@@ -23,14 +22,14 @@
       update: false
       version: "{{ dokku_daemon_version }}"
     tags:
-      - dokku-daemon
+    - dokku-daemon
 
   - name: install make for building dokku-daemon
     apt:
       name: make
       state: present
     tags:
-      - dokku-daemon
+    - dokku-daemon
 
   - name: install dokku-daemon
     command: make install
@@ -38,7 +37,7 @@
       chdir: /var/lib/dokku-daemon
       creates: /usr/bin/dokku-daemon
     notify:
-      - start dokku-daemon
+    - start dokku-daemon
     tags:
-      - dokku-daemon
+    - dokku-daemon
   when: dokku_daemon_install

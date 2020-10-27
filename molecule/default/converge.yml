@@ -1,17 +1,16 @@
----
 - name: Converge
   hosts: all
   become: true
 
   pre_tasks:
-    - name: Update apt cache.
-      apt: update_cache=yes cache_valid_time=600
-      when: ansible_os_family == 'Debian'
+  - name: Update apt cache.
+    apt: update_cache=yes cache_valid_time=600
+    when: ansible_os_family == 'Debian'
 
   roles:
-    - role: dokku_bot.ansible_dokku
-      vars:
-        dokku_plugins:
-          - name: global-cert
-            url: https://github.com/josegonzalez/dokku-global-cert
-        dokku_hostname: test.domain
+  - role: dokku_bot.ansible_dokku
+    vars:
+      dokku_plugins:
+      - name: global-cert
+        url: https://github.com/josegonzalez/dokku-global-cert
+      dokku_hostname: test.domain

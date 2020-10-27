@@ -1,44 +1,43 @@
----
 - import_tasks: nginx.yml
   tags:
-    - dokku
-    - dokku-nginx
+  - dokku
+  - dokku-nginx
 
 - import_tasks: install.yml
   tags:
-    - dokku
-    - dokku-install
+  - dokku
+  - dokku-install
 
 - import_tasks: dokku-daemon.yml
   tags:
-    - dokku
-    - dokku-daemon
+  - dokku
+  - dokku-daemon
 
 - import_tasks: ssh-keys.yml
   when: dokku_users is defined
   tags:
-    - dokku
-    - dokku-ssh-keys
+  - dokku
+  - dokku-ssh-keys
 
 - name: dokku plugin:list
   command: dokku plugin:list
   changed_when: false
   register: installed_dokku_plugins
   tags:
-    - dokku
-    - dokku-plugins
+  - dokku
+  - dokku-plugins
 
 - name: install moreutils for plugin updates
   apt:
     name: moreutils
   tags:
-    - dokku-plugins
+  - dokku-plugins
 
 - name: dokku:plugin install
   command: dokku plugin:install {{ item.url }} --name {{ item.name }}
   tags:
-    - dokku
-    - dokku-plugins
+  - dokku
+  - dokku-plugins
   when: dokku_plugins is defined and installed_dokku_plugins.stdout.find(item.name) == -1
   with_items: "{{ dokku_plugins }}"
 
@@ -53,13 +52,13 @@
   when: dokku_plugins is defined and not item.url.endswith(".tar.gz")
   with_items: "{{ dokku_plugins }}"
   tags:
-    - dokku
-    - dokku-plugins
+  - dokku
+  - dokku-plugins
 
 - name: dokku:plugin install-dependencies
   command: dokku plugin:install-dependencies
   tags:
-    - dokku
-    - dokku-plugins
-    - molecule-idempotence-notest
+  - dokku
+  - dokku-plugins
+  - molecule-idempotence-notest
   when: dokku_plugins is defined
