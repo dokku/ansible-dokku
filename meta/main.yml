@@ -1,4 +1,3 @@
----
 galaxy_info:
   author: "Jose Diaz-Gonzalez"
   description: |
@@ -8,27 +7,27 @@ galaxy_info:
   license: MIT License
   min_ansible_version: 2.2
   platforms:
-    - name: Ubuntu
-      versions:
-        - trusty
-        - utopic
-        - vivid
-        - wily
-        - xenial
-        - yakkety
-        - zesty
-        - artful
-        - bionic
-    - name: Debian
-      versions:
-        - wheezy
-        - jessie
-        - stretch
-        - buster
+  - name: Ubuntu
+    versions:
+    - trusty
+    - utopic
+    - vivid
+    - wily
+    - xenial
+    - yakkety
+    - zesty
+    - artful
+    - bionic
+  - name: Debian
+    versions:
+    - wheezy
+    - jessie
+    - stretch
+    - buster
   galaxy_tags:
-    - networking
-    - packaging
-    - system
+  - networking
+  - packaging
+  - system
 dependencies:
-  - geerlingguy.docker
-  - nginxinc.nginx
+- geerlingguy.docker
+- nginxinc.nginx

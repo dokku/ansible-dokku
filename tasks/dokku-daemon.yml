@@ -1,15 +1,14 @@
----
 - block:
   - name: ensure github.com is a known host
     lineinfile:
       dest: /root/.ssh/known_hosts
       create: true
       state: present
-      line: "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="  # yamllint disable-line rule:line-length
+      line: "github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=="
       regexp: "^github\\.com"
       mode: 0644
     tags:
-      - dokku-daemon
+    - dokku-daemon
 
   # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
   - name: install socat package
@@ -23,14 +22,14 @@
       update: false
       version: "{{ dokku_daemon_version }}"
     tags:
-      - dokku-daemon
+    - dokku-daemon
 
   - name: install make for building dokku-daemon
     apt:
       name: make
       state: present
     tags:
-      - dokku-daemon
+    - dokku-daemon
 
   - name: install dokku-daemon
     command: make install
@@ -38,7 +37,7 @@
       chdir: /var/lib/dokku-daemon
       creates: /usr/bin/dokku-daemon
     notify:
-      - start dokku-daemon
+    - start dokku-daemon
     tags:
-      - dokku-daemon
+    - dokku-daemon
   when: dokku_daemon_install

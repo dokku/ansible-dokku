@@ -1,16 +1,15 @@
----
 - block:
   - name: nginx:disable default site
     file:
       dest: /etc/nginx/{{ item }}/default
       state: absent
     notify:
-      - reload nginx
+    - reload nginx
     tags:
-      - dokku
+    - dokku
     with_items:
-      - sites-enabled
-      - sites-available
+    - sites-enabled
+    - sites-available
 
   - name: Ensure nginx sites directories exists
     file:
@@ -20,8 +19,8 @@
       group: root
       mode: 0755
     with_items:
-      - sites-enabled
-      - sites-available
+    - sites-enabled
+    - sites-available
 
   - name: nginx:new default
     copy:
@@ -31,7 +30,7 @@
       group: root
       mode: 0644
     tags:
-      - dokku
+    - dokku
 
   - name: nginx:enable default
     file:
@@ -39,7 +38,7 @@
       dest: /etc/nginx/sites-enabled/00-default
       state: link
     notify:
-      - reload nginx
+    - reload nginx
     tags:
-      - dokku
+    - dokku
     when: dokku_manage_nginx

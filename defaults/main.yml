@@ -1,4 +1,3 @@
----
 dokku_daemon_install: true
 dokku_daemon_version: 0.0.2
 dokku_hostname: dokku.me

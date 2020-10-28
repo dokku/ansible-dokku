@@ -5,11 +5,11 @@ import yaml
 
 
 def section_header(text, level=1):
-    return '{0} {1}'.format('#' * level, text)
+    return "{0} {1}".format("#" * level, text)
 
 
 def get_libraries(role_path):
-    libraries_path = os.path.join(role_path, 'library')
+    libraries_path = os.path.join(role_path, "library")
     files = []
     for (dirpath, dirnames, filenames) in os.walk(libraries_path):
         files.extend(filenames)
@@ -18,34 +18,40 @@ def get_libraries(role_path):
     data = {}
     for f in files:
         data[f] = {}
-        M = ast.parse(''.join(open(os.path.join(libraries_path, f))))
+        M = ast.parse("".join(open(os.path.join(libraries_path, f))))
         for child in M.body:
             if isinstance(child, ast.Assign):
                 for t in child.targets:
                     theid = None
                     try:
                         theid = t.id
-                    except AttributeError as e:
-                        print("Failed to assign id for %s on %s, skipping" % (t, filename))
+                    except AttributeError:
+                        print("Failed to assign id for %s on %s, skipping" % (t, f))
                         continue
-                    if 'DOCUMENTATION' == theid:
-                        data[f]['docs'] = yaml.load(child.value.s[1:].strip(), Loader=yaml.SafeLoader)
-                    elif 'EXAMPLES' == theid:
-                        data[f]['examples'] = child.value.s[1:].strip()
+                    if "DOCUMENTATION" == theid:
+                        data[f]["docs"] = yaml.load(
+                            child.value.s[1:].strip(), Loader=yaml.SafeLoader
+                        )
+                    elif "EXAMPLES" == theid:
+                        data[f]["examples"] = child.value.s[1:].strip()
 
     return data
 
 
 def add_table_of_contents(text):
-    text.append(section_header('Table Of Contents', 2))
-    text.append('\n'.join([
-        "- [Requirements](#requirements)",
-        "- [Dependencies](#dependencies)",
-        "- [Role Variables](#role-variables)",
-        "- [Libraries](#libraries)",
-        "- [Example Playbooks](#example-playbooks)",
-        "- [License](#license)",
-    ]))
+    text.append(section_header("Table Of Contents", 2))
+    text.append(
+        "\n".join(
+            [
+                "- [Requirements](#requirements)",
+                "- [Dependencies](#dependencies)",
+                "- [Role Variables](#role-variables)",
+                "- [Libraries](#libraries)",
+                "- [Example Playbooks](#example-playbooks)",
+                "- [License](#license)",
+            ]
+        )
+    )
     return text
 
 
@@ -54,114 +60,129 @@ def add_libraries(text, role_path):
 
     def chosen(choice, default):
         if choice == default:
-            return '**{0}** (default)'.format(choice)
-        return '{0}'.format(choice)
+            return "**{0}** (default)".format(choice)
+        return "{0}".format(choice)
 
     library_keys = sorted(libraries.keys())
-    text.append(section_header('Libraries', 2))
+    text.append(section_header("Libraries", 2))
     for library in library_keys:
         data = libraries[library]
         options = [
-            '|Parameter|Choices/Defaults|Comments|',
-            '|---------|----------------|--------|',
+            "|Parameter|Choices/Defaults|Comments|",
+            "|---------|----------------|--------|",
         ]
 
-        option_keys = sorted(data['docs'].get('options', {}).keys())
+        option_keys = sorted(data["docs"].get("options", {}).keys())
         for parameter in option_keys:
-            config = data['docs']['options'][parameter]
-            choices = config.get('choices', [])
-            default = config.get('default', None)
+            config = data["docs"]["options"][parameter]
+            choices = config.get("choices", [])
+            default = config.get("default", None)
 
             choice_default = []
             if len(choices) > 0:
-                choices = ['<li>{0}</li>'.format(chosen(choice, default)) for choice in choices]
-                choice_default.append('*Choices:* <ul>{0}</ul>'.format(''.join(choices)))
+                choices = [
+                    "<li>{0}</li>".format(chosen(choice, default)) for choice in choices
+                ]
+                choice_default.append(
+                    "*Choices:* <ul>{0}</ul>".format("".join(choices))
+                )
             elif default is not None:
-                choice_default.append('*Default:* {0}'.format(default))
+                choice_default.append("*Default:* {0}".format(default))
 
             title = parameter
-            if config.get('required', False):
+            if config.get("required", False):
                 title = "{0}<br /><sup>*required*</sup>".format(parameter)
 
-            options.append('|{0}|{1}|{2}|'.format(
-                title,
-                "\n".join(choice_default),
-                "<br />".join(config.get('description')).strip()))
+            options.append(
+                "|{0}|{1}|{2}|".format(
+                    title,
+                    "\n".join(choice_default),
+                    "<br />".join(config.get("description")).strip(),
+                )
+            )
 
-        text.append(section_header(data['docs']['module'], 3))
-        text.append(data['docs']['short_description'])
+        text.append(section_header(data["docs"]["module"], 3))
+        text.append(data["docs"]["short_description"])
 
-        requirements = data['docs'].get('requirements', [])
+        requirements = data["docs"].get("requirements", [])
         if len(requirements) > 0:
-            text.append(section_header('Requirements', 4))
-            requirements = ['- {0}'.format(r) for r in requirements]
-            text.append('{0}'.format("\n".join(requirements)))
+            text.append(section_header("Requirements", 4))
+            requirements = ["- {0}".format(r) for r in requirements]
+            text.append("{0}".format("\n".join(requirements)))
 
         if len(options) > 0:
-            text.append(section_header('Parameters', 4))
+            text.append(section_header("Parameters", 4))
             text.append("\n".join(options))
 
-        text.append(section_header('Example', 4))
-        text.append("```yaml\n{0}\n```".format(data['examples'].strip()))
+        text.append(section_header("Example", 4))
+        text.append("```yaml\n{0}\n```".format(data["examples"].strip()))
 
     return text
 
 
 def add_requirements(text, meta, defaults):
-    text.append(section_header('Requirements', 2))
-    text.append('Minimum Ansible Version: {0}'.format(
-      meta['galaxy_info']['min_ansible_version']))
+    text.append(section_header("Requirements", 2))
+    text.append(
+        "Minimum Ansible Version: {0}".format(
+            meta["galaxy_info"]["min_ansible_version"]
+        )
+    )
 
-    if len(meta['galaxy_info']['platforms']) > 0:
-        text.append(section_header('Platform Requirements', 3))
-        text.append('Supported Platforms')
+    if len(meta["galaxy_info"]["platforms"]) > 0:
+        text.append(section_header("Platform Requirements", 3))
+        text.append("Supported Platforms")
         platforms = []
-        for platform in meta['galaxy_info']['platforms']:
-            for v in platform['versions']:
-                platforms.append('- {0}: {1}'.format(platform['name'], v))
+        for platform in meta["galaxy_info"]["platforms"]:
+            for v in platform["versions"]:
+                platforms.append("- {0}: {1}".format(platform["name"], v))
         text.append("\n".join(platforms))
 
-    text.append(section_header('Dependencies', 2))
+    text.append(section_header("Dependencies", 2))
     dependencies = []
-    if len(meta['dependencies']) > 0:
-        dependencies = ['- {0} ansible role'.format(dependency) for dependency in meta['dependencies']]
-    dependencies.append('- Dokku version {0} (for library usage)'.format(defaults['dokku_version']))
+    if len(meta["dependencies"]) > 0:
+        dependencies = [
+            "- {0} ansible role".format(dependency)
+            for dependency in meta["dependencies"]
+        ]
+    dependencies.append(
+        "- Dokku version {0} (for library usage)".format(defaults["dokku_version"])
+    )
     text.append("\n".join(dependencies))
-
 
     return text
 
 
 def add_variables(text, role_path):
     defaults = {}
-    defaults_file = os.path.join(role_path, 'defaults', 'main.yml.base')
+    defaults_file = os.path.join(role_path, "defaults", "main.yml.base")
     with open(defaults_file) as f:
         defaults = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
     if len(defaults) > 0:
-        text.append(section_header('Role Variables', 2))
+        text.append(section_header("Role Variables", 2))
         variables = sorted(defaults.keys())
         for variable in variables:
             config = defaults[variable]
-            text.append(section_header('{0}'.format(variable), 3))
-            text.append("- default: `{0}`\n- type: `{1}`\n- description: {2}".format(
-                config['default'],
-                config['type'],
-                config['description'].strip()))
+            text.append(section_header("{0}".format(variable), 3))
+            text.append(
+                "- default: `{0}`\n- type: `{1}`\n- description: {2}".format(
+                    config["default"], config["type"], config["description"].strip()
+                )
+            )
 
     return text
 
 
 def add_examples(text, role_path):
     examples = {}
-    examples_file = os.path.join(role_path, 'example.yml')
+    examples_file = os.path.join(role_path, "example.yml")
     with open(examples_file) as f:
-        examples = yaml.load(f.read(), Loader=yaml.SafeLoader)['examples']
+        examples = yaml.load(f.read(), Loader=yaml.SafeLoader)["examples"]
 
-    text.append(section_header('Example Playbooks', 2))
+    text.append(section_header("Example Playbooks", 2))
     for e in examples:
-        text.append(section_header(e['name'], 3))
-        text.append("```yaml\n{0}\n```".format(e['example'].strip()))
+        text.append(section_header(e["name"], 3))
+        text.append("```yaml\n{0}\n```".format(e["example"].strip()))
 
     return text
 
@@ -170,24 +191,24 @@ def generate_readme():
     role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
     meta = {}
-    meta_file = os.path.join(role_path, 'meta', 'main.yml')
+    meta_file = os.path.join(role_path, "meta", "main.yml")
     with open(meta_file) as f:
         meta = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
     defaults = {}
-    defaults_file = os.path.join(role_path, 'defaults', 'main.yml')
+    defaults_file = os.path.join(role_path, "defaults", "main.yml")
     with open(defaults_file) as f:
         defaults = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
     text = []
-    text.append(section_header('Ansible Role: Dokku'))
+    text.append(section_header("Ansible Role: Dokku"))
     text.append(
-        '[![Ansible Role](https://img.shields.io/ansible/role/39276.svg)](https://galaxy.ansible.com/dokku_bot/ansible_dokku) ' +
-        '[![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases) ' +
-        '[![Build Status](https://travis-ci.org/dokku/ansible-dokku.svg?branch=master)](https://travis-ci.org/dokku/ansible-dokku)'
+        "[![Ansible Role](https://img.shields.io/ansible/role/39276.svg)](https://galaxy.ansible.com/dokku_bot/ansible_dokku) "
+        + "[![Release](https://img.shields.io/github/release/dokku/ansible-dokku.svg)](https://github.com/dokku/ansible-dokku/releases) "
+        + "[![Build Status](https://github.com/dokku/ansible-dokku/workflows/CI/badge.svg)](https://github.com/dokku/ansible-dokku/actions)"
     )
 
-    text.append(meta['galaxy_info']['description'])
+    text.append(meta["galaxy_info"]["description"])
 
     text = add_table_of_contents(text)
     text = add_requirements(text, meta, defaults)
@@ -195,19 +216,19 @@ def generate_readme():
     text = add_libraries(text, role_path)
     text = add_examples(text, role_path)
 
-    text.append(section_header('License', 2))
-    text.append(meta['galaxy_info']['license'])
-    if os.path.isfile(os.path.join(role_path, 'LICENSE.md')):
-        text.append('See LICENSE.md for further details.')
+    text.append(section_header("License", 2))
+    text.append(meta["galaxy_info"]["license"])
+    if os.path.isfile(os.path.join(role_path, "LICENSE.md")):
+        text.append("See LICENSE.md for further details.")
 
-    readme_file = os.path.join(role_path, 'README.md')
-    with open(readme_file, 'w') as f:
+    readme_file = os.path.join(role_path, "README.md")
+    with open(readme_file, "w") as f:
         f.write("\n\n".join(text) + "\n")
 
 
 def generate_defaults():
     role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
-    defaults_base_file = os.path.join(role_path, 'defaults', 'main.yml.base')
+    defaults_base_file = os.path.join(role_path, "defaults", "main.yml.base")
 
     defaults_base = {}
     with open(defaults_base_file) as f:
@@ -216,25 +237,25 @@ def generate_defaults():
     defaults = {}
     if len(defaults_base) > 0:
         for variable, config in defaults_base.items():
-            if config['default'] is None and not config['templated']:
+            if config["default"] is None and not config["templated"]:
                 continue
-            defaults[variable] = config['default']
+            defaults[variable] = config["default"]
 
-    defaults_file = os.path.join(role_path, 'defaults', 'main.yml')
-    with open(defaults_file, 'w') as f:
-        f.write(yaml.dump(defaults, explicit_start=True))
+    defaults_file = os.path.join(role_path, "defaults", "main.yml")
+    with open(defaults_file, "w") as f:
+        f.write(yaml.dump(defaults, explicit_start=False))
 
 
 def generate_requirements():
     role_path = os.path.dirname(os.path.dirname(os.path.realpath(__file__)))
 
     meta = {}
-    meta_file = os.path.join(role_path, 'meta', 'main.yml')
+    meta_file = os.path.join(role_path, "meta", "main.yml")
     with open(meta_file) as f:
         meta = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
-    with open(os.path.join(role_path, 'ansible-role-requirements.yml'), 'w') as f:
-        documents = yaml.dump(meta['dependencies'], f, explicit_start=True)
+    with open(os.path.join(role_path, "ansible-role-requirements.yml"), "w") as f:
+        yaml.dump(meta["dependencies"], f, explicit_start=True)
 
 
 def main():
