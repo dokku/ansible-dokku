@@ -7,11 +7,14 @@
   - dokku-ssh-keys
   ignore_errors: true
 
-- name: dokku ssh-keys:add
-  shell: echo "{{ item.ssh_key }}" | dokku ssh-keys:add {{ item.username }}
-  no_log: true
+- name: add ssh key for user {{ item.username }}
+  include_tasks: ssh-key.yml
   tags:
   - dokku
   - dokku-ssh-keys
-  when: sshcommand_users is skipped or sshcommand_users is failed or sshcommand_users.stdout.find(item.username) == -1
   with_items: "{{ dokku_users }}"
+  vars:
+    username: "{{ item.username }}"
+    ssh_key: "{{ item.ssh_key }}"
+    ssh_key_list: "{{ sshcommand_users.stdout }}"
+    force_add: "{{ sshcommand_users is skipped or sshcommand_users is failed or sshcommand_users.stdout.find(item.username) == -1 }}"

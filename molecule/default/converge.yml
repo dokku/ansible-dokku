@@ -14,3 +14,7 @@
       - name: global-cert
         url: https://github.com/josegonzalez/dokku-global-cert
       dokku_hostname: test.domain
+      dokku_users:
+      - name: Giuseppe Verdi
+        username: gverdi
+        ssh_key: "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQC+G029J1r06FCB0rvavqdHcFZickiGcSH5a4un/DT5Gt4xVThM66WhkoEBY/F5yXTH49r5D2ky5G1aACPQeewfkeseV8A0y07fmLPyPjtKz/bOX7904GqFGNV3q+SBHkiYMk0JhUbOJM1C6Iyq03c4rmU4EVTI2hX/uZg3R65ezI/H94BHJyt/U/Nrip1FFhV9EoltAhLNhvMO8cxET+xqJUorjIiHA0JIUZQ02GTH2uwH2Qycv93vA0G7TJPTwHO1WJFpKr+2SWVW4auvA8zBx6epWuRxQO45nD3cQwpjCOt/YbVxt7Q2PJDVy+1OB3p1Q/NkuvDR5ht056quxwOVLYYSllSmEbDgml+5LOIsEqRw+OAbv1Y8FQq+Gr+J53RTmqkPQZLgyhYLWJ/sQKB2rMOntIVfpEzPI6ikFIG63BxwxPnRb9zr1VKOxWMKWEqtpE0YLy3JoDn8oi0oSDfCITqsf9pa5NDnjWPuxyKz6FwHXvrCmiG4tsRyLD7AOp8= verdi@doremi"

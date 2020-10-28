@@ -1,0 +1,12 @@
+- name: store sha256 hash of ssh key for user {{ username }}
+  shell: ssh-keygen -lf <(echo "{{ ssh_key }}") | awk '{print $2}'
+  no_log: true
+  args:
+    executable: /bin/bash
+  changed_when: false
+  register: sha256
+
+- name: dokku ssh-keys:add for user {{ username }}
+  shell: echo "{{ ssh_key }}" | dokku ssh-keys:add {{ username }}
+  no_log: true
+  when: force_add or ssh_key_list.find(sha256.stdout) == -1
