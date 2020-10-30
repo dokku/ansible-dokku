@@ -23,6 +23,12 @@ options:
     required: True
     default: null
     aliases: []
+  version:
+    description:
+      - Git tree (tag or branch name)
+    required: False
+    default: null
+    aliases: []
 author: Jose Diaz-Gonzalez
 requirements:
   - the `dokku-clone` plugin
@@ -33,6 +39,7 @@ EXAMPLES = """
   dokku_clone:
     app: hello-world
     repository: https://github.com/hello-world/hello-world.git
+    version: v1.0
 """
 
 
@@ -69,7 +76,12 @@ def dokku_clone(data):
         )
         return (is_error, has_changed, meta)
 
-    command = "dokku clone {0} {1}".format(data["app"], data["repository"])
+    if "version" in data and data["version"]:
+        command = "dokku clone {0} {1} {2}".format(
+            data["app"], data["repository"], data["version"]
+        )
+    else:
+        command = "dokku clone {0} {1}".format(data["app"], data["repository"])
     try:
         subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
         is_error = False
@@ -86,6 +98,7 @@ def main():
     fields = {
         "app": {"required": True, "type": "str"},
         "repository": {"required": True, "type": "str"},
+        "version": {"required": False, "type": "str"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
