@@ -478,7 +478,7 @@ Manage ports for a given dokku application
 #### Example
 
 ```yaml
-- name: proxy:ports-add hello-world http:80:80
+- name: proxy:ports-set hello-world http:80:80
   dokku_ports:
     app: hello-world
     mappings:
