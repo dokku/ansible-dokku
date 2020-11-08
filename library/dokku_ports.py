@@ -35,7 +35,7 @@ requirements: [ ]
 """
 
 EXAMPLES = """
-- name: proxy:ports-add hello-world http:80:80
+- name: proxy:ports-set hello-world http:80:80
   dokku_ports:
     app: hello-world
     mappings:
@@ -163,7 +163,7 @@ def dokku_proxy_ports_present(data):
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet proxy:ports-add {0} {1}".format(
+    command = "dokku --quiet proxy:ports-set {0} {1}".format(
         data["app"], " ".join(to_add)
     )
     try:
