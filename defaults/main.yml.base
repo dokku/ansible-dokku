@@ -1,7 +1,15 @@
+dokku_packages_state:
+  default: present
+  description: State of dokku packages. Accepts 'present' and 'latest'
+  type: string
+
 dokku_version:
-  default: unpinned
-  description: | 
-    The version of Dokku to install, e.g. '0.21.4' or 'unpinned' in order to leave the choice up to `apt`.
+  default: null
+  description: |
+    The version of dokku to install.
+    Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
+  deprecated: true
+  templated: true
   type: version
 
 dokku_manage_nginx:
@@ -15,22 +23,34 @@ dokku_daemon_install:
   type: boolean
 dokku_daemon_version:
   default: 0.0.2
-  description: Version of dokku-daemon to install
+  description: The version of dokku-daemon to install
   type: string
 
 herokuish_version:
-  default: unpinned
-  description: The version of herokuish to install.
+  default: null
+  description: |
+    The version of herokuish to install.
+    Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
+  deprecated: true
+  templated: true
   type: version
 
 sshcommand_version:
-  default: unpinned
-  description: The version of sshcommand to install.
+  default: null
+  description: |
+    The version of sshcommand to install.
+    Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
+  deprecated: true
+  templated: true
   type: version
 
 plugn_version:
-  default: unpinned
-  description: The version of plugn to install.
+  default: null
+  description: |
+    The version of plugn to install.
+    Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
+  deprecated: true
+  templated: true
   type: version
 
 dokku_users:
@@ -46,7 +66,7 @@ dokku_users:
       username: camilla
       ssh_key: CAMILLAS_PUBLIC_SSH_KEY
     ```
-  templated: False
+  templated: false
   type: list
 
 # debconf

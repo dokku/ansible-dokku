@@ -72,6 +72,7 @@
 - name: install dokku packages
   apt:
     name: "{{ item }}"
+    state: "{{ dokku_packages_state }}"
   with_items:
   - plugn
   - sshcommand

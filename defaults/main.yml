@@ -3,11 +3,12 @@ dokku_daemon_version: 0.0.2
 dokku_hostname: dokku.me
 dokku_key_file: /root/.ssh/id_rsa.pub
 dokku_manage_nginx: true
+dokku_packages_state: present
 dokku_plugins: {}
 dokku_skip_key_file: 'false'
-dokku_version: unpinned
+dokku_version:
 dokku_vhost_enable: 'true'
 dokku_web_config: 'false'
-herokuish_version: unpinned
-plugn_version: unpinned
-sshcommand_version: unpinned
+herokuish_version:
+plugn_version:
+sshcommand_version:
