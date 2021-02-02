@@ -56,7 +56,7 @@ Supported Platforms
 
 ### dokku_daemon_version
 
-- default: `unpinned`
+- default: `0.0.2`
 - type: `string`
 - description: Version of dokku-daemon to install
 
