@@ -34,6 +34,7 @@ Supported Platforms
 - Ubuntu: zesty
 - Ubuntu: artful
 - Ubuntu: bionic
+- Ubuntu: focal
 - Debian: wheezy
 - Debian: jessie
 - Debian: stretch
