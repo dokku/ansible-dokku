@@ -24,12 +24,14 @@ options:
     default: null
     aliases: []
 author: Jose Diaz-Gonzalez
-requirements:
-  - the `dokku-clone` plugin
 """
 
 EXAMPLES = """
-- name: clone a repo
+- name: clone a git repository
+  dokku_clone:
+    app: hello-world
+    repository: https://github.com/hello-world/hello-world.git
+- name: clone specific tag of a git repository
   dokku_clone:
     app: hello-world
     repository: https://github.com/hello-world/hello-world.git
@@ -69,7 +71,12 @@ def dokku_clone(data):
         )
         return (is_error, has_changed, meta)
 
-    command = "dokku clone {0} {1}".format(data["app"], data["repository"])
+    if "version" in data and data["version"]:
+        command = "dokku git:sync {0} {1} {2}".format(
+            data["app"], data["repository"], data["version"]
+        )
+    else:
+        command = "dokku git:sync {0} {1}".format(data["app"], data["repository"])
     try:
         subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
         is_error = False
