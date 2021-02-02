@@ -44,7 +44,7 @@ Supported Platforms
 
 - geerlingguy.docker ansible role
 - nginxinc.nginx ansible role
-- Dokku version unpinned (for library usage)
+- Dokku (for library usage)
 
 ## Role Variables
 
