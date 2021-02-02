@@ -215,7 +215,7 @@ Manages ssl configuration for an app.
 
 ### dokku_clone
 
-Deploys a repository to an undeployed application.
+Clone repository and deploy app.
 
 #### Parameters
 
@@ -223,32 +223,7 @@ Deploys a repository to an undeployed application.
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
 |repository<br /><sup>*required*</sup>||Git repository url|
-|version||Git tree (tag or branch name)|
-
-#### Example
-
-```yaml
-- name: clone a git repository
-  dokku_clone:
-    app: hello-world
-    repository: https://github.com/hello-world/hello-world.git
-- name: clone specific tag of a git repository
-  dokku_clone:
-    app: hello-world
-    repository: https://github.com/hello-world/hello-world.git
-    version: v1.0
-```
-
-### dokku_clone
-
-Deploys a repository to an undeployed application.
-
-#### Parameters
-
-|Parameter|Choices/Defaults|Comments|
-|---------|----------------|--------|
-|app<br /><sup>*required*</sup>||The name of the app|
-|repository<br /><sup>*required*</sup>||Git repository url|
+|version||Git tree (tag or branch name). If not provided, default branch is used.|
 
 #### Example
 

@@ -2,14 +2,16 @@
 # -*- coding: utf-8 -*-
 # from ansible.module_utils.basic import *
 from ansible.module_utils.basic import AnsibleModule
-import os
+from ansible.module_utils.dokku_app import (
+    dokku_app_present,
+)
 import subprocess
 
 
 DOCUMENTATION = """
 ---
 module: dokku_clone
-short_description: Deploys a repository to an undeployed application.
+short_description: Clone repository and deploy app.
 options:
   app:
     description:
@@ -29,12 +31,6 @@ options:
     required: False
     default: null
     aliases: []
-  build:
-    description:
-      - Whether to build the app (only when repository changes)
-    required: False
-    default: True
-    aliases: []
 author: Jose Diaz-Gonzalez
 """
 
@@ -50,54 +46,63 @@ EXAMPLES = """
 """
 
 
-def get_state(b_path):
-    """ Find out current state """
+def dokku_git_sha(data):
+    """Get SHA of current app repository.
 
-    if os.path.lexists(b_path):
-        if os.path.islink(b_path):
-            return "link"
-        elif os.path.isdir(b_path):
-            return "directory"
-        elif os.stat(b_path).st_nlink > 1:
-            return "hard"
-        # could be many other things, but defaulting to file
-        return "file"
+    Returns `None` if app does not exist.
+    """
+    command_git_report = "dokku git:report {app} --git-sha".format(app=data["app"])
+    try:
+        sha = subprocess.check_output(
+            command_git_report, stderr=subprocess.STDOUT, shell=True
+        )
+    except subprocess.CalledProcessError:
+        sha = None
 
-    return "absent"
+    return sha
 
 
 def dokku_clone(data):
-    is_error = True
-    has_changed = False
-    meta = {"present": False}
 
-    index_state = get_state("/home/dokku/{0}/HEAD".format(data["app"]))
-    if index_state == "file":
-        is_error = False
-        meta["present"] = True
+    # create app (if not exists)
+    is_error, has_changed, meta = dokku_app_present(data)
+    meta[
+        "present"
+    ] = False  # should indicate that requested *version* of app is present
+    if is_error:
         return (is_error, has_changed, meta)
 
-    if index_state != "absent":
-        meta["error"] = "git HEAD for app {0} is of file type {1}".format(
-            data["app"], index_state
-        )
-        return (is_error, has_changed, meta)
+    sha_old = dokku_git_sha(data)
 
-    command = "dokku git:sync"
-    if data["build"]:
-        command += " --build"
-
-    command += " {app} {repository}".format(
+    # sync with remote repository
+    command_git_sync = "dokku git:sync {app} {repository}".format(
         app=data["app"], repository=data["repository"]
     )
-
     if data["version"]:
-        command += command + " {version}".format(version=data["version"])
-
+        command_git_sync += command_git_sync + " {version}".format(
+            version=data["version"]
+        )
     try:
-        subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
+        subprocess.check_output(command_git_sync, stderr=subprocess.STDOUT, shell=True)
         is_error = False
+    except subprocess.CalledProcessError as e:
+        is_error = True
+        meta["error"] = e.output
+        return (is_error, has_changed, meta)
+
+    sha_new = dokku_git_sha(data)
+    if sha_new == sha_old:
+        meta["present"] = True
+        return (is_error, has_changed, meta)
+    else:
         has_changed = True
+
+    # rebuild app
+    command_ps_rebuild = "dokku ps:rebuild {app}".format(app=data["app"])
+    try:
+        subprocess.check_output(
+            command_ps_rebuild, stderr=subprocess.STDOUT, shell=True
+        )
         meta["present"] = True
     except subprocess.CalledProcessError as e:
         is_error = True
@@ -111,7 +116,6 @@ def main():
         "app": {"required": True, "type": "str"},
         "repository": {"required": True, "type": "str"},
         "version": {"required": False, "type": "str"},
-        "build": {"required": False, "type": "bool"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
