@@ -6,6 +6,7 @@ galaxy_info:
     used to interface with dokku from your own Ansible playbooks.
   license: MIT License
   min_ansible_version: 2.2
+  # See e.g. https://galaxy.ansible.com/api/v1/platforms/?name=Ubuntu
   platforms:
   - name: Ubuntu
     versions:
@@ -18,6 +19,7 @@ galaxy_info:
     - zesty
     - artful
     - bionic
+    - focal
   - name: Debian
     versions:
     - wheezy

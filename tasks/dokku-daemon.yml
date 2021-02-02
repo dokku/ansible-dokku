@@ -14,6 +14,8 @@
   - name: install socat package
     apt:
       name: socat
+    tags:
+    - dokku-daemon
 
   - name: clone dokku-daemon
     git:
