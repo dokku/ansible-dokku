@@ -6,10 +6,12 @@
   - name: Bare include (free-form)
     include_vars: ../../defaults/main.yml
 
+  # Testing dokku_global_cert
   - name: Check that dokku_global_cert module can parse output
     dokku_global_cert:
       state: absent
 
+  # Testing dokku_hostname
   - name: Get dokku_hostname    # noqa 301
     command: dokku domains:report --global
     register: dokku_domains
@@ -35,3 +37,36 @@
       msg: |
         Found warnings in output of `apt update`:
         {{ apt_update.stderr }}
+
+  # Testing dokku_clone
+  - name: clone example_app
+    dokku_clone:
+      app: example_app
+      repository: https://github.com/heroku/node-js-getting-started
+      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+
+  - name: Get list of apps  # noqa 301
+    command: dokku apps:list
+    register: dokku_apps
+
+  - name: Check that example_app is in list of apps
+    assert:
+      that:
+      - "'example_app' in dokku_apps.stdout"
+      msg: |
+        'example_app' not found in output of 'dokku apps:list':
+        {{ dokku_apps.stdout }}
+
+  - name: clone example app again
+    dokku_clone:
+      app: node-js-getting-started
+      repository: https://github.com/heroku/node-js-getting-started
+      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+    register: example_app
+
+  - name: Check that re-cloning example app did not change anything
+    assert:
+      that:
+      - not example_app.changed
+      msg: |
+        Re-cloning example app resulted in changed status

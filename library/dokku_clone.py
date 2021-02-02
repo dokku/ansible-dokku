@@ -23,6 +23,18 @@ options:
     required: True
     default: null
     aliases: []
+  version:
+    description:
+      - Git tree (tag or branch name). If not provided, default branch is used.
+    required: False
+    default: null
+    aliases: []
+  build:
+    description:
+      - Whether to build the app (only when repository changes)
+    required: False
+    default: True
+    aliases: []
 author: Jose Diaz-Gonzalez
 """
 
@@ -71,12 +83,17 @@ def dokku_clone(data):
         )
         return (is_error, has_changed, meta)
 
-    if "version" in data and data["version"]:
-        command = "dokku git:sync {0} {1} {2}".format(
-            data["app"], data["repository"], data["version"]
-        )
-    else:
-        command = "dokku git:sync {0} {1}".format(data["app"], data["repository"])
+    command = "dokku git:sync"
+    if data["build"]:
+        command += " --build"
+
+    command += " {app} {repository}".format(
+        app=data["app"], repository=data["repository"]
+    )
+
+    if data["version"]:
+        command += command + " {version}".format(version=data["version"])
+
     try:
         subprocess.check_output(command, stderr=subprocess.STDOUT, shell=True)
         is_error = False
@@ -93,6 +110,8 @@ def main():
     fields = {
         "app": {"required": True, "type": "str"},
         "repository": {"required": True, "type": "str"},
+        "version": {"required": False, "type": "str"},
+        "build": {"required": False, "type": "bool"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
