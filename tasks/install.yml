@@ -65,7 +65,7 @@
       Package: {{ item.key }}
       Pin: version {{ item.value }}
       Pin-Priority: 1001
-    mode: preserve
+    mode: 0644
   with_dict:
     plugn: "{{ plugn_version }}"
     sshcommand: "{{ sshcommand_version }}"
