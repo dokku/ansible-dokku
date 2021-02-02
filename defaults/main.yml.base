@@ -1,6 +1,7 @@
 dokku_version:
-  default: 0.21.4
-  description: The version of Dokku to install
+  default: unpinned
+  description: | 
+    The version of Dokku to install, e.g. '0.21.4' or 'unpinned' in order to leave the choice up to `apt`.
   type: version
 
 dokku_manage_nginx:
@@ -13,23 +14,23 @@ dokku_daemon_install:
   description: Whether to install the dokku-daemon
   type: boolean
 dokku_daemon_version:
-  default: 0.0.2
+  default: unpinned
   description: Version of dokku-daemon to install
   type: string
 
 herokuish_version:
-  default: 0.5.18
-  description: The version of herokuish to install
+  default: unpinned
+  description: The version of herokuish to install.
   type: version
 
 sshcommand_version:
-  default: 0.11.0
-  description: The version of sshcommand to install
+  default: unpinned
+  description: The version of sshcommand to install.
   type: version
 
 plugn_version:
-  default: 0.5.0
-  description: The version of plugn to install
+  default: unpinned
+  description: The version of plugn to install.
   type: version
 
 dokku_users:

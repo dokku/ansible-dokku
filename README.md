@@ -44,7 +44,7 @@ Supported Platforms
 
 - geerlingguy.docker ansible role
 - nginxinc.nginx ansible role
-- Dokku version 0.21.4 (for library usage)
+- Dokku version unpinned (for library usage)
 
 ## Role Variables
 
@@ -56,7 +56,7 @@ Supported Platforms
 
 ### dokku_daemon_version
 
-- default: `0.0.2`
+- default: `unpinned`
 - type: `string`
 - description: Version of dokku-daemon to install
 
@@ -115,9 +115,9 @@ Supported Platforms
 
 ### dokku_version
 
-- default: `0.21.4`
+- default: `unpinned`
 - type: `version`
-- description: The version of Dokku to install
+- description: The version of Dokku to install, e.g. '0.21.4' or 'unpinned' in order to leave the choice up to `apt`.
 
 ### dokku_vhost_enable
 
@@ -133,21 +133,21 @@ Supported Platforms
 
 ### herokuish_version
 
-- default: `0.5.18`
+- default: `unpinned`
 - type: `version`
-- description: The version of herokuish to install
+- description: The version of herokuish to install.
 
 ### plugn_version
 
-- default: `0.5.0`
+- default: `unpinned`
 - type: `version`
-- description: The version of plugn to install
+- description: The version of plugn to install.
 
 ### sshcommand_version
 
-- default: `0.11.0`
+- default: `unpinned`
 - type: `version`
-- description: The version of sshcommand to install
+- description: The version of sshcommand to install.
 
 ## Libraries
 

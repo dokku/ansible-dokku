@@ -58,14 +58,8 @@
   tags:
   - dokku
 
-- name: pin dokku packages
-  copy:
-    dest: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
-    content: |
-      Package: {{ item.key }}
-      Pin: version {{ item.value }}
-      Pin-Priority: 1001
-    mode: 0644
+- name: package pinning
+  include_tasks: install-pin.yml
   with_dict:
     plugn: "{{ plugn_version }}"
     sshcommand: "{{ sshcommand_version }}"
@@ -77,12 +71,12 @@
 
 - name: install dokku packages
   apt:
-    name: "{{ item.key }}={{ item.value }}"
-  with_dict:
-    plugn: "{{ plugn_version }}"
-    sshcommand: "{{ sshcommand_version }}"
-    herokuish: "{{ herokuish_version }}"
-    dokku: "{{ dokku_version }}"
+    name: "{{ item }}"
+  with_items:
+  - plugn
+  - sshcommand
+  - herokuish
+  - dokku
   tags:
   - dokku
   - dokku-install
