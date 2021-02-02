@@ -71,13 +71,12 @@
 
 - name: install dokku packages
   apt:
-    name: "{{ item }}"
+    name:
+    - plugn
+    - sshcommand
+    - herokuish
+    - dokku
     state: "{{ dokku_packages_state }}"
-  with_items:
-  - plugn
-  - sshcommand
-  - herokuish
-  - dokku
   tags:
   - dokku
   - dokku-install
