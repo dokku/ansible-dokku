@@ -172,11 +172,19 @@ def add_variables(text, role_path):
             header_text = "{0}".format(variable)
             if config.get("deprecated", False):
                 header_text += " (deprecated)"
-
             text.append(section_header(header_text, 3))
+
+            # Note: there doesn't seem to be a straighforward way of mapping a python value to its yaml representation
+            # without getting a whole yaml document back. See https://stackoverflow.com/questions/28376530
+            default_str = config["default"]
+            if default_str == "":
+                default_str = "''"
+            elif default_str is None:
+                default_str = "null"
+
             text.append(
                 "- default: `{0}`\n- type: `{1}`\n- description: {2}".format(
-                    config["default"], config["type"], config["description"].strip()
+                    default_str, config["type"], config["description"].strip()
                 )
             )
 

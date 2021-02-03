@@ -4,13 +4,13 @@ dokku_packages_state:
   type: string
 
 dokku_version:
-  default: null
+  default: ""
   description: |
     The version of dokku to install.
     Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
   deprecated: true
   templated: true
-  type: version
+  type: string
 
 dokku_manage_nginx:
   default: true
@@ -27,31 +27,31 @@ dokku_daemon_version:
   type: string
 
 herokuish_version:
-  default: null
+  default: ""
   description: |
     The version of herokuish to install.
     Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
   deprecated: true
   templated: true
-  type: version
+  type: string
 
 sshcommand_version:
-  default: null
+  default: ""
   description: |
     The version of sshcommand to install.
     Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
   deprecated: true
   templated: true
-  type: version
+  type: string
 
 plugn_version:
-  default: null
+  default: ""
   description: |
     The version of plugn to install.
     Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
   deprecated: true
   templated: true
-  type: version
+  type: string
 
 dokku_users:
   default: null

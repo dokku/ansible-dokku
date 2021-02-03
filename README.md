@@ -106,7 +106,7 @@ Supported Platforms
 
 ### dokku_users
 
-- default: `None`
+- default: `null`
 - type: `list`
 - description: A list of users who should have access to Dokku. This will _not_ grant them generic SSH access, but rather only access as the `dokku` user. Users should be specified in the following format:
 
@@ -121,8 +121,8 @@ Supported Platforms
 
 ### dokku_version (deprecated)
 
-- default: `None`
-- type: `version`
+- default: `''`
+- type: `string`
 - description: The version of dokku to install.
 Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
@@ -140,22 +140,22 @@ Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ### herokuish_version (deprecated)
 
-- default: `None`
-- type: `version`
+- default: `''`
+- type: `string`
 - description: The version of herokuish to install.
 Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ### plugn_version (deprecated)
 
-- default: `None`
-- type: `version`
+- default: `''`
+- type: `string`
 - description: The version of plugn to install.
 Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ### sshcommand_version (deprecated)
 
-- default: `None`
-- type: `version`
+- default: `''`
+- type: `string`
 - description: The version of sshcommand to install.
 Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
