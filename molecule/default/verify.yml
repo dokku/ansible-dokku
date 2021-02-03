@@ -21,3 +21,18 @@
       msg: |
         hostname 'test.domain' not found in output of 'dokku domains':
         {{ dokku_domains.stdout }}
+
+  # check apt sources configuration
+  - name: Run apt update
+    apt:
+      update_cache: true
+      cache_valid_time: 0
+    register: apt_update
+
+  - name: Check that apt update output does not contain warnigns
+    assert:
+      that:
+      - "W:' not in apt_update.stderr"
+      msg: |
+        Found warnings in output of `apt update`:
+        {{ apt_update.stderr }}
