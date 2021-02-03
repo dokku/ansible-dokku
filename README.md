@@ -44,7 +44,7 @@ Supported Platforms
 
 - geerlingguy.docker ansible role
 - nginxinc.nginx ansible role
-- Dokku version 0.21.4 (for library usage)
+- Dokku (for library usage)
 
 ## Role Variables
 
@@ -58,7 +58,7 @@ Supported Platforms
 
 - default: `0.0.2`
 - type: `string`
-- description: Version of dokku-daemon to install
+- description: The version of dokku-daemon to install
 
 ### dokku_hostname
 
@@ -77,6 +77,12 @@ Supported Platforms
 - default: `True`
 - type: `boolean`
 - description: Whether we should manage the 00-default nginx site
+
+### dokku_packages_state
+
+- default: `present`
+- type: `string`
+- description: State of dokku packages. Accepts 'present' and 'latest'
 
 ### dokku_plugins
 
@@ -100,7 +106,7 @@ Supported Platforms
 
 ### dokku_users
 
-- default: `None`
+- default: `null`
 - type: `list`
 - description: A list of users who should have access to Dokku. This will _not_ grant them generic SSH access, but rather only access as the `dokku` user. Users should be specified in the following format:
 
@@ -113,11 +119,12 @@ Supported Platforms
   ssh_key: CAMILLAS_PUBLIC_SSH_KEY
 ```
 
-### dokku_version
+### dokku_version (deprecated)
 
-- default: `0.21.4`
-- type: `version`
-- description: The version of Dokku to install
+- default: `''`
+- type: `string`
+- description: The version of dokku to install.
+Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ### dokku_vhost_enable
 
@@ -131,23 +138,26 @@ Supported Platforms
 - type: `string`
 - description: Use web-based config for hostname and keyfile
 
-### herokuish_version
+### herokuish_version (deprecated)
 
-- default: `0.5.18`
-- type: `version`
-- description: The version of herokuish to install
+- default: `''`
+- type: `string`
+- description: The version of herokuish to install.
+Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
-### plugn_version
+### plugn_version (deprecated)
 
-- default: `0.5.0`
-- type: `version`
-- description: The version of plugn to install
+- default: `''`
+- type: `string`
+- description: The version of plugn to install.
+Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
-### sshcommand_version
+### sshcommand_version (deprecated)
 
-- default: `0.11.0`
-- type: `version`
-- description: The version of sshcommand to install
+- default: `''`
+- type: `string`
+- description: The version of sshcommand to install.
+Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ## Libraries
 

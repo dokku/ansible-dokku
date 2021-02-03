@@ -4,6 +4,13 @@ import os
 import yaml
 
 
+def represent_none(self, _):
+    return self.represent_scalar("tag:yaml.org,2002:null", "")
+
+
+yaml.add_representer(type(None), represent_none)
+
+
 def section_header(text, level=1):
     return "{0} {1}".format("#" * level, text)
 
@@ -145,9 +152,7 @@ def add_requirements(text, meta, defaults):
             "- {0} ansible role".format(dependency)
             for dependency in meta["dependencies"]
         ]
-    dependencies.append(
-        "- Dokku version {0} (for library usage)".format(defaults["dokku_version"])
-    )
+    dependencies.append("- Dokku (for library usage)")
     text.append("\n".join(dependencies))
 
     return text
@@ -164,10 +169,22 @@ def add_variables(text, role_path):
         variables = sorted(defaults.keys())
         for variable in variables:
             config = defaults[variable]
-            text.append(section_header("{0}".format(variable), 3))
+            header_text = "{0}".format(variable)
+            if config.get("deprecated", False):
+                header_text += " (deprecated)"
+            text.append(section_header(header_text, 3))
+
+            # Note: there doesn't seem to be a straighforward way of mapping a python value to its yaml representation
+            # without getting a whole yaml document back. See https://stackoverflow.com/questions/28376530
+            default_str = config["default"]
+            if default_str == "":
+                default_str = "''"
+            elif default_str is None:
+                default_str = "null"
+
             text.append(
                 "- default: `{0}`\n- type: `{1}`\n- description: {2}".format(
-                    config["default"], config["type"], config["description"].strip()
+                    default_str, config["type"], config["description"].strip()
                 )
             )
 
