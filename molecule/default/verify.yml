@@ -23,16 +23,15 @@
         {{ dokku_domains.stdout }}
 
   # check apt sources configuration
-  - name: Run apt update
-    apt:
-      update_cache: true
-      cache_valid_time: 0
+  # Note: cannot use apt module for this https://stackoverflow.com/questions/51410696
+  - name: Run apt update  # noqa 303 301
+    command: apt-get update
     register: apt_update
 
   - name: Check that apt update output does not contain warnigns
     assert:
       that:
-      - "W:' not in apt_update.stderr"
+      - "'W:' not in apt_update.stderr"
       msg: |
         Found warnings in output of `apt update`:
         {{ apt_update.stderr }}
