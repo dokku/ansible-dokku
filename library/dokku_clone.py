@@ -66,9 +66,7 @@ def dokku_clone(data):
 
     # create app (if not exists)
     is_error, has_changed, meta = dokku_app_present(data)
-    meta[
-        "present"
-    ] = False  # should indicate that requested *version* of app is present
+    meta["present"] = False  # meaning: requested *version* of app is present
     if is_error:
         return (is_error, has_changed, meta)
 
@@ -79,9 +77,7 @@ def dokku_clone(data):
         app=data["app"], repository=data["repository"]
     )
     if data["version"]:
-        command_git_sync += command_git_sync + " {version}".format(
-            version=data["version"]
-        )
+        command_git_sync += " {version}".format(version=data["version"])
     try:
         subprocess.check_output(command_git_sync, stderr=subprocess.STDOUT, shell=True)
         is_error = False
