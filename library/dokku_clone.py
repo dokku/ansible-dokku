@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 # from ansible.module_utils.basic import *
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_app import (
+from ansible.module_utils.dokku_app_utils import (
     dokku_app_present,
 )
 import subprocess
