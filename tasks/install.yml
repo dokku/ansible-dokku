@@ -58,6 +58,8 @@
   tags:
   - dokku
 
+# this can be removed in July 2021
+# (package pinning deprecated).
 - name: package pinning
   include_tasks: install-pin.yml
   with_dict:

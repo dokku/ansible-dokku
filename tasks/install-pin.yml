@@ -1,4 +1,4 @@
-- name: pin dokku packages where requested
+- name: pin {{ item.key }} package
   copy:
     dest: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
     content: |
@@ -8,7 +8,15 @@
     mode: 0644
   when: item.value
 
-- name: remove pins from 'unpinned' dokku packages
+# note: this is necessary since the apt module with "state: present"
+# does *not* check whether the package version agrees with the
+# pinned version.
+- name: install pinned {{ item.key }} package
+  apt:
+    name: "{{ item.key }}={{ item.value }}"
+  when: item.value
+
+- name: remove pin from {{ item.key }} package
   file:
     path: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
     state: absent
