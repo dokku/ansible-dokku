@@ -575,6 +575,100 @@ Manage the registry configuration for a given dokku application
     state: absent
 ```
 
+### dokku_resource_limit
+
+Manage limits for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|clear-before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all limits before apply|
+|process-type||The process type selector|
+|resources<br /><sup>*required*</sup>||The Resource type and quantity|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources|
+
+#### Example
+
+```yaml
+- name: Create a dokku app cpu and memory limit
+  dokku_resource_limit:
+    app: hello-world
+    resources:
+      cpu: 100
+      memory: 100
+
+- name: Create a limit per-process type dokku app
+  dokku_resource_limit:
+    app: hello-world
+    process-type: web
+    resources:
+      cpu: 100
+      memory: 100
+
+- name: Clear before apply new limits
+  dokku_resource_limit:
+    app: hello-world
+    state: present
+    clear-before: True
+    resources:
+      cpu: 100
+      memory: 100
+
+- name: Remove all resource/limits
+  dokku_app:
+    app: hello-world
+    state: absent
+```
+
+### dokku_resource_reserve
+
+Manage reserves for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|clear-before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all reserves before apply|
+|process-type||The process type selector|
+|resources<br /><sup>*required*</sup>||The Resource type and quantity|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources|
+
+#### Example
+
+```yaml
+- name: Create a dokku app cpu and memory reserve
+  dokku_resource_reserve:
+    app: hello-world
+    resources:
+      cpu: 100
+      memory: 100
+
+- name: Create a reserve per-process type dokku app
+  dokku_resource_reserve:
+    app: hello-world
+    process-type: web
+    resources:
+      cpu: 100
+      memory: 100
+
+- name: Clear before apply new reserves
+  dokku_resource_reserve:
+    app: hello-world
+    state: present
+    clear-before: True
+    resources:
+      cpu: 100
+      memory: 100      
+
+- name: Remove all resource/reserves
+  dokku_app:
+    app: hello-world
+    state: absent
+```
+
 ### dokku_service_create
 
 Creates a given service
