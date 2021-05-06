@@ -474,6 +474,34 @@ Manages global ssl configuration.
     state: absent
 ```
 
+### dokku_letsencrypt
+
+Enable or disable the letsencrypt plugin for a dokku app
+
+#### Requirements
+
+- the `dokku-letsencrypt` plugin
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the letsencrypt plugin|
+
+#### Example
+
+```yaml
+- name: Enable the letsencrypt plugin
+  dokku_letsencrypt:
+    app: hello-world
+
+- name: Disable the letsencrypt plugin
+  dokku_letsencrypt:
+    app: hello-world
+    state: absent
+```
+
 ### dokku_ports
 
 Manage ports for a given dokku application
