@@ -18,8 +18,8 @@ options:
     aliases: []
   resources:
     description:
-      - The Resource type and quantity
-    required: True
+      - The Resource type and quantity (required when state=present)
+    required: False
     default: null
     aliases: []
   process-type:

@@ -586,7 +586,7 @@ Manage limits for a given dokku application
 |app<br /><sup>*required*</sup>||The name of the app|
 |clear-before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all limits before apply|
 |process-type||The process type selector|
-|resources<br /><sup>*required*</sup>||The Resource type and quantity|
+|resources||The Resource type and quantity (required when state=present)|
 |state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources|
 
 #### Example
@@ -633,7 +633,7 @@ Manage reserves for a given dokku application
 |app<br /><sup>*required*</sup>||The name of the app|
 |clear-before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all reserves before apply|
 |process-type||The process type selector|
-|resources<br /><sup>*required*</sup>||The Resource type and quantity|
+|resources||The Resource type and quantity (required when state=present)|
 |state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources|
 
 #### Example
@@ -661,7 +661,7 @@ Manage reserves for a given dokku application
     clear-before: True
     resources:
       cpu: 100
-      memory: 100      
+      memory: 100
 
 - name: Remove all resource/reserves
   dokku_app:
