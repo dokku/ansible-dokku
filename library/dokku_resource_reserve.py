@@ -22,7 +22,7 @@ options:
     required: False
     default: null
     aliases: []
-  process-type:
+  process_type:
     description:
       - The process type selector
     required: False
@@ -37,7 +37,7 @@ options:
     aliases: []
   state:
     description:
-      - The state of resources reserve
+      - The state of the resource reservations
     required: False
     default: present
     choices: [ "present", "absent" ]
@@ -58,12 +58,12 @@ EXAMPLES = """
 - name: Create a reservation per process type of a dokku app
   dokku_resource_reserve:
     app: hello-world
-    process-type: web
+    process_type: web
     resources:
       cpu: 100
       memory: 100
 
-- name: Clear reservations before applying new reservations
+- name: Clear all reservations before applying
   dokku_resource_reserve:
     app: hello-world
     state: present
@@ -72,7 +72,7 @@ EXAMPLES = """
       cpu: 100
       memory: 100
 
-- name: Remove all resource reserves
+- name: Remove all resource reservations
   dokku_resource_reserve:
     app: hello-world
     state: absent
@@ -107,8 +107,8 @@ def subprocess_check_output(command, split="\n"):
 def dokku_resource_clear(data):
     error = None
     process_type = ""
-    if data["process-type"]:
-        process_type = "--process-type {0}".format(data["process-type"])
+    if data["process_type"]:
+        process_type = "--process-type {0}".format(data["process_type"])
     command = "dokku resource:reserve-clear {0} {1}".format(process_type, data["app"])
     try:
         subprocess.check_call(command, shell=True)
@@ -120,8 +120,8 @@ def dokku_resource_clear(data):
 def dokku_resource_reserve_report(data):
 
     process_type = ""
-    if data["process-type"]:
-        process_type = "--process-type {0}".format(data["process-type"])
+    if data["process_type"]:
+        process_type = "--process-type {0}".format(data["process_type"])
     command = "dokku --quiet resource:reserve {0} {1}".format(process_type, data["app"])
 
     output, error = subprocess_check_output(command)
@@ -130,16 +130,14 @@ def dokku_resource_reserve_report(data):
     output = [re.sub(r"\s+", "", line) for line in output]
 
     report = {}
-    allowed_keys = []
 
     for line in output:
         if ":" not in line:
             continue
         key, value = line.split(":", 1)
         report[key] = value
-        allowed_keys.append(key)
 
-    return allowed_keys, report, error
+    return report, error
 
 
 def dokku_resource_reserve_present(data):
@@ -151,17 +149,17 @@ def dokku_resource_reserve_present(data):
         meta["error"] = "missing required arguments: resources"
         return (is_error, has_changed, meta)
 
-    allowed_keys, report, error = dokku_resource_reserve_report(data)
+    report, error = dokku_resource_reserve_report(data)
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
 
     for k, v in data["resources"].items():
-        if k not in allowed_keys:
+        if k not in report.keys():
             is_error = True
             has_changed = False
-            meta["error"] = "Unknow resource {0}, allowed ressource: {1}".format(
-                k, allowed_keys
+            meta["error"] = "Unknown resource {0}, choose one of: {1}".format(
+                k, report.keys()
             )
             return (is_error, has_changed, meta)
         if report[k] != str(v):
@@ -187,8 +185,8 @@ def dokku_resource_reserve_present(data):
         values.append("--{0} {1}".format(key, value))
 
     process_type = ""
-    if data["process-type"]:
-        process_type = "--process-type {0}".format(data["process-type"])
+    if data["process_type"]:
+        process_type = "--process-type {0}".format(data["process_type"])
 
     command = "dokku resource:reserve {0} {1} {2}".format(
         " ".join(values), process_type, data["app"]
@@ -225,7 +223,7 @@ def dokku_resource_reserve_absent(data):
 def main():
     fields = {
         "app": {"required": True, "type": "str"},
-        "process-type": {"required": False, "type": "str"},
+        "process_type": {"required": False, "type": "str"},
         "resources": {"required": False, "type": "dict"},
         "clear_before": {"required": False, "type": "bool"},
         "state": {
