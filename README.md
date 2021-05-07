@@ -577,29 +577,29 @@ Manage the registry configuration for a given dokku application
 
 ### dokku_resource_limit
 
-Manage limits for a given dokku application
+Manage resource limits for a given dokku application
 
 #### Parameters
 
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
-|clear-before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all limits before apply|
+|clear_before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all limits before apply|
 |process-type||The process type selector|
 |resources||The Resource type and quantity (required when state=present)|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources limit|
 
 #### Example
 
 ```yaml
-- name: Create a dokku app cpu and memory limit
+- name: Limit CPU and memory of a dokku app
   dokku_resource_limit:
     app: hello-world
     resources:
       cpu: 100
       memory: 100
 
-- name: Create a limit per-process type dokku app
+- name: Create a limit per-process type for a dokku app
   dokku_resource_limit:
     app: hello-world
     process-type: web
@@ -607,46 +607,46 @@ Manage limits for a given dokku application
       cpu: 100
       memory: 100
 
-- name: Clear before apply new limits
+- name: Clear limits before applying new limits 
   dokku_resource_limit:
     app: hello-world
     state: present
-    clear-before: True
+    clear_before: True
     resources:
       cpu: 100
       memory: 100
 
-- name: Remove all resource/limits
-  dokku_app:
+- name: Remove all resource limits
+  dokku_resource_limit:
     app: hello-world
     state: absent
 ```
 
 ### dokku_resource_reserve
 
-Manage reserves for a given dokku application
+Manage resource reservations for a given dokku application
 
 #### Parameters
 
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
-|clear-before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all reserves before apply|
+|clear_before|*Choices:* <ul><li>True</li><li>**False** (default)</li></ul>|Clear all reserves before apply|
 |process-type||The process type selector|
 |resources||The Resource type and quantity (required when state=present)|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of resources reserve|
 
 #### Example
 
 ```yaml
-- name: Create a dokku app cpu and memory reserve
+- name: Reserve CPU and memory for a dokku app
   dokku_resource_reserve:
     app: hello-world
     resources:
       cpu: 100
       memory: 100
 
-- name: Create a reserve per-process type dokku app
+- name: Create a reservation per process type of a dokku app
   dokku_resource_reserve:
     app: hello-world
     process-type: web
@@ -654,17 +654,17 @@ Manage reserves for a given dokku application
       cpu: 100
       memory: 100
 
-- name: Clear before apply new reserves
+- name: Clear reservations before applying new reservations
   dokku_resource_reserve:
     app: hello-world
     state: present
-    clear-before: True
+    clear_before: True
     resources:
       cpu: 100
       memory: 100
 
-- name: Remove all resource/reserves
-  dokku_app:
+- name: Remove all resource reserves
+  dokku_resource_reserve:
     app: hello-world
     state: absent
 ```

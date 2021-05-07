@@ -8,7 +8,7 @@ import re
 DOCUMENTATION = """
 ---
 module: dokku_resource_reserve
-short_description: Manage reserves for a given dokku application
+short_description: Manage resource reservations for a given dokku application
 options:
   app:
     description:
@@ -28,7 +28,7 @@ options:
     required: False
     default: null
     alias: []
-  clear-before:
+  clear_before:
     description:
       - Clear all reserves before apply
     required: False
@@ -37,7 +37,7 @@ options:
     aliases: []
   state:
     description:
-      - The state of resources
+      - The state of resources reserve
     required: False
     default: present
     choices: [ "present", "absent" ]
@@ -48,14 +48,14 @@ requirements: [ ]
 """
 
 EXAMPLES = """
-- name: Create a dokku app cpu and memory reserve
+- name: Reserve CPU and memory for a dokku app
   dokku_resource_reserve:
     app: hello-world
     resources:
       cpu: 100
       memory: 100
 
-- name: Create a reserve per-process type dokku app
+- name: Create a reservation per process type of a dokku app
   dokku_resource_reserve:
     app: hello-world
     process-type: web
@@ -63,17 +63,17 @@ EXAMPLES = """
       cpu: 100
       memory: 100
 
-- name: Clear before apply new reserves
+- name: Clear reservations before applying new reservations
   dokku_resource_reserve:
     app: hello-world
     state: present
-    clear-before: True
+    clear_before: True
     resources:
       cpu: 100
       memory: 100
 
-- name: Remove all resource/reserves
-  dokku_app:
+- name: Remove all resource reserves
+  dokku_resource_reserve:
     app: hello-world
     state: absent
 """
@@ -122,32 +122,24 @@ def dokku_resource_reserve_report(data):
     process_type = ""
     if data["process-type"]:
         process_type = "--process-type {0}".format(data["process-type"])
-    command = "dokku resource:reserve {0} {1}".format(process_type, data["app"])
+    command = "dokku --quiet resource:reserve {0} {1}".format(process_type, data["app"])
 
     output, error = subprocess_check_output(command)
     if error is not None:
         return output, error
     output = [re.sub(r"\s+", "", line) for line in output]
-    report = {}
 
-    allowed_keys = [
-        "cpu",
-        "memory",
-        "memory-swap",
-        "network",
-        "network-ingress",
-        "network-egress",
-        "nvidia-gpu",
-    ]
+    report = {}
+    allowed_keys = []
 
     for line in output:
         if ":" not in line:
             continue
         key, value = line.split(":", 1)
-        if key not in allowed_keys:
-            continue
         report[key] = value
-    return report, error
+        allowed_keys.append(key)
+
+    return allowed_keys, report, error
 
 
 def dokku_resource_reserve_present(data):
@@ -155,21 +147,11 @@ def dokku_resource_reserve_present(data):
     has_changed = False
     meta = {"present": False}
 
-    allowed_keys = [
-        "cpu",
-        "memory",
-        "memory-swap",
-        "network",
-        "network-ingress",
-        "network-egress",
-        "nvidia-gpu",
-    ]
-
     if "resources" not in data:
         meta["error"] = "missing required arguments: resources"
         return (is_error, has_changed, meta)
 
-    report, error = dokku_resource_reserve_report(data)
+    allowed_keys, report, error = dokku_resource_reserve_report(data)
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
@@ -185,7 +167,7 @@ def dokku_resource_reserve_present(data):
         if report[k] != str(v):
             has_changed = True
 
-    if data["clear-before"] is True:
+    if data["clear_before"] is True:
 
         error = dokku_resource_clear(data)
         if error:
@@ -245,7 +227,7 @@ def main():
         "app": {"required": True, "type": "str"},
         "process-type": {"required": False, "type": "str"},
         "resources": {"required": False, "type": "dict"},
-        "clear-before": {"required": False, "type": "bool"},
+        "clear_before": {"required": False, "type": "bool"},
         "state": {
             "required": False,
             "default": "present",
