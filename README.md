@@ -607,7 +607,7 @@ Manage resource limits for a given dokku application
       cpu: 100
       memory: 100
 
-- name: Clear limits before applying new limits 
+- name: Clear limits before applying new limits
   dokku_resource_limit:
     app: hello-world
     state: present
