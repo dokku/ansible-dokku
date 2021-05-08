@@ -159,7 +159,7 @@ def dokku_resource_reserve_present(data):
             is_error = True
             has_changed = False
             meta["error"] = "Unknown resource {0}, choose one of: {1}".format(
-                k, report.keys()
+                k, list(report.keys())
             )
             return (is_error, has_changed, meta)
         if report[k] != str(v):
