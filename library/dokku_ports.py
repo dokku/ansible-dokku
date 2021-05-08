@@ -150,21 +150,15 @@ def dokku_proxy_ports_present(data):
         meta["error"] = "missing required arguments: mappings"
         return (is_error, has_changed, meta)
 
-    existing, error = dokku_proxy_port_mappings(data)
-    if error:
-        meta["error"] = error
-        return (is_error, has_changed, meta)
+    to_set = [pipes.quote(m) for m in data["mappings"]]
 
-    to_add = [m for m in data["mappings"] if m not in existing]
-    to_add = [pipes.quote(m) for m in to_add]
-
-    if len(to_add) == 0:
+    if len(to_set) == 0:
         is_error = False
         meta["present"] = True
         return (is_error, has_changed, meta)
 
     command = "dokku --quiet proxy:ports-set {0} {1}".format(
-        data["app"], " ".join(to_add)
+        data["app"], " ".join(to_set)
     )
     try:
         subprocess.check_call(command, shell=True)
