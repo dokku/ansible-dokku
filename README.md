@@ -502,6 +502,30 @@ Enable or disable the letsencrypt plugin for a dokku app
     state: absent
 ```
 
+### dokku_network
+
+Create or destroy container networks
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|name<br /><sup>*required*</sup>||The name of the network|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the network|
+
+#### Example
+
+```yaml
+- name: Create a network
+  dokku_network:
+    name: example-network
+
+- name: Delete that network
+  dokku_network:
+    app: example-network
+    state: absent
+```
+
 ### dokku_ports
 
 Manage ports for a given dokku application
