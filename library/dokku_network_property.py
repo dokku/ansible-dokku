@@ -65,8 +65,8 @@ def dokku_network_property_set(data):
 
     command = "dokku network:set {0} {1} {2}".format(
         data["app"],
-        data["network"],
         data["property"] if "property" in data else "",
+        data["network"],
     )
 
     try:
