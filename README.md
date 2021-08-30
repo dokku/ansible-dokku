@@ -502,6 +502,30 @@ Enable or disable the letsencrypt plugin for a dokku app
     state: absent
 ```
 
+### dokku_network
+
+Create or destroy container networks for dokku apps
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|name<br /><sup>*required*</sup>||The name of the network|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the network|
+
+#### Example
+
+```yaml
+- name: Create a network
+  dokku_network:
+    name: example-network
+
+- name: Delete that network
+  dokku_network:
+    app: example-network
+    state: absent
+```
+
 ### dokku_network_property
 
 Set or clear a network property for a given dokku application
@@ -511,8 +535,8 @@ Set or clear a network property for a given dokku application
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
-|network<br /><sup>*required*</sup>||The name of the network|
-|property|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li></ul>|The network property to set|
+|network<br /><sup>*required*</sup>||The name of the network to attach to|
+|property<br /><sup>*required*</sup>|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li></ul>|The attach network property|
 
 #### Example
 
@@ -539,30 +563,6 @@ Set or clear a network property for a given dokku application
   dokku_network_property:
     app: hello-world
     network: example-network
-```
-
-### dokku_network
-
-Create or destroy container networks
-
-#### Parameters
-
-|Parameter|Choices/Defaults|Comments|
-|---------|----------------|--------|
-|name<br /><sup>*required*</sup>||The name of the network|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the network|
-
-#### Example
-
-```yaml
-- name: Create a network
-  dokku_network:
-    name: example-network
-
-- name: Delete that network
-  dokku_network:
-    app: example-network
-    state: absent
 ```
 
 ### dokku_ports
