@@ -502,6 +502,45 @@ Enable or disable the letsencrypt plugin for a dokku app
     state: absent
 ```
 
+### dokku_network_property
+
+Set or clear a network property for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|network<br /><sup>*required*</sup>||The name of the network|
+|property|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li></ul>|The network property to set|
+
+#### Example
+
+```yaml
+- name: Associates a network after a container is created but before it is started
+  dokku_network_property:
+    app: hello-world
+    network: example-network
+    property: attach-post-create
+
+- name: Associates the network at container creation
+  dokku_network_property:
+    app: hello-world
+    network: example-network
+    property: initial-network
+
+- name: Setting a global network property
+  dokku_network_property:
+    app: --global
+    network: example-network
+    property: attach-post-create
+
+- name: De-associate the container with the network.
+  dokku_network_property:
+    app: hello-world
+    network: example-network
+```
+
 ### dokku_network
 
 Create or destroy container networks
