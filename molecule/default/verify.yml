@@ -65,7 +65,7 @@
 
   - name: clone example app again
     dokku_clone:
-      app: node-js-getting-started
+      app: example-app
       repository: https://github.com/heroku/node-js-getting-started
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
     register: example_app
