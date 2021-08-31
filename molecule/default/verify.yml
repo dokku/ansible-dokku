@@ -41,9 +41,9 @@
         {{ apt_update.stderr }}
 
   # Testing dokku_clone
-  - name: clone example_app
+  - name: clone example-app
     dokku_clone:
-      app: example_app
+      app: example-app
       repository: https://github.com/heroku/node-js-getting-started
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
 
@@ -51,12 +51,12 @@
     command: dokku apps:list
     register: dokku_apps
 
-  - name: Check that example_app is in list of apps
+  - name: Check that example-app is in list of apps
     assert:
       that:
-      - "'example_app' in dokku_apps.stdout"
+      - "'example-app' in dokku_apps.stdout"
       msg: |
-        'example_app' not found in output of 'dokku apps:list':
+        'example-app' not found in output of 'dokku apps:list':
         {{ dokku_apps.stdout }}
 
   - name: clone example app again
