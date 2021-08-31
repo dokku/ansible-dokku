@@ -3,8 +3,10 @@
   become: true
 
   tasks:
-  - name: Bare include (free-form)
-    include_vars: ../../defaults/main.yml
+  - name: Run role without running any tasks
+    include_role:
+      name: dokku_bot.ansible_dokku
+      tasks_from: init.yml
 
   # Testing dokku_global_cert
   - name: Check that dokku_global_cert module can parse output
