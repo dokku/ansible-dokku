@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_app import (
-    dokku_app_present,
+    dokku_app_ensure_present,
 )
 import subprocess
 
@@ -64,7 +64,7 @@ def dokku_git_sha(data):
 def dokku_clone(data):
 
     # create app (if not exists)
-    is_error, has_changed, meta = dokku_app_present(data)
+    is_error, has_changed, meta = dokku_app_ensure_present(data)
     meta["present"] = False  # meaning: requested *version* of app is present
     if is_error:
         return (is_error, has_changed, meta)
@@ -82,12 +82,12 @@ def dokku_clone(data):
         is_error = False
     except subprocess.CalledProcessError as e:
         is_error = True
-        if "us not a dokku command" in e.output:
+        if "is not a dokku command" in str(e.output):
             meta[
                 "error"
             ] = "Please upgrade to dokku>=0.23.0 in order to use the 'git:sync' command."
         else:
-            meta["error"] = e.output
+            meta["error"] = str(e.output)
         return (is_error, has_changed, meta)
 
     sha_new = dokku_git_sha(data)

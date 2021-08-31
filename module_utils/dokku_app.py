@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import subprocess
 """Shared functions for managing dokku apps"""
+
+import subprocess
+
 
 def dokku_apps_exists(app):
     exists = False
@@ -16,7 +18,7 @@ def dokku_apps_exists(app):
     return exists, error
 
 
-def dokku_app_present(data):
+def dokku_app_ensure_present(data):
     """Create app if it does not exist."""
     is_error = True
     has_changed = False
@@ -35,12 +37,12 @@ def dokku_app_present(data):
         has_changed = True
         meta["present"] = True
     except subprocess.CalledProcessError as e:
-        meta["error"] = str(e) + "\n" + str(e.stdout) + "\n" + str(e.stderr)
+        meta["error"] = str(e.output)
 
     return (is_error, has_changed, meta)
 
 
-def dokku_app_absent(data=None):
+def dokku_app_ensure_absent(data=None):
     """Remove app if it exists."""
     is_error = True
     has_changed = False
