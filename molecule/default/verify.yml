@@ -68,6 +68,7 @@
       app: example-app
       repository: https://github.com/heroku/node-js-getting-started
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+      build: false
     register: example_app
 
   - name: Check that re-cloning example app did not change anything

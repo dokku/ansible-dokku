@@ -10,7 +10,7 @@ import subprocess
 DOCUMENTATION = """
 ---
 module: dokku_clone
-short_description: Clone repository and deploy app.
+short_description: Clone a git repository and deploy app.
 options:
   app:
     description:
@@ -30,18 +30,32 @@ options:
     required: False
     default: null
     aliases: []
+  build:
+    description:
+      - Whether to build the app after cloning.
+    required: False
+    default: true
+    aliases: []
 author: Jose Diaz-Gonzalez
 """
 
 EXAMPLES = """
-- name: clone a git repository
+
+- name: clone a git repository and build app
   dokku_clone:
-    app: hello-world
-    repository: https://github.com/hello-world/hello-world.git
-- name: clone specific tag of a git repository
+      app: example-app
+      repository: https://github.com/heroku/node-js-getting-started
+      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+- name: clone specific tag from git repository and build app
   dokku_clone:
-    app: hello-world
-    repository: https://github.com/hello-world/hello-world.git
+      app: example-app
+      repository: https://github.com/heroku/node-js-getting-started
+      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+- name: sync git repository without building app
+  dokku_clone:
+      app: example-app
+      repository: https://github.com/heroku/node-js-getting-started
+      build: false
 """
 
 
@@ -77,9 +91,10 @@ def dokku_clone(data):
     )
     if data["version"]:
         command_git_sync += " {version}".format(version=data["version"])
+    if data["build"]:
+        command_git_sync += " --build"
     try:
         subprocess.check_output(command_git_sync, stderr=subprocess.STDOUT, shell=True)
-        is_error = False
     except subprocess.CalledProcessError as e:
         is_error = True
         if "is not a dokku command" in str(e.output):
@@ -89,24 +104,11 @@ def dokku_clone(data):
         else:
             meta["error"] = str(e.output)
         return (is_error, has_changed, meta)
+    finally:
+        meta["present"] = True  # meaning: requested *version* of app is present
 
-    sha_new = dokku_git_sha(data)
-    if sha_new == sha_old:
-        meta["present"] = True
-        return (is_error, has_changed, meta)
-    else:
+    if data["build"] or dokku_git_sha(data) != sha_old:
         has_changed = True
-
-    # rebuild app
-    command_ps_rebuild = "dokku ps:rebuild {app}".format(app=data["app"])
-    try:
-        subprocess.check_output(
-            command_ps_rebuild, stderr=subprocess.STDOUT, shell=True
-        )
-        meta["present"] = True
-    except subprocess.CalledProcessError as e:
-        is_error = True
-        meta["error"] = e.output
 
     return (is_error, has_changed, meta)
 
@@ -116,6 +118,7 @@ def main():
         "app": {"required": True, "type": "str"},
         "repository": {"required": True, "type": "str"},
         "version": {"required": False, "type": "str"},
+        "build": {"required": False, "type": "bool"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)

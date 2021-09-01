@@ -215,27 +215,35 @@ Manages ssl configuration for an app.
 
 ### dokku_clone
 
-Clone repository and deploy app.
+Clone a git repository and deploy app.
 
 #### Parameters
 
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
+|build|*Default:* True|Whether to build the app after cloning.|
 |repository<br /><sup>*required*</sup>||Git repository url|
 |version||Git tree (tag or branch name). If not provided, default branch is used.|
 
 #### Example
 
 ```yaml
-- name: clone a git repository
+- name: clone a git repository and build app
   dokku_clone:
-    app: hello-world
-    repository: https://github.com/hello-world/hello-world.git
-- name: clone specific tag of a git repository
+      app: example-app
+      repository: https://github.com/heroku/node-js-getting-started
+      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+- name: clone specific tag from git repository and build app
   dokku_clone:
-    app: hello-world
-    repository: https://github.com/hello-world/hello-world.git
+      app: example-app
+      repository: https://github.com/heroku/node-js-getting-started
+      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+- name: sync git repository without building app
+  dokku_clone:
+      app: example-app
+      repository: https://github.com/heroku/node-js-getting-started
+      build: false
 ```
 
 ### dokku_config
