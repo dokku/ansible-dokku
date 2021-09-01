@@ -29,9 +29,11 @@
   - dokku
   - dokku-plugins
 
-- name: install moreutils for plugin updates
+- name: install apt packages
   apt:
-    name: moreutils
+    name:
+    - moreutils    # for plugin updates
+    - rsync        # for dokku git:sync
   tags:
   - dokku-plugins
 

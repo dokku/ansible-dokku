@@ -41,10 +41,6 @@
         {{ apt_update.stderr }}
 
   # Testing dokku_clone
-  - name: install rsync
-    apt:
-      name: rsync
-
   - name: clone example-app
     dokku_clone:
       app: example-app
