@@ -11,7 +11,7 @@ short_description: Set or clear a network property for a given dokku application
 options:
   global:
     description:
-      - Whether to change the global network property.
+      - Whether to change the global network property
     default: False
     aliases: []
   app:
@@ -22,12 +22,12 @@ options:
     aliases: []
   property:
     description:
-      - The network property of the app to be modified
+      - The network property to be be modified.
     required: True
     default: null
     choices: [ "initial-network", "attach-post-create", "attach-post-deploy", "bind-all-interfaces", "static-web-listener", "tld" ]
     aliases: []
-  network:
+  value:
     description:
       - The value of the network property (leave empty to unset)
     required: False
@@ -42,19 +42,19 @@ EXAMPLES = """
   dokku_network_property:
     app: hello-world
     property: attach-post-create
-    network: example-network
+    value: example-network
 
 - name: Associates the network at container creation
   dokku_network_property:
     app: hello-world
     property: initial-network
-    network: example-network
+    value: example-network
 
 - name: Setting a global network property
   dokku_network_property:
     global: true
     property: attach-post-create
-    network: example-network
+    value: example-network
 
 - name: Clearing a network property
   dokku_network_property:
@@ -71,7 +71,7 @@ def dokku_network_property_set(data):
     command = "dokku network:set {0} {1} {2}".format(
         "--global" if data["global"] else data["app"],
         data["property"],
-        data["network"] if "network" in data else "",
+        data["value"] if "value" in data else "",
     )
 
     try:
@@ -89,7 +89,6 @@ def main():
     fields = {
         "global": {"required": False, "default": False, "type": "bool"},
         "app": {"required": False, "type": "str"},
-        "network": {"required": True, "type": "str"},
         "property": {
             "required": False,
             "choices": [
@@ -102,6 +101,7 @@ def main():
             ],
             "type": "str",
         },
+        "value": {"required": True, "type": "str"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)

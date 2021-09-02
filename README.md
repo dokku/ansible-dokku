@@ -536,8 +536,8 @@ Set or clear a network property for a given dokku application
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
 |global|*Default:* False|Whether to change the global network property.|
-|network||The value of the network property (leave empty to unset)|
 |property<br /><sup>*required*</sup>|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li><li>bind-all-interfaces</li><li>static-web-listener</li><li>tld</li></ul>|The network property of the app to be modified|
+|value||The value of the network property (leave empty to unset)|
 
 #### Example
 
@@ -546,19 +546,19 @@ Set or clear a network property for a given dokku application
   dokku_network_property:
     app: hello-world
     property: attach-post-create
-    network: example-network
+    value: example-network
 
 - name: Associates the network at container creation
   dokku_network_property:
     app: hello-world
     property: initial-network
-    network: example-network
+    value: example-network
 
 - name: Setting a global network property
   dokku_network_property:
     global: true
     property: attach-post-create
-    network: example-network
+    value: example-network
 
 - name: Clearing a network property
   dokku_network_property:
