@@ -29,7 +29,7 @@ options:
     aliases: []
   network:
     description:
-      - The name of the network to attach to
+      - The value of the network property (leave empty to unset)
     required: False
     default: null
     aliases: []
@@ -92,7 +92,14 @@ def main():
         "network": {"required": True, "type": "str"},
         "property": {
             "required": False,
-            "choices": ["initial-network", "attach-post-create", "attach-post-deploy"],
+            "choices": [
+                "initial-network",
+                "attach-post-create",
+                "attach-post-deploy",
+                "bind-all-interfaces",
+                "static-web-listener",
+                "tld",
+            ],
             "type": "str",
         },
     }
