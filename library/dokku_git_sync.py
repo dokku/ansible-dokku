@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.dokku_utils import subprocess_check_output
 import pipes
 import re
 import subprocess
@@ -47,37 +48,12 @@ EXAMPLES = """
 """
 
 
-def force_list(var):
-    if isinstance(var, list):
-        return var
-    return list(var)
-
-
 def to_bool(v):
     return v.lower() == "true"
 
 
 def to_str(v):
     return "true" if v else "false"
-
-
-def subprocess_check_output(command, split="\n"):
-    error = None
-    output = []
-    try:
-        output = subprocess.check_output(command, shell=True)
-        if isinstance(output, bytes):
-            output = output.decode("utf-8")
-        output = str(output).rstrip("\n")
-        if split is None:
-            return output, error
-
-        output = output.split(split)
-        output = force_list(filter(None, output))
-        output = [o.strip() for o in output]
-    except subprocess.CalledProcessError as e:
-        error = str(e)
-    return output, error
 
 
 def dokku_module_set(command_prefix, data, key, value=None):
