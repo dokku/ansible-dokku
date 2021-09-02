@@ -1,6 +1,5 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# from ansible.module_utils.basic import *
 from ansible.module_utils.basic import AnsibleModule
 import subprocess
 
