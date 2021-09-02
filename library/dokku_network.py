@@ -33,7 +33,7 @@ EXAMPLES = """
 
 - name: Delete that network
   dokku_network:
-    app: example-network
+    name: example-network
     state: absent
 """
 

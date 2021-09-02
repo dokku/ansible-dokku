@@ -9,24 +9,29 @@ DOCUMENTATION = """
 module: dokku_network_property
 short_description: Set or clear a network property for a given dokku application
 options:
+  global:
+    description:
+      - Whether to change the global network property.
+    default: False
+    aliases: []
   app:
     description:
-      - The name of the app
-    required: True
-    default: null
-    aliases: []
-  network:
-    description:
-      - The name of the network to attach to
+      - The name of the app. This is required only if global is set to False.
     required: True
     default: null
     aliases: []
   property:
     description:
-      - The attach network property
+      - The network property of the app to be modified
     required: True
     default: null
-    choices: [ "initial-network", "attach-post-create", "attach-post-deploy" ]
+    choices: [ "initial-network", "attach-post-create", "attach-post-deploy", "bind-all-interfaces", "static-web-listener", "tld" ]
+    aliases: []
+  network:
+    description:
+      - The name of the network to attach to
+    required: False
+    default: null
     aliases: []
 author: Philipp Sessler
 requirements: [ ]
@@ -36,25 +41,25 @@ EXAMPLES = """
 - name: Associates a network after a container is created but before it is started
   dokku_network_property:
     app: hello-world
-    network: example-network
     property: attach-post-create
+    network: example-network
 
 - name: Associates the network at container creation
   dokku_network_property:
     app: hello-world
-    network: example-network
     property: initial-network
+    network: example-network
 
 - name: Setting a global network property
   dokku_network_property:
-    app: --global
-    network: example-network
+    global: true
     property: attach-post-create
+    network: example-network
 
-- name: De-associate the container with the network.
+- name: Clearing a network property
   dokku_network_property:
     app: hello-world
-    network: example-network
+    property: attach-post-create
 """
 
 
@@ -64,9 +69,9 @@ def dokku_network_property_set(data):
     meta = {"present": False}
 
     command = "dokku network:set {0} {1} {2}".format(
-        data["app"],
-        data["property"] if "property" in data else "",
-        data["network"],
+        "--global" if data["global"] else data["app"],
+        data["property"],
+        data["network"] if "network" in data else "",
     )
 
     try:
@@ -82,7 +87,8 @@ def dokku_network_property_set(data):
 
 def main():
     fields = {
-        "app": {"required": True, "type": "str"},
+        "global": {"required": False, "default": False, "type": "bool"},
+        "app": {"required": False, "type": "str"},
         "network": {"required": True, "type": "str"},
         "property": {
             "required": False,

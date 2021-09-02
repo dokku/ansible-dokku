@@ -522,7 +522,7 @@ Create or destroy container networks for dokku apps
 
 - name: Delete that network
   dokku_network:
-    app: example-network
+    name: example-network
     state: absent
 ```
 
@@ -534,9 +534,10 @@ Set or clear a network property for a given dokku application
 
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
-|app<br /><sup>*required*</sup>||The name of the app|
-|network<br /><sup>*required*</sup>||The name of the network to attach to|
-|property<br /><sup>*required*</sup>|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li></ul>|The attach network property|
+|app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
+|global|*Default:* False|Whether to change the global network property.|
+|network||The name of the network to attach to|
+|property<br /><sup>*required*</sup>|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li><li>bind-all-interfaces</li><li>static-web-listener</li><li>tld</li></ul>|The network property of the app to be modified|
 
 #### Example
 
@@ -544,25 +545,25 @@ Set or clear a network property for a given dokku application
 - name: Associates a network after a container is created but before it is started
   dokku_network_property:
     app: hello-world
-    network: example-network
     property: attach-post-create
+    network: example-network
 
 - name: Associates the network at container creation
   dokku_network_property:
     app: hello-world
-    network: example-network
     property: initial-network
+    network: example-network
 
 - name: Setting a global network property
   dokku_network_property:
-    app: --global
-    network: example-network
+    global: true
     property: attach-post-create
+    network: example-network
 
-- name: De-associate the container with the network.
+- name: Clearing a network property
   dokku_network_property:
     app: hello-world
-    network: example-network
+    property: attach-post-create
 ```
 
 ### dokku_ports
