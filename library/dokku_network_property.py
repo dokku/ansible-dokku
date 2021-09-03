@@ -21,10 +21,12 @@ options:
     aliases: []
   property:
     description:
-      - The network property to be be modified.
+      - |
+        The network property to be be modified. This can be any property network
+        property supported by dokku (e.g., `initial-network`, `attach-post-create`,
+        `attach-post-deploy`, `bind-all-interfaces`, `static-web-listener`, `tld`).
     required: True
     default: null
-    choices: [ "initial-network", "attach-post-create", "attach-post-deploy", "bind-all-interfaces", "static-web-listener", "tld" ]
     aliases: []
   value:
     description:
@@ -88,18 +90,7 @@ def main():
     fields = {
         "global": {"required": False, "default": False, "type": "bool"},
         "app": {"required": False, "type": "str"},
-        "property": {
-            "required": False,
-            "choices": [
-                "initial-network",
-                "attach-post-create",
-                "attach-post-deploy",
-                "bind-all-interfaces",
-                "static-web-listener",
-                "tld",
-            ],
-            "type": "str",
-        },
+        "property": {"required": False, "type": "str"},
         "value": {"required": True, "type": "str"},
     }
 

@@ -545,7 +545,9 @@ Set or clear a network property for a given dokku application
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
 |global|*Default:* False|Whether to change the global network property|
-|property<br /><sup>*required*</sup>|*Choices:* <ul><li>initial-network</li><li>attach-post-create</li><li>attach-post-deploy</li><li>bind-all-interfaces</li><li>static-web-listener</li><li>tld</li></ul>|The network property to be be modified.|
+|property<br /><sup>*required*</sup>||The network property to be be modified. This can be any property network
+property supported by dokku (e.g.,  "initial-network", "attach-post-create",
+attach-post-deploy", "bind-all-interfaces", "static-web-listener", "tld").|
 |value||The value of the network property (leave empty to unset)|
 
 #### Example
