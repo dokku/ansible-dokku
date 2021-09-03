@@ -73,3 +73,51 @@
       - not example_app.changed
       msg: |
         Re-cloning example app resulted in changed status
+
+  # Testing dokku_network
+  - name: Create a network # noqa 301
+    dokku_network:
+      name: example-network
+    register: example_network
+
+  - name: Get list of networks # noqa 301
+    command: dokku network:list
+    register: dokku_networks
+
+  - name: Check that example-network is in list of networks
+    assert:
+      that:
+      - "'example-network' in dokku_networks.stdout"
+      msg: |-
+        'example-network' not found in output of 'dokku network:list':
+        {{ dokku_networks.stdout }}
+
+  - name: Create a network that already exists # noqa 301
+    dokku_network:
+      name: example-network
+    register: example_network
+
+  - name: Check that re-creating network example-network did not change anything
+    assert:
+      that:
+      - not example_network.changed
+      msg: |
+        Re-creating network example-network resulted in changed status
+
+  # Testing dokku_network_property
+  - name: Setting a network property for an app
+    dokku_network_property:
+      property: attach-post-create
+      value: example-network
+
+  - name: Get network report for app example-app # noqa 301
+    command: dokku network:report example-app
+    register: example_app_network_report
+
+  - name: Check that property 'attach-post-create' of app 'example-app' has been set
+    assert:
+      that:
+      - example_app_network_report.stdout is search("attach post create:\s+cdc-network")
+      msg: |-
+        'attach post create: cdc-network' not found in outpot of 'dokku network:report example-app':
+        {{ example_app_network_report.stdout }}
