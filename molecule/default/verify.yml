@@ -107,7 +107,7 @@
   # Testing dokku_network_property
   - name: Setting a network property for an app
     dokku_network_property:
-      app: hello-world
+      app: example-app
       property: attach-post-create
       value: example-network
 
@@ -118,7 +118,7 @@
   - name: Check that property 'attach-post-create' of app 'example-app' has been set
     assert:
       that:
-      - example_app_network_report.stdout is search("attach post create:\s+cdc-network")
+      - example_app_network_report.stdout is search("attach post create:\s+example-network")
       msg: |-
-        'attach post create: cdc-network' not found in outpot of 'dokku network:report example-app':
+        'attach post create: example-network' not found in outpot of 'dokku network:report example-app':
         {{ example_app_network_report.stdout }}
