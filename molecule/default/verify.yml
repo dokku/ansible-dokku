@@ -107,7 +107,7 @@
   # Testing dokku_network_property
   - name: Setting a network property for an app
     dokku_network_property:
-      app: hello-world
+      app: example-app
       property: attach-post-create
       value: example-network
 
