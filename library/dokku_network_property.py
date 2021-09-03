@@ -21,10 +21,10 @@ options:
     aliases: []
   property:
     description:
-      - |
-        The network property to be be modified. This can be any property network
-        property supported by dokku (e.g., `initial-network`, `attach-post-create`,
-        `attach-post-deploy`, `bind-all-interfaces`, `static-web-listener`, `tld`).
+      - >
+        The network property to be be modified. This can be any property supported
+        by dokku (e.g., `initial-network`, `attach-post-create`, `attach-post-deploy`,
+        `bind-all-interfaces`, `static-web-listener`, `tld`).
     required: True
     default: null
     aliases: []
@@ -69,10 +69,20 @@ def dokku_network_property_set(data):
     has_changed = False
     meta = {"present": False}
 
+    if data["global"] and "app" in data:
+        is_error = True
+        meta["error"] = 'When "global" is set to true, "app" must not be provided.'
+        return (is_error, has_changed, meta)
+
+    # Check if "value" is set and evaluates to a non-empty string, otherwise use an empty string
+    value = data["value"] if "value" in data else None
+    if not value:
+        value = ""
+
     command = "dokku network:set {0} {1} {2}".format(
         "--global" if data["global"] else data["app"],
         data["property"],
-        data["value"] if "value" in data else "",
+        value,
     )
 
     try:
@@ -90,8 +100,8 @@ def main():
     fields = {
         "global": {"required": False, "default": False, "type": "bool"},
         "app": {"required": False, "type": "str"},
-        "property": {"required": False, "type": "str"},
-        "value": {"required": True, "type": "str"},
+        "property": {"required": True, "type": "str"},
+        "value": {"required": False, "type": "str"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
