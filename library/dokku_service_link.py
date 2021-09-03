@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-# from ansible.module_utils.basic import *
 from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.dokku_app import dokku_apps_exists
 import subprocess
 
 DOCUMENTATION = """
@@ -52,24 +52,6 @@ EXAMPLES = """
     service: redis
     state: absent
 """
-
-
-def force_list(var):
-    if isinstance(var, list):
-        return var
-    return list(var)
-
-
-def dokku_apps_exists(app):
-    exists = False
-    error = None
-    command = "dokku --quiet apps:exists {0}".format(app)
-    try:
-        subprocess.check_call(command, shell=True)
-        exists = True
-    except subprocess.CalledProcessError as e:
-        error = str(e)
-    return exists, error
 
 
 def dokku_service_exists(service, name):
