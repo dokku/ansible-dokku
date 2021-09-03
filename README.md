@@ -511,6 +511,70 @@ Enable or disable the letsencrypt plugin for a dokku app
     state: absent
 ```
 
+### dokku_network
+
+Create or destroy container networks for dokku apps
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|name<br /><sup>*required*</sup>||The name of the network|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the network|
+
+#### Example
+
+```yaml
+- name: Create a network
+  dokku_network:
+    name: example-network
+
+- name: Delete that network
+  dokku_network:
+    name: example-network
+    state: absent
+```
+
+### dokku_network_property
+
+Set or clear a network property for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
+|global|*Default:* False|Whether to change the global network property|
+|property<br /><sup>*required*</sup>||The network property to be be modified. This can be any property supported by dokku (e.g., `initial-network`, `attach-post-create`, `attach-post-deploy`, `bind-all-interfaces`, `static-web-listener`, `tld`).|
+|value||The value of the network property (leave empty to unset)|
+
+#### Example
+
+```yaml
+- name: Associates a network after a container is created but before it is started
+  dokku_network_property:
+    app: hello-world
+    property: attach-post-create
+    value: example-network
+
+- name: Associates the network at container creation
+  dokku_network_property:
+    app: hello-world
+    property: initial-network
+    value: example-network
+
+- name: Setting a global network property
+  dokku_network_property:
+    global: true
+    property: attach-post-create
+    value: example-network
+
+- name: Clearing a network property
+  dokku_network_property:
+    app: hello-world
+    property: attach-post-create
+```
+
 ### dokku_ports
 
 Manage ports for a given dokku application
