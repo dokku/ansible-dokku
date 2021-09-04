@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_app import (
-    dokku_app_present,
-    dokku_app_absent,
+    dokku_app_ensure_present,
+    dokku_app_ensure_absent,
 )
 
 DOCUMENTATION = """
@@ -51,8 +51,8 @@ def main():
         },
     }
     choice_map = {
-        "present": dokku_app_present,
-        "absent": dokku_app_absent,
+        "present": dokku_app_ensure_present,
+        "absent": dokku_app_ensure_absent,
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)

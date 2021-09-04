@@ -40,6 +40,11 @@
         Found warnings in output of `apt update`:
         {{ apt_update.stderr }}
 
+  # Testing dokku_app
+  - name: create example-app
+    dokku_app:
+      app: example-app
+
   # Testing dokku_clone
   - name: clone example-app
     dokku_clone:
