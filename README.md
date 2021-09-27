@@ -643,7 +643,7 @@ Manage process scaling for a given dokku application
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
 |scale<br /><sup>*required*</sup>|*Default:* {}|A map of scale values where proctype => qty|
-|skip_deploy|*Default:* True|Whether to skip the corresponding deploy or not. If the task is idempotent then setting skip_deploy to true will not perform a deploy.|
+|skip_deploy|*Default:* False|Whether to skip the corresponding deploy or not. If the task is idempotent then leaving skip_deploy as false will not trigger a deploy.|
 
 #### Example
 
