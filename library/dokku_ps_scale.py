@@ -25,9 +25,9 @@ options:
   skip_deploy:
     description:
       - Whether to skip the corresponding deploy or not. If the task is idempotent
-        then setting skip_deploy to true will not perform a deploy.
+        then leaving skip_deploy as false will not trigger a deploy.
     required: false
-    default: true
+    default: false
 author: Gavin Ballard
 requirements: [ ]
 """
