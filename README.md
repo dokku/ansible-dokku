@@ -633,6 +633,37 @@ Enable or disable the proxy for a dokku app
     state: absent
 ```
 
+### dokku_ps_scale
+
+Manage process scaling for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|scale<br /><sup>*required*</sup>|*Default:* {}|A map of scale values where proctype => qty|
+|skip_deploy|*Default:* True|Whether to skip the corresponding deploy or not. If the task is idempotent then setting skip_deploy to true will not perform a deploy.|
+
+#### Example
+
+```yaml
+- name: scale web and worker processes
+  dokku_ps_scale:
+    app: hello-world
+    scale:
+      web: 4
+      worker: 4
+
+- name: scale web and worker processes without deploy
+  dokku_ps_scale:
+    app: hello-world
+    skip_deploy: true
+    scale:
+      web: 4
+      worker: 4
+```
+
 ### dokku_registry
 
 Manage the registry configuration for a given dokku application
