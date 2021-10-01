@@ -144,3 +144,22 @@
       msg: |-
         'attach post create:' not found in outpot of 'dokku network:report example-app':
         {{ example_app_network_report.stdout }}
+
+  # Testing dokku_ps_scale
+  - name: Scaling application processes
+    dokku_ps_scale:
+      app: example-app
+      scale:
+        web: 2
+
+  - name: Get current scale values for application # noqa 301
+    command: dokku ps:scale example-app
+    register: example_app_scale_values
+
+  - name: Check that 'web' process of app 'example-app' has been scaled to '2'
+    assert:
+      that:
+      - "'web:  2' in example_app_scale_values.stdout"
+      msg: |-
+        'web:  2' not found in outpot of 'dokku ps:scale example-app':
+        {{ example_app_scale_values.stdout }}
