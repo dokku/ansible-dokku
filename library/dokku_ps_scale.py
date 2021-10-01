@@ -57,14 +57,15 @@ def dokku_ps_scale(data):
     if error is not None:
         return output, error
 
-    output = [re.sub(r"\s\s+", "", line) for line in output]
-    scale = {}
+    # strip all spaces from output lines
+    output = [re.sub(r"\s+", "", line) for line in output]
 
+    scale = {}
     for line in output:
         if ":" not in line:
             continue
         proctype, qty = line.split(":", 1)
-        scale[proctype] = qty
+        scale[proctype] = int(qty)
 
     return scale, error
 
@@ -74,16 +75,16 @@ def dokku_ps_scale_set(data):
     has_changed = False
     meta = {"present": False}
 
-    values = []
+    proctypes_to_scale = []
 
     existing, error = dokku_ps_scale(data)
 
     for proctype, qty in data["scale"].items():
         if qty == existing.get(proctype, None):
             continue
-        values.append("{0}={1}".format(proctype, qty))
+        proctypes_to_scale.append("{0}={1}".format(proctype, qty))
 
-    if len(values) == 0:
+    if len(proctypes_to_scale) == 0:
         is_error = False
         has_changed = False
         return (is_error, has_changed, meta)
@@ -91,7 +92,7 @@ def dokku_ps_scale_set(data):
     command = "dokku ps:scale {0}{1} {2}".format(
         "--skip-deploy " if data["skip_deploy"] is True else "",
         data["app"],
-        " ".join(values),
+        " ".join(proctypes_to_scale),
     )
 
     try:
