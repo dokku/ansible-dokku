@@ -34,6 +34,7 @@
     name:
     - moreutils    # for plugin updates
     - rsync        # for dokku git:sync
+    - cron         # missing on debian11
   tags:
   - dokku-plugins
 
