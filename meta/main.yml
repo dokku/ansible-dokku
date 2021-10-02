@@ -10,22 +10,12 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
-    - trusty
-    - utopic
-    - vivid
-    - wily
-    - xenial
-    - yakkety
-    - zesty
-    - artful
     - bionic
     - focal
   - name: Debian
     versions:
-    - wheezy
-    - jessie
-    - stretch
     - buster
+    - bullseye
   galaxy_tags:
   - networking
   - packaging
