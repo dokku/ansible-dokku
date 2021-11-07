@@ -383,42 +383,6 @@ Manages domains for a given application
     state: disable
 ```
 
-### dokku_ecr
-
-Manage the ecr configuration for a given dokku application
-
-#### Requirements
-
-- the `dokku-ecr` plugin (_commercial_)
-
-#### Parameters
-
-|Parameter|Choices/Defaults|Comments|
-|---------|----------------|--------|
-|account-id||The ecr aws account-id|
-|app<br /><sup>*required*</sup>||The name of the app|
-|image-repo||The image name to use when pushing to ecr|
-|region|*Default:* us-east-1|The ecr region|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the ecr integration|
-
-#### Example
-
-```yaml
-- name: ecr:enable hello-world
-  dokku_ecr:
-    app: hello-world
-
-- name: ecr:enable hello-world with args
-  dokku_ecr:
-    app: hello-world
-    image-repo: prod-hello-world
-
-- name: ecr:disable hello-world
-  dokku_ecr:
-    app: hello-world
-    state: absent
-```
-
 ### dokku_git_sync
 
 Manages syncing git code from a remote repository for an app
