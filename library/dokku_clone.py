@@ -118,7 +118,7 @@ def main():
         "app": {"required": True, "type": "str"},
         "repository": {"required": True, "type": "str"},
         "version": {"required": False, "type": "str"},
-        "build": {"required": False, "type": "bool"},
+        "build": {"default": True, "required": False, "type": "bool"},
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
