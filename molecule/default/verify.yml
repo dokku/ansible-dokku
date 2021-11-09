@@ -142,7 +142,7 @@
       that:
       - example_app_network_report.stdout is search("post create:\s+\n")
       msg: |-
-        'attach post create:' not found in outpot of 'dokku network:report example-app':
+        'attach post create:' not found in output of 'dokku network:report example-app':
         {{ example_app_network_report.stdout }}
 
   # Testing dokku_ps_scale
@@ -161,5 +161,5 @@
       that:
       - "'web:  2' in example_app_scale_values.stdout"
       msg: |-
-        'web:  2' not found in outpot of 'dokku ps:scale example-app':
+        'web:  2' not found in output of 'dokku ps:scale example-app':
         {{ example_app_scale_values.stdout }}

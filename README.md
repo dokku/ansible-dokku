@@ -272,42 +272,6 @@ Manage environment variables for a given dokku application
       KEY_2: VALUE_2
 ```
 
-### dokku_consul
-
-Manage the consul configuration for a given dokku application
-
-#### Requirements
-
-- the `dokku-consul` plugin (_commercial_)
-
-#### Parameters
-
-|Parameter|Choices/Defaults|Comments|
-|---------|----------------|--------|
-|app<br /><sup>*required*</sup>||The name of the app|
-|endpoint|*Default:* /|The consul healthcheck endpoint|
-|interval|*Default:* 60s|The consul healthcheck interval|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the consul integration|
-|timeout<br /><sup>*required*</sup>|*Default:* 60s|The consul healthcheck timeout|
-
-#### Example
-
-```yaml
-- name: consul:enable hello-world
-  dokku_consul:
-    app: hello-world
-
-- name: consul:enable hello-world with args
-  dokku_consul:
-    app: hello-world
-    endpoint: /_status
-
-- name: consul:disable hello-world
-  dokku_consul:
-    app: hello-world
-    state: absent
-```
-
 ### dokku_docker_options
 
 Manage docker-options for a given dokku application
@@ -381,42 +345,6 @@ Manages domains for a given application
   dokku_domains:
     app: hello-world
     state: disable
-```
-
-### dokku_ecr
-
-Manage the ecr configuration for a given dokku application
-
-#### Requirements
-
-- the `dokku-ecr` plugin (_commercial_)
-
-#### Parameters
-
-|Parameter|Choices/Defaults|Comments|
-|---------|----------------|--------|
-|account-id||The ecr aws account-id|
-|app<br /><sup>*required*</sup>||The name of the app|
-|image-repo||The image name to use when pushing to ecr|
-|region|*Default:* us-east-1|The ecr region|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the ecr integration|
-
-#### Example
-
-```yaml
-- name: ecr:enable hello-world
-  dokku_ecr:
-    app: hello-world
-
-- name: ecr:enable hello-world with args
-  dokku_ecr:
-    app: hello-world
-    image-repo: prod-hello-world
-
-- name: ecr:disable hello-world
-  dokku_ecr:
-    app: hello-world
-    state: absent
 ```
 
 ### dokku_git_sync
