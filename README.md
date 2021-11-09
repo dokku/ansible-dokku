@@ -25,8 +25,13 @@ Minimum Ansible Version: 2.2
 
 Supported Platforms
 
+- Ubuntu: xenial
+- Ubuntu: yakkety
+- Ubuntu: zesty
+- Ubuntu: artful
 - Ubuntu: bionic
 - Ubuntu: focal
+- Debian: stretch
 - Debian: buster
 - Debian: bullseye
 
