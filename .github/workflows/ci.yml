@@ -51,7 +51,7 @@ jobs:
 
     strategy:
       matrix:
-        distro: [ubuntu1604, ubuntu1804, ubuntu2004, debian9, debian10]
+        distro: [ubuntu1804, ubuntu2004, debian10, debian11]
       fail-fast: false
 
     steps:
