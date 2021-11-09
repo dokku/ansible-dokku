@@ -272,42 +272,6 @@ Manage environment variables for a given dokku application
       KEY_2: VALUE_2
 ```
 
-### dokku_consul
-
-Manage the consul configuration for a given dokku application
-
-#### Requirements
-
-- the `dokku-consul` plugin (_commercial_)
-
-#### Parameters
-
-|Parameter|Choices/Defaults|Comments|
-|---------|----------------|--------|
-|app<br /><sup>*required*</sup>||The name of the app|
-|endpoint|*Default:* /|The consul healthcheck endpoint|
-|interval|*Default:* 60s|The consul healthcheck interval|
-|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the consul integration|
-|timeout<br /><sup>*required*</sup>|*Default:* 60s|The consul healthcheck timeout|
-
-#### Example
-
-```yaml
-- name: consul:enable hello-world
-  dokku_consul:
-    app: hello-world
-
-- name: consul:enable hello-world with args
-  dokku_consul:
-    app: hello-world
-    endpoint: /_status
-
-- name: consul:disable hello-world
-  dokku_consul:
-    app: hello-world
-    state: absent
-```
-
 ### dokku_docker_options
 
 Manage docker-options for a given dokku application
