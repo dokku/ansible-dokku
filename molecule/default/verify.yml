@@ -165,8 +165,8 @@
         {{ example_app_scale_values.stdout }}
 
   # Testing dokku_image
-  - name: clone example-app
-    dokku_clone:
+  - name: Deploy meilisearch using dokku_image
+    dokku_image:
       app: ms
       image: getmeili/meilisearch:latest
 
