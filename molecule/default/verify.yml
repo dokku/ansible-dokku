@@ -3,181 +3,181 @@
   become: true
 
   tasks:
-  - name: Run role without running any tasks
-    include_role:
-      name: dokku_bot.ansible_dokku
-      tasks_from: init.yml
+    - name: Run role without running any tasks
+      include_role:
+        name: dokku_bot.ansible_dokku
+        tasks_from: init.yml
 
-  # Testing dokku_global_cert
-  - name: Check that dokku_global_cert module can parse output
-    dokku_global_cert:
-      state: absent
+    # Testing dokku_global_cert
+    - name: Check that dokku_global_cert module can parse output
+      dokku_global_cert:
+        state: absent
 
-  # Testing dokku_hostname
-  - name: Get dokku_hostname    # noqa 301
-    command: dokku domains:report --global
-    register: dokku_domains
+    # Testing dokku_hostname
+    - name: Get dokku_hostname # noqa 301
+      command: dokku domains:report --global
+      register: dokku_domains
 
-  - name: Check that dokku_hostname is set correctly
-    assert:
-      that:
-      - "'test.domain' in dokku_domains.stdout"
-      msg: |
-        hostname 'test.domain' not found in output of 'dokku domains':
-        {{ dokku_domains.stdout }}
+    - name: Check that dokku_hostname is set correctly
+      assert:
+        that:
+          - "'test.domain' in dokku_domains.stdout"
+        msg: |
+          hostname 'test.domain' not found in output of 'dokku domains':
+          {{ dokku_domains.stdout }}
 
-  # check apt sources configuration
-  # Note: cannot use apt module for this https://stackoverflow.com/questions/51410696
-  - name: Run apt update  # noqa 303 301
-    command: apt-get update
-    register: apt_update
+    # check apt sources configuration
+    # Note: cannot use apt module for this https://stackoverflow.com/questions/51410696
+    - name: Run apt update # noqa 303 301
+      command: apt-get update
+      register: apt_update
 
-  - name: Check that apt update output does not contain warnigns
-    assert:
-      that:
-      - "'W:' not in apt_update.stderr"
-      msg: |
-        Found warnings in output of `apt update`:
-        {{ apt_update.stderr }}
+    - name: Check that apt update output does not contain warnigns
+      assert:
+        that:
+          - "'W:' not in apt_update.stderr"
+        msg: |
+          Found warnings in output of `apt update`:
+          {{ apt_update.stderr }}
 
-  # Testing dokku_app
-  - name: create example-app
-    dokku_app:
-      app: example-app
+    # Testing dokku_app
+    - name: create example-app
+      dokku_app:
+        app: example-app
 
-  # Testing dokku_clone
-  - name: clone example-app
-    dokku_clone:
-      app: example-app
-      repository: https://github.com/heroku/node-js-getting-started
-      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+    # Testing dokku_clone
+    - name: clone example-app
+      dokku_clone:
+        app: example-app
+        repository: https://github.com/heroku/node-js-getting-started
+        version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
 
-  - name: Get list of apps  # noqa 301
-    command: dokku apps:list
-    register: dokku_apps
+    - name: Get list of apps # noqa 301
+      command: dokku apps:list
+      register: dokku_apps
 
-  - name: Check that example-app is in list of apps
-    assert:
-      that:
-      - "'example-app' in dokku_apps.stdout"
-      msg: |
-        'example-app' not found in output of 'dokku apps:list':
-        {{ dokku_apps.stdout }}
+    - name: Check that example-app is in list of apps
+      assert:
+        that:
+          - "'example-app' in dokku_apps.stdout"
+        msg: |
+          'example-app' not found in output of 'dokku apps:list':
+          {{ dokku_apps.stdout }}
 
-  - name: clone example app again
-    dokku_clone:
-      app: example-app
-      repository: https://github.com/heroku/node-js-getting-started
-      version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
-      build: false
-    register: example_app
+    - name: clone example app again
+      dokku_clone:
+        app: example-app
+        repository: https://github.com/heroku/node-js-getting-started
+        version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+        build: false
+      register: example_app
 
-  - name: Check that re-cloning example app did not change anything
-    assert:
-      that:
-      - not example_app.changed
-      msg: |
-        Re-cloning example app resulted in changed status
+    - name: Check that re-cloning example app did not change anything
+      assert:
+        that:
+          - not example_app.changed
+        msg: |
+          Re-cloning example app resulted in changed status
 
-  # Testing dokku_network
-  - name: Create a network # noqa 301
-    dokku_network:
-      name: example-network
-    register: example_network
+    # Testing dokku_network
+    - name: Create a network # noqa 301
+      dokku_network:
+        name: example-network
+      register: example_network
 
-  - name: Get list of networks # noqa 301
-    command: dokku network:list
-    register: dokku_networks
+    - name: Get list of networks # noqa 301
+      command: dokku network:list
+      register: dokku_networks
 
-  - name: Check that example-network is in list of networks
-    assert:
-      that:
-      - "'example-network' in dokku_networks.stdout"
-      msg: |-
-        'example-network' not found in output of 'dokku network:list':
-        {{ dokku_networks.stdout }}
+    - name: Check that example-network is in list of networks
+      assert:
+        that:
+          - "'example-network' in dokku_networks.stdout"
+        msg: |-
+          'example-network' not found in output of 'dokku network:list':
+          {{ dokku_networks.stdout }}
 
-  - name: Create a network that already exists # noqa 301
-    dokku_network:
-      name: example-network
-    register: example_network
+    - name: Create a network that already exists # noqa 301
+      dokku_network:
+        name: example-network
+      register: example_network
 
-  - name: Check that re-creating network example-network did not change anything
-    assert:
-      that:
-      - not example_network.changed
-      msg: |
-        Re-creating network example-network resulted in changed status
+    - name: Check that re-creating network example-network did not change anything
+      assert:
+        that:
+          - not example_network.changed
+        msg: |
+          Re-creating network example-network resulted in changed status
 
-  # Testing dokku_network_property
-  - name: Setting a network property for an app
-    dokku_network_property:
-      app: example-app
-      property: attach-post-create
-      value: example-network
+    # Testing dokku_network_property
+    - name: Setting a network property for an app
+      dokku_network_property:
+        app: example-app
+        property: attach-post-create
+        value: example-network
 
-  - name: Get network report for app example-app # noqa 301
-    command: dokku network:report example-app
-    register: example_app_network_report
+    - name: Get network report for app example-app # noqa 301
+      command: dokku network:report example-app
+      register: example_app_network_report
 
-  - name: Check that property 'attach-post-create' of app 'example-app' has been set
-    assert:
-      that:
-      - example_app_network_report.stdout is search("attach post create:\s+example-network")
-      msg: |-
-        'attach post create: example-network' not found in outpot of 'dokku network:report example-app':
-        {{ example_app_network_report.stdout }}
+    - name: Check that property 'attach-post-create' of app 'example-app' has been set
+      assert:
+        that:
+          - example_app_network_report.stdout is search("attach post create:\s+example-network")
+        msg: |-
+          'attach post create: example-network' not found in outpot of 'dokku network:report example-app':
+          {{ example_app_network_report.stdout }}
 
-  - name: Clearing a network property for an app
-    dokku_network_property:
-      app: example-app
-      property: attach-post-create
+    - name: Clearing a network property for an app
+      dokku_network_property:
+        app: example-app
+        property: attach-post-create
 
-  - name: Get network report for app example-app # noqa 301
-    command: dokku network:report example-app
-    register: example_app_network_report
+    - name: Get network report for app example-app # noqa 301
+      command: dokku network:report example-app
+      register: example_app_network_report
 
-  - name: Check that property 'attach-post-create' of app 'example-app' has been cleared
-    assert:
-      that:
-      - example_app_network_report.stdout is search("post create:\s+\n")
-      msg: |-
-        'attach post create:' not found in output of 'dokku network:report example-app':
-        {{ example_app_network_report.stdout }}
+    - name: Check that property 'attach-post-create' of app 'example-app' has been cleared
+      assert:
+        that:
+          - example_app_network_report.stdout is search("post create:\s+\n")
+        msg: |-
+          'attach post create:' not found in output of 'dokku network:report example-app':
+          {{ example_app_network_report.stdout }}
 
-  # Testing dokku_ps_scale
-  - name: Scaling application processes
-    dokku_ps_scale:
-      app: example-app
-      scale:
-        web: 2
+    # Testing dokku_ps_scale
+    - name: Scaling application processes
+      dokku_ps_scale:
+        app: example-app
+        scale:
+          web: 2
 
-  - name: Get current scale values for application # noqa 301
-    command: dokku ps:scale example-app
-    register: example_app_scale_values
+    - name: Get current scale values for application # noqa 301
+      command: dokku ps:scale example-app
+      register: example_app_scale_values
 
-  - name: Check that 'web' process of app 'example-app' has been scaled to '2'
-    assert:
-      that:
-      - "'web:  2' in example_app_scale_values.stdout"
-      msg: |-
-        'web:  2' not found in output of 'dokku ps:scale example-app':
-        {{ example_app_scale_values.stdout }}
+    - name: Check that 'web' process of app 'example-app' has been scaled to '2'
+      assert:
+        that:
+          - "'web:  2' in example_app_scale_values.stdout"
+        msg: |-
+          'web:  2' not found in output of 'dokku ps:scale example-app':
+          {{ example_app_scale_values.stdout }}
 
-  # Testing dokku_image
-  - name: Deploy meilisearch using dokku_image
-    dokku_image:
-      app: ms
-      image: getmeili/meilisearch:latest
+    # Testing dokku_image
+    - name: Deploy meilisearch using dokku_image
+      dokku_image:
+        app: ms
+        image: getmeili/meilisearch:latest
 
-  - name: Get list of app # noqa 301s
-    command: dokku apps:list
-    register: dokku_apps
+    - name: Get list of apps # noqa 301s
+      command: dokku apps:list
+      register: dokku_apps
 
-  - name: Check that ms is in list of apps
-    assert:
-      that:
-      - "'ms' in dokku_apps.stdout"
-      msg: |
-        'ms' not found in output of 'dokku apps:list':
-        {{ dokku_apps.stdout }}
+    - name: Check that ms is in list of apps
+      assert:
+        that:
+          - "'ms' in dokku_apps.stdout"
+        msg: |
+          'ms' not found in output of 'dokku apps:list':
+          {{ dokku_apps.stdout }}
