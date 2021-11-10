@@ -170,7 +170,7 @@
       app: ms
       image: getmeili/meilisearch:latest
 
-  - name: Get list of apps
+  - name: Get list of app # noqa 301s
     command: dokku apps:list
     register: dokku_apps
 
