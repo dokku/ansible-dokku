@@ -181,3 +181,7 @@
       msg: |
         'ms' not found in output of 'dokku apps:list':
         {{ dokku_apps.stdout }}
+<<<<<<< HEAD
+=======
+
+>>>>>>> f79b056 (chore: add trailing newline)
