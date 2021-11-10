@@ -115,7 +115,7 @@ def dokku_image(data):
     finally:
         meta["present"] = True  # meaning: requested *version* of app is present
 
-    if data["build"] or dokku_git_sha(data) != sha_old:
+    if dokku_git_sha(data) != sha_old:
         has_changed = True
 
     return (is_error, has_changed, meta)
