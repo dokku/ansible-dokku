@@ -406,6 +406,40 @@ Manages global ssl configuration.
     state: absent
 ```
 
+### dokku_image
+
+Pull Docker image and deploy app
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|build_dir||Specifiy custom build directory for a custom build context|
+|image<br /><sup>*required*</sup>||Docker image|
+|user_email||Git user.email for customizing the author's email|
+|user_name||Git user.name for customizing the author's name|
+
+#### Example
+
+```yaml
+- name: Pull and deploy meilisearch
+  dokku_image:
+      app: meilisearch
+      image: getmeili/meilisearch:v0.24.0rc1
+- name: Pull and deploy image with custom author
+  dokku_image:
+      app: hello-world
+      user_name: Elliot Alderson
+      user_email: elliotalderson@protonmail.ch
+      repository: hello-world:latest
+- name: Pull and deploy image with custom build dir
+  dokku_image:
+      app: hello-world
+      build_dir: /path/to/build
+      repository: hello-world:latest
+```
+
 ### dokku_letsencrypt
 
 Enable or disable the letsencrypt plugin for a dokku app
