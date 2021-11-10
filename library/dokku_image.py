@@ -131,7 +131,7 @@ def main():
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
-    is_error, has_changed, result = dokku_clone(module.params)
+    is_error, has_changed, result = dokku_image(module.params)
 
     if is_error:
         module.fail_json(msg=result["error"], meta=result)
