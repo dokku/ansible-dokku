@@ -165,9 +165,15 @@
         {{ example_app_scale_values.stdout }}
 
   # Testing dokku_image
+  - name: Make a dummy folder for testing # noqa 301
+    command: mkdir /home/dokku/test
+
   - name: Deploy meilisearch using dokku_image
     dokku_image:
       app: ms
+      user_name: Elliot Alderson
+      user_email: elliotalderson@protonmail.ch
+      build_dir: /home/dokku/test
       image: getmeili/meilisearch:latest
 
   - name: Get list of apps # noqa 301
@@ -181,7 +187,3 @@
       msg: |
         'ms' not found in output of 'dokku apps:list':
         {{ dokku_apps.stdout }}
-<<<<<<< HEAD
-=======
-
->>>>>>> f79b056 (chore: add trailing newline)
