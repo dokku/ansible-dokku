@@ -415,7 +415,7 @@ Pull Docker image and deploy app
 |Parameter|Choices/Defaults|Comments|
 |---------|----------------|--------|
 |app<br /><sup>*required*</sup>||The name of the app|
-|build_dir||Specifiy custom build directory for a custom build context|
+|build_dir||Specify custom build directory for a custom build context|
 |image<br /><sup>*required*</sup>||Docker image|
 |user_email||Git user.email for customizing the author's email|
 |user_name||Git user.name for customizing the author's name|
@@ -432,12 +432,12 @@ Pull Docker image and deploy app
       app: hello-world
       user_name: Elliot Alderson
       user_email: elliotalderson@protonmail.ch
-      repository: hello-world:latest
+      image: hello-world:latest
 - name: Pull and deploy image with custom build dir
   dokku_image:
       app: hello-world
       build_dir: /path/to/build
-      repository: hello-world:latest
+      image: hello-world:latest
 ```
 
 ### dokku_letsencrypt

@@ -4,6 +4,7 @@ import subprocess
 
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_app import dokku_app_ensure_present
+from ansible.module_utils.dokku_git import dokku_git_sha
 
 DOCUMENTATION = """
 ---
@@ -36,7 +37,7 @@ options:
     aliases: []
   build_dir:
     description:
-      - Specifiy custom build directory for a custom build context
+      - Specify custom build directory for a custom build context
     required: False
     default: null
     aliases: []
@@ -53,29 +54,13 @@ EXAMPLES = """
       app: hello-world
       user_name: Elliot Alderson
       user_email: elliotalderson@protonmail.ch
-      repository: hello-world:latest
+      image: hello-world:latest
 - name: Pull and deploy image with custom build dir
   dokku_image:
       app: hello-world
       build_dir: /path/to/build
-      repository: hello-world:latest
+      image: hello-world:latest
 """
-
-
-def dokku_git_sha(data):
-    """Get SHA of current app repository.
-
-    Returns `None` if app does not exist.
-    """
-    command_git_report = "dokku git:report {app} --git-sha".format(app=data["app"])
-    try:
-        sha = subprocess.check_output(
-            command_git_report, stderr=subprocess.STDOUT, shell=True
-        )
-    except subprocess.CalledProcessError:
-        sha = None
-
-    return sha
 
 
 def dokku_image(data):
@@ -96,7 +81,7 @@ def dokku_image(data):
     if data["user_email"]:
         command_git_from_image += " {user_email}".format(user_email=data["user_email"])
     if data["build_dir"]:
-        command_git_from_image += " --build-dir {build_dir}".format(
+        command_git_from_image += " --build-dir \"{build_dir}\"".format(
             build_dir=data["build_dir"]
         )
     try:
@@ -115,7 +100,7 @@ def dokku_image(data):
     finally:
         meta["present"] = True  # meaning: requested *version* of app is present
 
-    if dokku_git_sha(data) != sha_old:
+    if dokku_git_sha(data["app"]) != sha_old:
         has_changed = True
 
     return (is_error, has_changed, meta)
