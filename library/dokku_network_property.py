@@ -69,7 +69,7 @@ def dokku_network_property_set(data):
     has_changed = False
     meta = {"present": False}
 
-    if data["global"] and "app" in data:
+    if data["global"] and data["app"]:
         is_error = True
         meta["error"] = 'When "global" is set to true, "app" must not be provided.'
         return (is_error, has_changed, meta)
