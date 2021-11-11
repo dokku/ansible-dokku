@@ -66,7 +66,7 @@ def dokku_clone(data):
     if is_error:
         return (is_error, has_changed, meta)
 
-    sha_old = dokku_git_sha(data)
+    sha_old = dokku_git_sha(data["app"])
 
     # sync with remote repository
     command_git_sync = "dokku git:sync {app} {repository}".format(

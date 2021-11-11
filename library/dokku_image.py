@@ -70,7 +70,7 @@ def dokku_image(data):
     if is_error:
         return (is_error, has_changed, meta)
 
-    sha_old = dokku_git_sha(data)
+    sha_old = dokku_git_sha(data["app"])
 
     # get image
     command_git_from_image = "dokku git:from-image {app} {image}".format(
