@@ -81,7 +81,7 @@ def dokku_image(data):
     if data["user_email"]:
         command_git_from_image += " {user_email}".format(user_email=data["user_email"])
     if data["build_dir"]:
-        command_git_from_image += " --build-dir \"{build_dir}\"".format(
+        command_git_from_image += ' --build-dir "{build_dir}"'.format(
             build_dir=data["build_dir"]
         )
     try:

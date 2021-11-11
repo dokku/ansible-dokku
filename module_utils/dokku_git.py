@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 """Utility functions for dokku git related plugins"""
+import subprocess
 
 
 def dokku_git_sha(app):
