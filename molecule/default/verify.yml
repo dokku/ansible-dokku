@@ -163,3 +163,29 @@
       msg: |-
         'web:  2' not found in output of 'dokku ps:scale example-app':
         {{ example_app_scale_values.stdout }}
+
+  # Testing dokku_image
+  - name: Create a dummy directory for testing
+    file:
+      path: /home/dokku/test
+      state: directory
+
+  - name: Deploy meilisearch using dokku_image
+    dokku_image:
+      app: ms
+      user_name: Elliot Alderson
+      user_email: elliotalderson@protonmail.ch
+      build_dir: /home/dokku/test
+      image: getmeili/meilisearch:latest
+
+  - name: Get list of apps # noqa 301
+    command: dokku apps:list
+    register: dokku_apps
+
+  - name: Check that ms is in list of apps
+    assert:
+      that:
+      - "'ms' in dokku_apps.stdout"
+      msg: |
+        'ms' not found in output of 'dokku apps:list':
+        {{ dokku_apps.stdout }}

@@ -1,11 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_app import (
-    dokku_app_ensure_present,
-)
 import subprocess
 
+from ansible.module_utils.basic import AnsibleModule
+from ansible.module_utils.dokku_app import dokku_app_ensure_present
+from ansible.module_utils.dokku_git import dokku_git_sha
 
 DOCUMENTATION = """
 ---
@@ -59,22 +58,6 @@ EXAMPLES = """
 """
 
 
-def dokku_git_sha(data):
-    """Get SHA of current app repository.
-
-    Returns `None` if app does not exist.
-    """
-    command_git_report = "dokku git:report {app} --git-sha".format(app=data["app"])
-    try:
-        sha = subprocess.check_output(
-            command_git_report, stderr=subprocess.STDOUT, shell=True
-        )
-    except subprocess.CalledProcessError:
-        sha = None
-
-    return sha
-
-
 def dokku_clone(data):
 
     # create app (if not exists)
@@ -83,7 +66,7 @@ def dokku_clone(data):
     if is_error:
         return (is_error, has_changed, meta)
 
-    sha_old = dokku_git_sha(data)
+    sha_old = dokku_git_sha(data["app"])
 
     # sync with remote repository
     command_git_sync = "dokku git:sync {app} {repository}".format(
@@ -107,7 +90,7 @@ def dokku_clone(data):
     finally:
         meta["present"] = True  # meaning: requested *version* of app is present
 
-    if data["build"] or dokku_git_sha(data) != sha_old:
+    if data["build"] or dokku_git_sha(data["app"]) != sha_old:
         has_changed = True
 
     return (is_error, has_changed, meta)
