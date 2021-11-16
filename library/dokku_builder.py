@@ -159,7 +159,6 @@ def dokku_module_require_fields(data, required_fields):
 def build_report(output, re_compiled, allowed_report_keys):
     output = [re.sub(r"\s\s+", "", line) for line in output]
     report = {}
-
     for line in output:
         if ":" not in line:
             continue
@@ -169,8 +168,7 @@ def build_report(output, re_compiled, allowed_report_keys):
             continue
 
         report[key] = value.strip()
-
-    return report, error
+    return report
 
 
 def dokku_module_report(command_prefix, data, re_compiled, allowed_report_keys):
@@ -178,7 +176,7 @@ def dokku_module_report(command_prefix, data, re_compiled, allowed_report_keys):
     output, error = subprocess_check_output(command)
     if error is not None:
         return output, error
-    return build_report(output, re_compiled, allowed_report_keys)
+    return build_report(output, re_compiled, allowed_report_keys), error
 
 
 def dokku_module_report_global(command_prefix, data, re_compiled, allowed_report_keys):
@@ -186,8 +184,7 @@ def dokku_module_report_global(command_prefix, data, re_compiled, allowed_report
     output, error = subprocess_check_output(command)
     if error is not None:
         return output, error
-
-    return build_report(output, re_compiled, map(lambda key: "global {0}", allowed_report_keys))
+    return build_report(output, re_compiled, map(lambda key: "global {0}", allowed_report_keys)), error
 
 
 def dokku_builder(
@@ -207,16 +204,11 @@ def dokku_builder(
         meta["error"] = error
         return (is_error, has_changed, meta)
 
-    report = {}
-    error = None
-    if data["global"]:
-        report, error = dokku_module_report_global(
-            command_prefix, data, re_compiled, allowed_report_keys
-        )
-    else:
-        report, error = dokku_module_report(
-            command_prefix, data, re_compiled, allowed_report_keys
-        )
+    report, error = dokku_module_report_global(
+        command_prefix, data, re_compiled, allowed_report_keys
+    ) if data["global"] else dokku_module_report(
+        command_prefix, data, re_compiled, allowed_report_keys
+    )
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
