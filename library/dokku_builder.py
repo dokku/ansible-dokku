@@ -244,7 +244,7 @@ def main():
     allowed_report_keys = ["build", "selected"]
     command_prefix = "builder"
     required_present_fields = ["app", "key"]
-    setable_fields = ["value"]
+    setable_fields = ["build dir", "selected"]
     RE_PREFIX = re.compile("^builder-")
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
