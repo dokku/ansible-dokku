@@ -204,6 +204,6 @@
     assert:
       that:
       - "'/app' in dokku_builder.stdout"
-      msg: |
+      msg: |-
         build-dir '/app' not found in output of 'dokku builder':
         {{ dokku_builder.stdout }}

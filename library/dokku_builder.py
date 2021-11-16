@@ -76,13 +76,12 @@ def dokku_module_set(command_prefix, data, key, value=None):
         command = "dokku --quiet {0}:set {1} {2} {3}".format(
             command_prefix,
             "--global" if data["global"] else data["app"],
-            key, pipes.quote(value)
+            key,
+            pipes.quote(value),
         )
     else:
         command = "dokku --quiet {0}:set {1} {2}".format(
-            command_prefix,
-            "--global" if data["global"] else data["app"],
-            key
+            command_prefix, "--global" if data["global"] else data["app"], key
         )
 
     try:
@@ -184,7 +183,12 @@ def dokku_module_report_global(command_prefix, data, re_compiled, allowed_report
     output, error = subprocess_check_output(command)
     if error is not None:
         return output, error
-    return build_report(output, re_compiled, map(lambda key: "global {0}", allowed_report_keys)), error
+    return (
+        build_report(
+            output, re_compiled, map(lambda key: "global {0}", allowed_report_keys)
+        ),
+        error,
+    )
 
 
 def dokku_builder(
@@ -204,10 +208,12 @@ def dokku_builder(
         meta["error"] = error
         return (is_error, has_changed, meta)
 
-    report, error = dokku_module_report_global(
-        command_prefix, data, re_compiled, allowed_report_keys
-    ) if data["global"] else dokku_module_report(
-        command_prefix, data, re_compiled, allowed_report_keys
+    report, error = (
+        dokku_module_report_global(
+            command_prefix, data, re_compiled, allowed_report_keys
+        )
+        if data["global"]
+        else dokku_module_report(command_prefix, data, re_compiled, allowed_report_keys)
     )
     if error:
         meta["error"] = error
