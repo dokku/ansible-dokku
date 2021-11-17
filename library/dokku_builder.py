@@ -95,7 +95,7 @@ def dokku_builder(data):
 def main():
     fields = {
         "app": {"required": True, "type": "str"},
-        "propert": {"required": True, "type": "str"},
+        "property": {"required": True, "type": "str"},
         "value": {"required": False, "type": "str", "no_log": True},
         "global": {"required": False, "type": "bool"},
     }
