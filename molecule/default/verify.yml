@@ -193,7 +193,7 @@
   - name: Configuring the builder for an app
     dokku_builder:
       app: example-app
-      key: build-dir
+      property: build-dir
       value: /app
 
   - name: Get builder output # noqa 301
