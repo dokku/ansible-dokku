@@ -180,6 +180,43 @@ Create or destroy dokku apps
     state: absent
 ```
 
+### dokku_builder
+
+Manage the builder configuration for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
+|global|*Default:* False|If the property being set is global|
+|property<br /><sup>*required*</sup>||The property to be changed (e.g., `build-dir`, `selected`)|
+|value||The value of the builder property (leave empty to unset)|
+
+#### Example
+
+```yaml
+- name: Overriding the auto-selected builder
+  dokku_builder:
+    app: node-js-app
+    property: selected
+    value: dockerfile
+- name: Setting the builder to the default value
+  dokku_builder:
+    app: node-js-app
+    property: selected
+- name: Changing the build build directory
+  dokku_builder:
+    app: monorepo
+    property: build-dir
+    value: backend
+- name: Overriding the auto-selected builder globally
+  dokku_builder:
+    global: true
+    property: selected
+    value: herokuish
+```
+
 ### dokku_certs
 
 Manages ssl configuration for an app.

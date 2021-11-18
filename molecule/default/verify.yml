@@ -189,3 +189,21 @@
       msg: |
         'ms' not found in output of 'dokku apps:list':
         {{ dokku_apps.stdout }}
+  # Testing dokku_builder
+  - name: Configuring the builder for an app
+    dokku_builder:
+      app: example-app
+      property: build-dir
+      value: /app
+
+  - name: Get builder output # noqa 301
+    command: dokku builder:report example-app
+    register: dokku_builder
+
+  - name: Check that the build dir was set correctly
+    assert:
+      that:
+      - "'/app' in dokku_builder.stdout"
+      msg: |-
+        build-dir '/app' not found in output of 'dokku builder':
+        {{ dokku_builder.stdout }}
