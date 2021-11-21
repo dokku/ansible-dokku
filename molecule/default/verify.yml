@@ -164,6 +164,20 @@
         'web:  2' not found in output of 'dokku ps:scale example-app':
         {{ example_app_scale_values.stdout }}
 
+  # Testing dokku_acl_app
+  - name: Let gverdi manage example-app
+    dokku_acl_app:
+      app: example-app
+      users:
+      - gverdi
+
+  - name: Remove permission for gverdi to manage example-app
+    dokku_acl_app:
+      app: example-app
+      users:
+      - gverdi
+      state: absent
+
   # Testing dokku_image
   - name: Create a dummy directory for testing
     file:

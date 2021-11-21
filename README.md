@@ -156,6 +156,38 @@ Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ## Libraries
 
+### dokku_acl_app
+
+Manage access control list for a given dokku application
+
+#### Requirements
+
+- the `dokku-acl` plugin
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|Whether the ACLs should be present or absent|
+|users<br /><sup>*required*</sup>||The list of users who can manage the app|
+
+#### Example
+
+```yaml
+- name: let leopold manage hello-world
+  dokku_acl_app:
+    app: hello-world
+    users:
+      - leopold
+- name: remove leopold from hello-world
+  dokku_acl_app:
+    app: hello-world
+    users:
+      - leopold
+    state: absent
+```
+
 ### dokku_app
 
 Create or destroy dokku apps
