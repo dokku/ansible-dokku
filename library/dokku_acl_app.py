@@ -63,18 +63,7 @@ def dokku_acl_app_set(data):
 
     users = set(output)
 
-    if data["state"] == "present":
-        for user in data["users"]:
-            if user in users:
-                continue
-
-            command = "dokku --quiet acl:add {0} {1}".format(data["app"], user)
-            output, error = subprocess_check_output(command)
-            has_changed = True
-            if error is not None:
-                meta["error"] = error
-                return (is_error, has_changed, meta)
-    else:
+    if data["state"] == "absent":
         for user in data["users"]:
             if user not in users:
                 continue
@@ -85,7 +74,19 @@ def dokku_acl_app_set(data):
             if error is not None:
                 meta["error"] = error
                 return (is_error, has_changed, meta)
+    else:
+        for user in data["users"]:
+            if user in users:
+                continue
 
+            command = "dokku --quiet acl:add {0} {1}".format(data["app"], user)
+            output, error = subprocess_check_output(command)
+            has_changed = True
+            if error is not None:
+                meta["error"] = error
+                return (is_error, has_changed, meta)
+
+    is_error = False
     return (is_error, has_changed, meta)
 
 

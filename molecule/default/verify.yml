@@ -171,12 +171,36 @@
       users:
       - gverdi
 
+  - name: List ACLs for example-app  # noqa 301
+    command: dokku acl:list example-app
+    register: dokku_acl_list
+
+  - name: Check that gverdi is in list of ACLs for example-app
+    assert:
+      that:
+      - "'gverdi' in dokku_acl_list.stdout"
+      msg: |
+        'gverdi' not found in output of 'dokku acl:list example-app':
+        {{ dokku_acl_list.stdout }}
+
   - name: Remove permission for gverdi to manage example-app
     dokku_acl_app:
       app: example-app
       users:
       - gverdi
       state: absent
+
+  - name: List ACLs for example-app  # noqa 301
+    command: dokku acl:list example-app
+    register: dokku_acl_list
+
+  - name: Check that gverdi is no longer in list of ACLs for example-app
+    assert:
+      that:
+      - "'gverdi' not in dokku_acl_list.stdout"
+      msg: |
+        'gverdi' found in output of 'dokku acl:list example-app':
+        {{ dokku_acl_list.stdout }}
 
   # Testing dokku_image
   - name: Create a dummy directory for testing
