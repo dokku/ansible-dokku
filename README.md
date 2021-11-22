@@ -188,6 +188,41 @@ Manage access control list for a given dokku application
     state: absent
 ```
 
+### dokku_acl_service
+
+Manage access control list for a given dokku service
+
+#### Requirements
+
+- the `dokku-acl` plugin
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|service<br /><sup>*required*</sup>||The name of the service|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|Whether the ACLs should be present or absent|
+|type<br /><sup>*required*</sup>||The type of the service|
+|users<br /><sup>*required*</sup>||The list of users who can manage the service|
+
+#### Example
+
+```yaml
+- name: let leopold manage mypostgres postgres service
+  dokku_acl_service:
+    service: mypostgres
+    type: postgres
+    users:
+      - leopold
+- name: remove leopold from mypostgres postgres service
+  dokku_acl_service:
+    service: hello-world
+    type: postgres
+    users:
+      - leopold
+    state: absent
+```
+
 ### dokku_app
 
 Create or destroy dokku apps
