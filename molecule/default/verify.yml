@@ -59,7 +59,10 @@
   - name: Check that gverdi is in list of ACLs for example-app
     assert:
       that:
-      - "'gverdi' in dokku_acl_list.stdout"
+      # Note: As of Nov 2021, `dokku acl:list` writes to stderr
+      # Feel free to remove this the stderr case when the following issue is fixed
+      # https://github.com/dokku-community/dokku-acl/issues/34
+      - ("'gverdi' in dokku_acl_list.stdout") or ("'gverdi' in dokku_acl_list.stderr")
       msg: |-
         'gverdi' not found in output of 'dokku acl:list example-app':
         {{ dokku_acl_list.stdout }}
@@ -78,7 +81,10 @@
   - name: Check that gverdi is no longer in list of ACLs for example-app
     assert:
       that:
-      - "'gverdi' not in dokku_acl_list.stdout"
+      # Note: As of Nov 2021, `dokku acl:list` writes to stderr
+      # Feel free to remove this the stderr case when the following issue is fixed
+      # https://github.com/dokku-community/dokku-acl/issues/34
+      - ("'gverdi' not in dokku_acl_list.stdout") and ("'gverdi' not in dokku_acl_list.stderr")
       msg: |-
         'gverdi' found in output of 'dokku acl:list example-app':
         {{ dokku_acl_list.stdout }}
@@ -202,7 +208,6 @@
       msg: |-
         'web:  2' not found in output of 'dokku ps:scale example-app':
         {{ example_app_scale_values.stdout }}
-
 
   # Testing dokku_image
   - name: Create a dummy directory for testing
