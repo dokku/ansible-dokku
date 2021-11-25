@@ -121,8 +121,8 @@ def main():
             "choices": ["present", "absent"],
             "type": "str",
         },
-        "password": {"required": True, "type": "str", "no_log": True},
-        "user": {"required": True, "type": "str"},
+        "password": {"required": False, "type": "str", "no_log": True},
+        "user": {"required": False, "type": "str"},
     }
     choice_map = {
         "present": dokku_http_auth_present,
