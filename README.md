@@ -470,7 +470,6 @@ Manage HTTP Basic Authentication for a dokku app
     user: samsepi0l
     password: hunter2
 
-
 - name: Disable the http-auth plugin
   dokku_http_auth:
     app: hello-world

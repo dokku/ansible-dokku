@@ -46,7 +46,6 @@ EXAMPLES = """
     user: samsepi0l
     password: hunter2
 
-
 - name: Disable the http-auth plugin
   dokku_http_auth:
     app: hello-world
@@ -76,7 +75,9 @@ def dokku_http_auth_present(data):
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet http-auth:on {0} {1} {2}".format(data["app"], data["user"], data["password"])
+    command = "dokku --quiet http-auth:on {0} {1} {2}".format(
+        data["app"], data["user"], data["password"]
+    )
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
