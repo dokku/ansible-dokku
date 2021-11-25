@@ -443,6 +443,40 @@ Manages global ssl configuration.
     state: absent
 ```
 
+### dokku_http_auth
+
+Manage HTTP Basic Authentication for a dokku app
+
+#### Requirements
+
+- the `dokku-http-auth` plugin
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|password||The HTTP Auth Password (required for 'present' state)|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the http-auth plugin|
+|user||The HTTP Auth User (required for 'present' state)|
+
+#### Example
+
+```yaml
+- name: Enable the http-auth plugin
+  dokku_http_auth:
+    app: hello-world
+    state: present
+    user: samsepi0l
+    password: hunter2
+
+
+- name: Disable the http-auth plugin
+  dokku_http_auth:
+    app: hello-world
+    state: absent
+```
+
 ### dokku_image
 
 Pull Docker image and deploy app

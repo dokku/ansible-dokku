@@ -189,6 +189,7 @@
       msg: |
         'ms' not found in output of 'dokku apps:list':
         {{ dokku_apps.stdout }}
+
   # Testing dokku_builder
   - name: Configuring the builder for an app
     dokku_builder:
@@ -207,3 +208,40 @@
       msg: |-
         build-dir '/app' not found in output of 'dokku builder':
         {{ dokku_builder.stdout }}
+
+  # Testing dokku_http_auth
+  - name: Enabling http-auth for an app
+    dokku_http_auth:
+      app: example-app
+      state: present
+      user: samsepi0l
+      password: hunter2
+
+  - name: Get http-auth output # noqa 301
+    command: dokku --quiet http-auth:report example-app
+    register: dokku_http_auth_on
+
+  - name: Check that the HTTP Basic Authentication was enabled correctly
+    assert:
+      that:
+      - "'true' in dokku_http_auth_on.stdout"
+      msg: |-
+        'true' not found in output of 'dokku http-auth:report':
+        {{ dokku_http_auth_on.stdout }}
+
+  - name: Disabling http-auth for an app
+    dokku_http_auth:
+      app: example-app
+      state: absent
+
+  - name: Get http-auth output # noqa 301
+    command: dokku --quiet http-auth:report example-app
+    register: dokku_http_auth_off
+
+  - name: Check that the HTTP Basic Authentication was disabled correctly
+    assert:
+      that:
+      - "'false' in dokku_http_auth_off.stdout"
+      msg: |-
+        'false' not found in output of 'dokku http-auth:report':
+        {{ dokku_http_auth_off.stdout }}
