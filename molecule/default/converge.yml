@@ -13,6 +13,8 @@
       dokku_plugins:
       - name: global-cert
         url: https://github.com/josegonzalez/dokku-global-cert
+      - name: http-auth
+        url: https://github.com/dokku/dokku-http-auth
       dokku_hostname: test.domain
       dokku_users:
       - name: Giuseppe Verdi
