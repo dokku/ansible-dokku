@@ -23,9 +23,9 @@ options:
     default: present
     choices: [ "present", "absent" ]
     aliases: []
-  user:
+  username:
     description:
-      - The HTTP Auth User (required for 'present' state)
+      - The HTTP Auth Username (required for 'present' state)
     required: False
     aliases: []
   password:
@@ -43,7 +43,7 @@ EXAMPLES = """
   dokku_http_auth:
     app: hello-world
     state: present
-    user: samsepi0l
+    username: samsepi0l
     password: hunter2
 
 - name: Disable the http-auth plugin
@@ -76,7 +76,7 @@ def dokku_http_auth_present(data):
         return (is_error, has_changed, meta)
 
     command = "dokku --quiet http-auth:on {0} {1} {2}".format(
-        data["app"], data["user"], data["password"]
+        data["app"], data["username"], data["password"]
     )
     try:
         subprocess.check_call(command, shell=True)
@@ -121,7 +121,7 @@ def main():
             "choices": ["present", "absent"],
             "type": "str",
         },
-        "user": {"required": False, "type": "str"},
+        "username": {"required": False, "type": "str"},
         "password": {"required": False, "type": "str", "no_log": True},
     }
     choice_map = {

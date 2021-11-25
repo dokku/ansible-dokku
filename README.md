@@ -458,7 +458,7 @@ Manage HTTP Basic Authentication for a dokku app
 |app<br /><sup>*required*</sup>||The name of the app|
 |password||The HTTP Auth Password (required for 'present' state)|
 |state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the http-auth plugin|
-|user||The HTTP Auth User (required for 'present' state)|
+|username||The HTTP Auth Username (required for 'present' state)|
 
 #### Example
 
@@ -467,7 +467,7 @@ Manage HTTP Basic Authentication for a dokku app
   dokku_http_auth:
     app: hello-world
     state: present
-    user: samsepi0l
+    username: samsepi0l
     password: hunter2
 
 - name: Disable the http-auth plugin

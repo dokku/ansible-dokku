@@ -214,7 +214,7 @@
     dokku_http_auth:
       app: example-app
       state: present
-      user: samsepi0l
+      username: samsepi0l
       password: hunter2
 
   - name: Get http-auth output # noqa 301
