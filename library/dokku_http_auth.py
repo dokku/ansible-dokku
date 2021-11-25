@@ -122,7 +122,7 @@ def main():
             "type": "str",
         },
         "password": {"required": True, "type": "str", "no_log": True},
-        "username": {"required": True, "type": "str"},
+        "user": {"required": True, "type": "str"},
     }
     choice_map = {
         "present": dokku_http_auth_present,
