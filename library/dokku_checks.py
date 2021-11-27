@@ -65,9 +65,7 @@ def dokku_checks_present(data):
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet checks:enable {0}".format(
-        data["app"]
-    )
+    command = "dokku --quiet checks:enable {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
