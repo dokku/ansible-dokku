@@ -27,7 +27,7 @@ author: Simo Aleksandrov
 """
 
 EXAMPLES = """
-- name: Enable the zero downtime deployment (enabled by default)
+- name: Re-enable the zero downtime deployment (enabled by default)
   dokku_checks:
     app: hello-world
     state: present
