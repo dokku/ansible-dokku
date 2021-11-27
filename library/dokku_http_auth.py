@@ -70,6 +70,10 @@ def dokku_http_auth_present(data):
     meta = {"present": False}
 
     enabled, error = dokku_http_auth_enabled(data)
+    if error:
+        meta["error"] = error
+        return (is_error, has_changed, meta)
+
     if enabled:
         is_error = False
         meta["present"] = True
@@ -95,6 +99,10 @@ def dokku_http_auth_absent(data=None):
     meta = {"present": True}
 
     enabled, error = dokku_http_auth_enabled(data)
+    if error:
+        meta["error"] = error
+        return (is_error, has_changed, meta)
+
     if enabled is False:
         is_error = False
         meta["present"] = False
