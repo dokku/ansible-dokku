@@ -247,12 +247,29 @@
         {{ dokku_http_auth_off.stdout }}
 
   # Testing dokku_checks
-  - name: Enabling the Zero Downtime deployment
+  - name: Disabling the Zero Downtime deployment
+    dokku_checks:
+      app: example-app
+      state: absent
+
+  - name: Get checks output # noqa 301
+    command: dokku checks:report example-app
+    register: dokku_checks
+
+  - name: Check that the checks were enabled
+    assert:
+      that:
+      - "'_all_' in dokku_checks.stdout"
+      msg: |-
+        checks were not disabled in output of 'dokku checks':
+        {{ dokku_checks.stdout }}
+
+  - name: Re-enabling the Zero Downtime deployment
     dokku_checks:
       app: example-app
       state: present
 
-  - name: Get builder output # noqa 301
+  - name: Get checks output # noqa 301
     command: dokku checks:report example-app
     register: dokku_checks
 
@@ -262,4 +279,4 @@
       - "'none' in dokku_checks.stdout"
       msg: |-
         checks were not enabled in output of 'dokku checks':
-        {{ dokku_builder.stdout }}
+        {{ dokku_checks.stdout }}
