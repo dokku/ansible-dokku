@@ -45,6 +45,51 @@
     dokku_app:
       app: example-app
 
+  # Testing dokku_acl_app
+  - name: Let gverdi manage example-app
+    dokku_acl_app:
+      app: example-app
+      users:
+      - gverdi
+
+  - name: List ACLs for example-app  # noqa 301
+    command: dokku acl:list example-app
+    register: dokku_acl_list
+
+  - name: Check that gverdi is in list of ACLs for example-app
+    assert:
+      that:
+      # Note: As of Nov 2021, `dokku acl:list` writes to stderr
+      # Feel free to remove this the stderr case when the following issue is fixed
+      # https://github.com/dokku-community/dokku-acl/issues/34
+      - ("'gverdi' in dokku_acl_list.stdout") or ("'gverdi' in dokku_acl_list.stderr")
+      msg: |-
+        'gverdi' not found in output of 'dokku acl:list example-app':
+        {{ dokku_acl_list.stdout }}
+
+  - name: Remove permission for gverdi to manage example-app
+    dokku_acl_app:
+      app: example-app
+      users:
+      - gverdi
+      state: absent
+
+  - name: List ACLs for example-app  # noqa 301
+    command: dokku acl:list example-app
+    register: dokku_acl_list
+
+  - name: Check that gverdi is no longer in list of ACLs for example-app
+    assert:
+      that:
+      # Note: As of Nov 2021, `dokku acl:list` writes to stderr
+      # Feel free to remove this the stderr case when the following issue is fixed
+      # https://github.com/dokku-community/dokku-acl/issues/34
+      - ("'gverdi' not in dokku_acl_list.stdout") and ("'gverdi' not in dokku_acl_list.stderr")
+      msg: |-
+        'gverdi' found in output of 'dokku acl:list example-app':
+        {{ dokku_acl_list.stdout }}
+
+
   # Testing dokku_clone
   - name: clone example-app
     dokku_clone:
