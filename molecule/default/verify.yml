@@ -256,7 +256,7 @@
     command: dokku checks:report example-app
     register: dokku_checks
 
-  - name: Check that the checks were enabled
+  - name: Check that the checks were disabled
     assert:
       that:
       - "'_all_' in dokku_checks.stdout"
@@ -273,7 +273,7 @@
     command: dokku checks:report example-app
     register: dokku_checks
 
-  - name: Check that the checks were enabled
+  - name: Check that the checks were re-enabled
     assert:
       that:
       - "'none' in dokku_checks.stdout"

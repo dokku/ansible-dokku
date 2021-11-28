@@ -47,7 +47,7 @@ def dokku_checks_enabled(data):
         return None, error
 
     report = response[0].split(":")[1]
-    return report.strip() == "_all_", error
+    return report.strip() != "_all_", error
 
 
 def dokku_checks_present(data):
