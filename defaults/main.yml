@@ -6,9 +6,5 @@ dokku_manage_nginx: true
 dokku_packages_state: present
 dokku_plugins: {}
 dokku_skip_key_file: 'false'
-dokku_version: ''
 dokku_vhost_enable: 'true'
 dokku_web_config: 'false'
-herokuish_version: ''
-plugn_version: ''
-sshcommand_version: ''
