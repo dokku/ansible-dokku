@@ -245,6 +245,31 @@ Manages ssl configuration for an app.
     state: absent
 ```
 
+### dokku_checks
+
+Manage the Zero Downtime checks for a dokku app
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|state|*Choices:* <ul><li>**present** (default)</li><li>absent</li></ul>|The state of the checks functionality|
+
+#### Example
+
+```yaml
+- name: Disable the zero downtime deployment
+  dokku_checks:
+    app: hello-world
+    state: absent
+
+- name: Re-enable the zero downtime deployment (enabled by default)
+  dokku_checks:
+    app: hello-world
+    state: present
+```
+
 ### dokku_clone
 
 Clone a git repository and deploy app.
