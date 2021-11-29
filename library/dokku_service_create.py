@@ -29,6 +29,20 @@ EXAMPLES = """
   dokku_service_create:
     name: default
     service: redis
+
+- name: postgres:create default
+  dokku_service_create:
+    name: default
+    service: postgres
+
+- name: postgres:create default with custom image
+  environment:
+    POSTGRES_IMAGE: postgis/postgis
+    POSTGRES_IMAGE_VERSION: 13-master
+  dokku_service_create:
+    name: default
+    service: postgres
+
 """
 
 
