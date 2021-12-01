@@ -938,6 +938,19 @@ Creates a given service
   dokku_service_create:
     name: default
     service: redis
+
+- name: postgres:create default
+  dokku_service_create:
+    name: default
+    service: postgres
+
+- name: postgres:create default with custom image
+  environment:
+    POSTGRES_IMAGE: postgis/postgis
+    POSTGRES_IMAGE_VERSION: 13-master
+  dokku_service_create:
+    name: default
+    service: postgres
 ```
 
 ### dokku_service_link
@@ -961,6 +974,12 @@ Links and unlinks a given service to an application
     app: hello-world
     name: default
     service: redis
+
+- name: postgres:link default hello-world
+  dokku_service_link:
+    app: hello-world
+    name: default
+    service: postgres
 
 - name: redis:unlink default hello-world
   dokku_service_link:

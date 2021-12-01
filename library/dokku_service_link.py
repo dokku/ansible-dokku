@@ -45,6 +45,12 @@ EXAMPLES = """
     name: default
     service: redis
 
+- name: postgres:link default hello-world
+  dokku_service_link:
+    app: hello-world
+    name: default
+    service: postgres
+
 - name: redis:unlink default hello-world
   dokku_service_link:
     app: hello-world
