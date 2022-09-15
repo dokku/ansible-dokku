@@ -220,7 +220,7 @@ def dokku_storage_absent(data):
             return (is_error, has_changed, meta)
         elif not exists:
             is_error = False
-            return (is_error, has_changed, meta)
+            continue
 
         command = "dokku --quiet storage:unmount {0} {1}:{2}".format(
             data["app"], data["host_dir"], data["container_dir"]
