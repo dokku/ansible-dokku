@@ -5,7 +5,7 @@ galaxy_info:
     from installing Dokku, it also provides various modules that can be
     used to interface with dokku from your own Ansible playbooks.
   license: MIT License
-  min_ansible_version: 2.2
+  min_ansible_version: '2.2'
   # See e.g. https://galaxy.ansible.com/api/v1/platforms/?name=Ubuntu
   platforms:
   - name: Ubuntu
@@ -26,5 +26,5 @@ galaxy_info:
   - packaging
   - system
 dependencies:
-- geerlingguy.docker
-- nginxinc.nginx
+- role: geerlingguy.docker
+- role: nginxinc.nginx

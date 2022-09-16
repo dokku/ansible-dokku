@@ -7,7 +7,7 @@
 - name: dokku repo
   apt_repository:
     filename: dokku
-    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} main'
+    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main'
 
     state: present
   tags:
