@@ -1,7 +1,17 @@
 # use `# noqa xxx` at the end of a line, to ignore a particular error
-# or add to the warn_list, to ignore for the whole project
+# or add to the skip_list/warn_list, to ignore for the whole project
+skip_list:
+- name
+- fqcn-builtins
+- yaml[line-length]
+- risky-shell-pipe
+
 warn_list:
-  - '106' # Role name {} does not match ``^[a-z][a-z0-9_]+$`` pattern
-  - '204' # Lines should be no longer than 160 chars.
-  - '208' # File permissions unset or incorrect
-  - '306' # Shells that use pipes should set the pipefail option.
+- role-name
+
+# it appears that for errors related to missing roles/modules
+# (internal-error, syntax-check), the "# noqa" task/line-based approach of
+# skipping rules has no effect, which forces us to skip the entire file.
+exclude_paths:
+- molecule/default/converge.yml
+- molecule/default/verify.yml

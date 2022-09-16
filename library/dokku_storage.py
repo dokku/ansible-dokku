@@ -94,7 +94,7 @@ def get_gid(group):
 
 
 def get_state(b_path):
-    """ Find out current state """
+    """Find out current state"""
 
     if os.path.lexists(b_path):
         if os.path.islink(b_path):
