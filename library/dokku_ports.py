@@ -56,11 +56,15 @@ EXAMPLES = """
 
 
 def dokku_proxy_port_mappings(data):
-    command = "dokku --quiet proxy:ports {0}".format(data["app"])
+    mappings = []
+    command = "dokku --quiet proxy:report {0}".format(data["app"])
     output, error = subprocess_check_output(command)
     if error is None:
-        output = [re.sub(r"\s\s+", ":", line).strip(":") for line in output]
-    return output, error
+        for line in output:
+            match = re.match("Proxy port map:(?P<mapping>.+)", line.strip())
+            if match:
+                mappings = match.group("mapping").strip().split(" ")
+    return mappings, error
 
 
 def dokku_proxy_ports_absent(data):
@@ -125,9 +129,15 @@ def dokku_proxy_ports_present(data):
         meta["error"] = "missing required arguments: mappings"
         return (is_error, has_changed, meta)
 
+    existing, error = dokku_proxy_port_mappings(data)
+    if error:
+        meta["error"] = error
+        return (is_error, has_changed, meta)
+
+    to_add = [m for m in data["mappings"] if m not in existing]
     to_set = [pipes.quote(m) for m in data["mappings"]]
 
-    if len(to_set) == 0:
+    if len(to_add) == 0:
         is_error = False
         meta["present"] = True
         return (is_error, has_changed, meta)
