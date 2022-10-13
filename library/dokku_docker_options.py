@@ -4,6 +4,7 @@ from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
 import pipes
 import subprocess
+import re
 
 DOCUMENTATION = """
 ---
@@ -57,22 +58,17 @@ EXAMPLES = """
 
 
 def dokku_docker_options(data):
-    options = {"build": [], "deploy": [], "run": []}
-    command = "dokku --quiet docker-options {0}".format(data["app"])
+    options = {"build": "", "deploy": "", "run": ""}
+    command = "dokku --quiet docker-options:report {0}".format(data["app"])
     output, error = subprocess_check_output(command)
     if error is None:
-        _type = "build"
         for line in output:
-            if line == "Build options:":
-                _type = "build"
-                continue
-            elif line == "Deploy options:":
-                _type = "deploy"
-                continue
-            elif line == "Run options:":
-                _type = "run"
-                continue
-            options[_type].append(line)
+            match = re.match(
+                "Docker options (?P<type>build|deploy|run):(?P<options>.+)",
+                line.strip(),
+            )
+            if match:
+                options[match.group("type")] = match.group("options").strip()
     return options, error
 
 
