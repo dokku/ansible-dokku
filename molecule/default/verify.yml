@@ -325,3 +325,55 @@
       msg: |-
         checks were not enabled in output of 'dokku checks':
         {{ dokku_checks.stdout }}
+
+  # Testing dokku_docker_options
+  - name: Set docker build options
+    dokku_docker_options:
+      app: example-app
+      phase: build
+      option: "--pull"
+
+  - name: Get docker-options output # noqa 301
+    command: dokku docker-options:report example-app
+    register: dokku_docker_options
+
+  - name: Check that the docker options were set
+    assert:
+      that:
+      - "'--pull' in dokku_docker_options.stdout"
+      msg: |-
+        docker option '--pull' was not set in output of 'dokku docker-options':
+        {{ dokku_docker_options.stdout }}
+
+  - name: Set docker build options that already exist # noqa 301
+    dokku_docker_options:
+      app: example-app
+      phase: build
+      option: "--pull"
+    register: existing_docker_options
+
+  - name: Check that setting existing docker options did not change anything
+    assert:
+      that:
+      - not existing_docker_options.changed
+      msg: |
+        Setting existing docker options resulted in changed status
+
+  - name: Remove docker build options
+    dokku_docker_options:
+      app: example-app
+      phase: build
+      option: "--pull"
+      state: absent
+
+  - name: Get docker-options output # noqa 301
+    command: dokku docker-options:report example-app
+    register: dokku_docker_options
+
+  - name: Check that the docker options were removed
+    assert:
+      that:
+      - "'--pull' not in dokku_docker_options.stdout"
+      msg: |-
+        docker option '--pull' was not removed in output of 'dokku docker-options':
+        {{ dokku_docker_options.stdout }}
