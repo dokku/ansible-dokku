@@ -190,6 +190,60 @@
         'attach post create:' not found in output of 'dokku network:report example-app':
         {{ example_app_network_report.stdout }}
 
+  # Testing dokku_ports
+  - name: Set port mapping for an app
+    dokku_ports:
+      app: example-app
+      mappings:
+      - http:80:5000
+      - http:8080:5000
+
+  - name: Get proxy output
+    command: dokku proxy:report example-app
+    register: dokku_proxy_ports
+
+  - name: Check that port mapping was set
+    assert:
+      that:
+      - "'http:80:5000' in dokku_proxy_ports.stdout"
+      - "'http:8080:5000' in dokku_proxy_ports.stdout"
+      msg: |-
+        port mapping 'http:80:5000' or 'http:8080:5000' was not set in output of 'dokku proxy:report':
+        {{ dokku_proxy_ports.stdout }}
+
+  - name: Set port mapping that already exists
+    dokku_ports:
+      app: example-app
+      mappings:
+      - http:80:5000
+    register: existing_proxy_ports
+
+  - name: Check that setting existing port mapping did not change anything
+    assert:
+      that:
+      - not existing_proxy_ports.changed
+      msg: |
+        Setting existing port mapping resulted in changed status
+
+  - name: Remove port mapping
+    dokku_ports:
+      app: example-app
+      mappings:
+      - http:8080:5000
+      state: absent
+
+  - name: Get proxy output
+    command: dokku proxy:report example-app
+    register: dokku_proxy_ports
+
+  - name: Check that the port mapping was removed
+    assert:
+      that:
+      - "'http:8080:5000' not in dokku_proxy_ports.stdout"
+      msg: |-
+        port mapping 'http:8080:5000' was not removed in output of 'dokku proxy:report':
+        {{ dokku_proxy_ports.stdout }}
+
   # Testing dokku_ps_scale
   - name: Scaling application processes
     dokku_ps_scale:
