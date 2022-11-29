@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_app import dokku_apps_exists
+from ansible_collections.dokku_bot.ansible_dokku.plugins.module_utils.dokku_app import dokku_apps_exists
 import subprocess
 
 DOCUMENTATION = """
