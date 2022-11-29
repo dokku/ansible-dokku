@@ -1,7 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_util_app import (
+
+from ansible_collections.dokku_bot.ansible_dokku.plugins.module_utils.dokku_app import (
     dokku_app_ensure_present,
     dokku_app_ensure_absent,
 )
