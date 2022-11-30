@@ -5,7 +5,7 @@
 namespace: dokku_bot
 
 # The name of the collection. Has the same character restrictions as 'namespace'
-name: ansible_dokku
+name: dokku_collection
 
 # The version of the collection. Must be compatible with semantic versioning
 version: 1.0.0
@@ -16,7 +16,7 @@ readme: README.md
 # A list of the collection's content authors. Can be just the name or in the format 'Full Name <email> (url)
 # @nicks:irc/im.site#channel'
 authors:
-- your name <example@domain.com>
+- Jose Diaz-Gonzalez <example@domain.com>
 
 
 ### OPTIONAL but strongly recommended

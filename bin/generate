@@ -15,17 +15,17 @@ def section_header(text, level=1):
     return "{0} {1}".format("#" * level, text)
 
 
-def get_libraries(role_path):
-    libraries_path = os.path.join(role_path, "library")
+def get_plugins(role_path):
+    plugins_path = os.path.join(role_path, "plugins", "modules")
     files = []
-    for (dirpath, dirnames, filenames) in os.walk(libraries_path):
+    for (dirpath, dirnames, filenames) in os.walk(plugins_path):
         files.extend(filenames)
         break
 
     data = {}
     for f in files:
         data[f] = {}
-        M = ast.parse("".join(open(os.path.join(libraries_path, f))))
+        M = ast.parse("".join(open(os.path.join(plugins_path, f))))
         for child in M.body:
             if isinstance(child, ast.Assign):
                 for t in child.targets:
@@ -53,7 +53,7 @@ def add_table_of_contents(text):
                 "- [Requirements](#requirements)",
                 "- [Dependencies](#dependencies)",
                 "- [Role Variables](#role-variables)",
-                "- [Libraries](#libraries)",
+                "- [Plugins](#Plugins)",
                 "- [Example Playbooks](#example-playbooks)",
                 "- [Contributing](#contributing)",
                 "- [License](#license)",
@@ -63,18 +63,18 @@ def add_table_of_contents(text):
     return text
 
 
-def add_libraries(text, role_path):
-    libraries = get_libraries(role_path)
+def add_plugins(text, role_path):
+    plugins = get_plugins(role_path)
 
     def chosen(choice, default):
         if choice == default:
             return "**{0}** (default)".format(choice)
         return "{0}".format(choice)
 
-    library_keys = sorted(libraries.keys())
-    text.append(section_header("Libraries", 2))
-    for library in library_keys:
-        data = libraries[library]
+    plugin_keys = sorted(plugins.keys())
+    text.append(section_header("Plugins", 2))
+    for plugin in plugin_keys:
+        data = plugins[plugin]
         options = [
             "|Parameter|Choices/Defaults|Comments|",
             "|---------|----------------|--------|",
@@ -152,7 +152,7 @@ def add_requirements(text, meta, defaults):
             "- {0} ansible role".format(dependency["role"])
             for dependency in meta["dependencies"]
         ]
-    dependencies.append("- Dokku (for library usage)")
+    dependencies.append("- Dokku (for plugin usage)")
     text.append("\n".join(dependencies))
 
     return text
@@ -214,7 +214,9 @@ def generate_readme():
         meta = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
     defaults = {}
-    defaults_file = os.path.join(role_path, "defaults", "main.yml")
+    defaults_file = os.path.join(
+        role_path, "roles", "install_dokku", "defaults", "main.yml"
+    )
     with open(defaults_file) as f:
         defaults = yaml.load(f.read(), Loader=yaml.SafeLoader)
 
@@ -231,7 +233,7 @@ def generate_readme():
     text = add_table_of_contents(text)
     text = add_requirements(text, meta, defaults)
     text = add_variables(text, role_path)
-    text = add_libraries(text, role_path)
+    text = add_plugins(text, role_path)
     text = add_examples(text, role_path)
 
     text.append(section_header("Contributing", 2))
@@ -262,7 +264,9 @@ def generate_defaults():
                 continue
             defaults[variable] = config["default"]
 
-    defaults_file = os.path.join(role_path, "defaults", "main.yml")
+    defaults_file = os.path.join(
+        role_path, "roles", "install_dokku", "defaults", "main.yml"
+    )
     with open(defaults_file, "w") as f:
         f.write(yaml.dump(defaults, explicit_start=False))
 

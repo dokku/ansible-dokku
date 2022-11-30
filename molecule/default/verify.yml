@@ -5,7 +5,7 @@
   tasks:
   - name: Run role without running any tasks
     include_role:
-      name: dokku_bot.ansible_dokku
+      name: install_dokku
       tasks_from: init.yml
 
   # Testing dokku_global_cert
@@ -125,7 +125,7 @@
         Re-cloning example app resulted in changed status
 
   # Testing dokku_network
-  - name: Create a network # noqa 301
+  - name: Create a network  # noqa 301
     dokku_network:
       name: example-network
     register: example_network

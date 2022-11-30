@@ -12,7 +12,7 @@ used to interface with dokku from your own Ansible playbooks.
 - [Requirements](#requirements)
 - [Dependencies](#dependencies)
 - [Role Variables](#role-variables)
-- [Libraries](#libraries)
+- [Plugins](#Plugins)
 - [Example Playbooks](#example-playbooks)
 - [Contributing](#contributing)
 - [License](#license)
@@ -39,7 +39,7 @@ Supported Platforms
 
 - geerlingguy.docker ansible role
 - nginxinc.nginx ansible role
-- Dokku (for library usage)
+- Dokku (for plugin usage)
 
 ## Role Variables
 
@@ -154,7 +154,7 @@ Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 - description: The version of sshcommand to install.
 Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
-## Libraries
+## Plugins
 
 ### dokku_acl_app
 
