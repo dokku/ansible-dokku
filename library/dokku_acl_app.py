@@ -55,7 +55,7 @@ def dokku_acl_app_set(data):
 
     # get users for app
     command = "dokku acl:list {0}".format(data["app"])
-    output, error = subprocess_check_output(command)
+    output, error = subprocess_check_output(command, redirect_stderr=True)
 
     if error is not None:
         meta["error"] = error
