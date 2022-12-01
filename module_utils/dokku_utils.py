@@ -9,13 +9,16 @@ def force_list(var):
         return var
     return list(var)
 
+
 # Add an option to redirect stderr to stdout, because some dokku commands output to stderr
 def subprocess_check_output(command, split="\n", redirect_stderr=False):
     error = None
     output = []
     try:
         if redirect_stderr:
-            output = subprocess.check_output(command, shell=True, stderr=subprocess.STDOUT)
+            output = subprocess.check_output(
+                command, shell=True, stderr=subprocess.STDOUT
+            )
         else:
             output = subprocess.check_output(command, shell=True)
         if isinstance(output, bytes):

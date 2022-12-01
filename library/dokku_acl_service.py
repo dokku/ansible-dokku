@@ -62,13 +62,14 @@ def dokku_acl_service_set(data):
     has_changed = False
 
     # get users for service
-    command = "dokku --quiet acl:list-service {0} {1}".format(data["type"], data["service"])
+    command = "dokku --quiet acl:list-service {0} {1}".format(
+        data["type"], data["service"]
+    )
     output, error = subprocess_check_output(command, redirect_stderr=True)
 
     if error is not None:
         meta["error"] = error
         return (is_error, has_changed, meta)
-
 
     users = set(output)
 
