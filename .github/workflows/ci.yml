@@ -79,14 +79,6 @@ jobs:
       run: make ansible-role-requirements.yml
       working-directory: ${{ env.galaxy-name }}
 
-    # See https://github.com/geerlingguy/raspberry-pi-dramble/issues/166
-    - name: Force GitHub Actions' docker daemon to use vfs.
-      run: |
-        #sudo apt install -y jq
-        sudo systemctl stop docker
-        echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job", "storage-driver":"vfs"}' | sudo tee /etc/docker/daemon.json
-        sudo systemctl start docker
-
     - name: Run molecule
       run: molecule test
       working-directory: ${{ env.galaxy-name }}
