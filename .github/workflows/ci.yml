@@ -84,7 +84,7 @@ jobs:
       run: |
         sudo systemctl stop docker
         echo '{"cgroup-parent":"/actions_job","storage-driver":"vfs"}' | sudo tee /etc/docker/daemon.json
-        sudo systemctl start docker
+        sudo systemctl start docker || journalctl -xeu docker.service
 
     - name: Run molecule
       run: molecule test
