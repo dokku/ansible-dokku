@@ -82,6 +82,7 @@ jobs:
     # See https://github.com/geerlingguy/raspberry-pi-dramble/issues/166
     - name: Force GitHub Actions' docker daemon to use vfs.
       run: |
+        sudo cat /etc/docker/daemon.json
         sudo systemctl stop docker
         echo '{"cgroup-parent":"/actions_job","storage-driver":"vfs"}' | sudo tee /etc/docker/daemon.json
         sudo systemctl start docker || journalctl -xeu docker.service
