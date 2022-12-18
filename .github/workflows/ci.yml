@@ -18,7 +18,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v1
       with:
-        python-version: 3.8
+        python-version: 3.9
     - uses: pre-commit/action@v2.0.0
 
   readme:
@@ -30,7 +30,7 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Install requirements
       run: pip install -r requirements.txt
@@ -60,10 +60,10 @@ jobs:
       with:
         path: ${{ env.galaxy-name }}
 
-    - name: Set up Python 3.8
+    - name: Set up Python 3.9
       uses: actions/setup-python@v2
       with:
-        python-version: 3.8
+        python-version: 3.9
 
     - name: Upgrade pip
       run: |
@@ -82,8 +82,9 @@ jobs:
     # See https://github.com/geerlingguy/raspberry-pi-dramble/issues/166
     - name: Force GitHub Actions' docker daemon to use vfs.
       run: |
+        sudo apt install -y jq
         sudo systemctl stop docker
-        echo '{"cgroup-parent":"/actions_job","storage-driver":"vfs"}' | sudo tee /etc/docker/daemon.json
+        echo '{ "exec-opts": ["native.cgroupdriver=cgroupfs"], "cgroup-parent": "/actions_job", "storage-driver":"vfs"}' | sudo tee /etc/docker/daemon.json
         sudo systemctl start docker
 
     - name: Run molecule

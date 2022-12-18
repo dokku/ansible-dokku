@@ -1,7 +1,7 @@
 # for running tests
-molecule[docker]~=3.3.0
-docker~=4.4.4
-ansible~=4.6.0
+molecule[docker]~=4.0.4
+docker~=6.0.1
+ansible~=7.1.0
 # for development
 pre-commit
 # for README generation

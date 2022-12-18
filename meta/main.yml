@@ -1,4 +1,6 @@
 galaxy_info:
+  role_name: ansible_dokku
+  namespace: dokku_bot
   author: "Jose Diaz-Gonzalez"
   description: |
     This Ansible role helps install Dokku on Debian/Ubuntu variants. Apart
