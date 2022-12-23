@@ -64,8 +64,10 @@ def dokku_acl_service_set(data):
     has_changed = False
 
     # get users for service
-    command = "dokku --quiet acl:list {0}".format(data["service"])
-    output, error = subprocess_check_output(command)
+    command = "dokku --quiet acl:list-service {0} {1}".format(
+        data["type"], data["service"]
+    )
+    output, error = subprocess_check_output(command, redirect_stderr=True)
 
     if error is not None:
         meta["error"] = error
@@ -78,7 +80,7 @@ def dokku_acl_service_set(data):
             if user not in users:
                 continue
 
-            command = "dokku --quiet acl:remove {0} {1} {2}".format(
+            command = "dokku --quiet acl:remove-service {0} {1} {2}".format(
                 data["type"], data["service"], user
             )
             output, error = subprocess_check_output(command)
@@ -91,10 +93,10 @@ def dokku_acl_service_set(data):
             if user in users:
                 continue
 
-            command = "dokku --quiet acl:add {0} {1} {2}".format(
+            command = "dokku --quiet acl:add-service {0} {1} {2}".format(
                 data["type"], data["service"], user
             )
-            output, error = subprocess_check_output(command)
+            output, error = subprocess_check_output(command, redirect_stderr=True)
             has_changed = True
             if error is not None:
                 meta["error"] = error
