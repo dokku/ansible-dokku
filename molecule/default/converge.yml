@@ -13,7 +13,7 @@
       - gpg-agent
 
   roles:
-  - role: install_dokku # noqa
+  - role: dokku_bot.dokku_collection.install_dokku # noqa
     vars:
       dokku_plugins:
       - name: global-cert
