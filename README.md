@@ -1044,7 +1044,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku_bot.ansible_dokku
+    - dokku_bot.dokku_collection
 ```
 
 ### Installing Plugins
@@ -1053,7 +1053,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku_bot.ansible_dokku
+    - dokku_bot.dokku_collection
   vars:
     dokku_plugins:
       - name: clone
@@ -1068,7 +1068,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku_bot.ansible_dokku
+    - dokku_bot.dokku_collection
   tasks:
     - name: dokku apps:create inflector
       dokku_app:
@@ -1086,7 +1086,7 @@ Manage storage for dokku applications
 ---
 - hosts: all
   roles:
-    - dokku_bot.ansible_dokku
+    - dokku_bot.dokku_collection
     - geerlingguy.swap
   vars:
     # If you are running dokku on a small VPS, you'll most likely

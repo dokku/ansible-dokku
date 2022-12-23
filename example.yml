@@ -4,14 +4,14 @@ examples:
     ---
     - hosts: all
       roles:
-        - dokku_bot.ansible_dokku
+        - dokku_bot.dokku_collection
 
 - name: Installing Plugins
   example: |
     ---
     - hosts: all
       roles:
-        - dokku_bot.ansible_dokku
+        - dokku_bot.dokku_collection
       vars:
         dokku_plugins:
           - name: clone
@@ -24,7 +24,7 @@ examples:
     ---
     - hosts: all
       roles:
-        - dokku_bot.ansible_dokku
+        - dokku_bot.dokku_collection
       tasks:
         - name: dokku apps:create inflector
           dokku_app:
@@ -39,7 +39,7 @@ examples:
     ---
     - hosts: all
       roles:
-        - dokku_bot.ansible_dokku
+        - dokku_bot.dokku_collection
         - geerlingguy.swap
       vars:
         # If you are running dokku on a small VPS, you'll most likely

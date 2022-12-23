@@ -3,7 +3,7 @@
 import subprocess
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.dokku_bot.ansible_dokku.plugins.module_utils.dokku_utils import (
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
     subprocess_check_output,
 )
 
