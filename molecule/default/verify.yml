@@ -10,7 +10,7 @@
 
   # Testing dokku_global_cert
   - name: Check that dokku_global_cert module can parse output
-    dokku_global_cert:
+    dokku_bot.dokku_collection.dokku_global_cert:
       state: absent
 
   # Testing dokku_hostname
@@ -42,12 +42,12 @@
 
   # Testing dokku_app
   - name: create example-app
-    dokku_app:
+    dokku_bot.dokku_collection.dokku_app:
       app: example-app
 
   # Testing dokku_acl_app
   - name: Let gverdi manage example-app
-    dokku_acl_app:
+    dokku_bot.dokku_collection.dokku_acl_app:
       app: example-app
       users:
       - gverdi
@@ -68,7 +68,7 @@
         {{ dokku_acl_list.stdout }}
 
   - name: Remove permission for gverdi to manage example-app
-    dokku_acl_app:
+    dokku_bot.dokku_collection.dokku_acl_app:
       app: example-app
       users:
       - gverdi
@@ -92,7 +92,7 @@
 
   # Testing dokku_clone
   - name: clone example-app
-    dokku_clone:
+    dokku_bot.dokku_collection.dokku_clone:
       app: example-app
       repository: https://github.com/heroku/node-js-getting-started
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
@@ -110,7 +110,7 @@
         {{ dokku_apps.stdout }}
 
   - name: clone example app again
-    dokku_clone:
+    dokku_bot.dokku_collection.dokku_clone:
       app: example-app
       repository: https://github.com/heroku/node-js-getting-started
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
@@ -126,7 +126,7 @@
 
   # Testing dokku_network
   - name: Create a network  # noqa 301
-    dokku_network:
+    dokku_bot.dokku_collection.dokku_network:
       name: example-network
     register: example_network
 
@@ -143,7 +143,7 @@
         {{ dokku_networks.stdout }}
 
   - name: Create a network that already exists # noqa 301
-    dokku_network:
+    dokku_bot.dokku_collection.dokku_network:
       name: example-network
     register: example_network
 
@@ -156,7 +156,7 @@
 
   # Testing dokku_network_property
   - name: Setting a network property for an app
-    dokku_network_property:
+    dokku_bot.dokku_collection.dokku_network_property:
       app: example-app
       property: attach-post-create
       value: example-network
@@ -174,7 +174,7 @@
         {{ example_app_network_report.stdout }}
 
   - name: Clearing a network property for an app
-    dokku_network_property:
+    dokku_bot.dokku_collection.dokku_network_property:
       app: example-app
       property: attach-post-create
 
@@ -192,7 +192,7 @@
 
   # Testing dokku_ports
   - name: Set port mapping for an app
-    dokku_ports:
+    dokku_bot.dokku_collection.dokku_ports:
       app: example-app
       mappings:
       - http:80:5000
@@ -212,7 +212,7 @@
         {{ dokku_proxy_ports.stdout }}
 
   - name: Set port mapping that already exists
-    dokku_ports:
+    dokku_bot.dokku_collection.dokku_ports:
       app: example-app
       mappings:
       - http:80:5000
@@ -226,7 +226,7 @@
         Setting existing port mapping resulted in changed status
 
   - name: Remove port mapping
-    dokku_ports:
+    dokku_bot.dokku_collection.dokku_ports:
       app: example-app
       mappings:
       - http:8080:5000
@@ -246,7 +246,7 @@
 
   # Testing dokku_ps_scale
   - name: Scaling application processes
-    dokku_ps_scale:
+    dokku_bot.dokku_collection.dokku_ps_scale:
       app: example-app
       scale:
         web: 2
@@ -270,7 +270,7 @@
       state: directory
 
   - name: Deploy meilisearch using dokku_image
-    dokku_image:
+    dokku_bot.dokku_collection.dokku_image:
       app: ms
       user_name: Elliot Alderson
       user_email: elliotalderson@protonmail.ch
@@ -291,7 +291,7 @@
 
   # Testing dokku_builder
   - name: Configuring the builder for an app
-    dokku_builder:
+    dokku_bot.dokku_collection.dokku_builder:
       app: example-app
       property: build-dir
       value: /app
@@ -310,7 +310,7 @@
 
   # Testing dokku_http_auth
   - name: Enabling http-auth for an app
-    dokku_http_auth:
+    dokku_bot.dokku_collection.dokku_http_auth:
       app: example-app
       state: present
       username: samsepi0l
@@ -329,7 +329,7 @@
         {{ dokku_http_auth_on.stdout }}
 
   - name: Disabling http-auth for an app
-    dokku_http_auth:
+    dokku_bot.dokku_collection.dokku_http_auth:
       app: example-app
       state: absent
 
@@ -347,7 +347,7 @@
 
   # Testing dokku_checks
   - name: Disabling the Zero Downtime deployment
-    dokku_checks:
+    dokku_bot.dokku_collection.dokku_checks:
       app: example-app
       state: absent
 
@@ -364,7 +364,7 @@
         {{ dokku_checks.stdout }}
 
   - name: Re-enabling the Zero Downtime deployment
-    dokku_checks:
+    dokku_bot.dokku_collection.dokku_checks:
       app: example-app
       state: present
 
@@ -382,7 +382,7 @@
 
   # Testing dokku_docker_options
   - name: Set docker build options
-    dokku_docker_options:
+    dokku_bot.dokku_collection.dokku_docker_options:
       app: example-app
       phase: build
       option: "--pull"
@@ -400,7 +400,7 @@
         {{ dokku_docker_options.stdout }}
 
   - name: Set docker build options that already exist # noqa 301
-    dokku_docker_options:
+    dokku_bot.dokku_collection.dokku_docker_options:
       app: example-app
       phase: build
       option: "--pull"
@@ -414,7 +414,7 @@
         Setting existing docker options resulted in changed status
 
   - name: Remove docker build options
-    dokku_docker_options:
+    dokku_bot.dokku_collection.dokku_docker_options:
       app: example-app
       phase: build
       option: "--pull"
