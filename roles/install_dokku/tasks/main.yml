@@ -1,3 +1,9 @@
+- ansible.builtin.import_role:
+    name: geerlingguy.docker
+
+- ansible.builtin.import_role:
+    name: nginxinc.nginx
+
 - import_tasks: init.yml
 
 - import_tasks: nginx.yml
