@@ -1,15 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
 import pipes
 import re
 import subprocess
 
 DOCUMENTATION = """
 ---
-module: dokku_registry
-short_description: Manage the registry configuration for a given dokku application
+module: dokku_git_sync
+short_description: Manages syncing git code from a remote repository for an app
 options:
   app:
     description:
@@ -17,56 +19,32 @@ options:
     required: True
     default: null
     aliases: []
-  image:
+  remote:
     description:
-      - Alternative to app name for image repository name
+      - The git remote url to use
     required: False
-    aliases: []
-  password:
-    description:
-      - The registry password (required for 'present' state)
-    required: False
-    aliases: []
-  server:
-    description:
-      - The registry server hostname (required for 'present' state)
-    required: False
-    aliases: []
-  username:
-    description:
-      - The registry username (required for 'present' state)
-    required: False
+    default: null
     aliases: []
   state:
     description:
-      - The state of the registry integration
+      - The state of the git-sync integration
     required: False
     default: present
-    choices: ["present", "absent" ]
+    choices: [ "present", "absent" ]
     aliases: []
 author: Jose Diaz-Gonzalez
 requirements:
-  - the `dokku-registry` plugin
+  - the `dokku-git-sync` plugin (_commercial_)
 """
 
 EXAMPLES = """
-- name: registry:enable hello-world
-  dokku_registry:
+- name: git-sync:enable hello-world
+  dokku_git_sync:
     app: hello-world
-    password: password
-    server: localhost:8080
-    username: user
+    remote: git@github.com:hello-world/hello-world.git
 
-- name: registry:enable hello-world with args
-  dokku_registry:
-    app: hello-world
-    image: other-image
-    password: password
-    server: localhost:8080
-    username: user
-
-- name: registry:disable hello-world
-  dokku_registry:
+- name: git-sync:disable hello-world
+  dokku_git_sync:
     app: hello-world
     state: absent
 """
@@ -277,10 +255,7 @@ def dokku_module_present(
 def main():
     fields = {
         "app": {"required": True, "type": "str"},
-        "image": {"required": False, "type": "str"},
-        "password": {"required": True, "type": "str", "no_log": True},
-        "server": {"required": False, "type": "str"},
-        "username": {"required": True, "type": "str"},
+        "remote": {"required": False, "type": "str", "default": None},
         "state": {
             "required": False,
             "default": "present",
@@ -293,11 +268,11 @@ def main():
         "present": dokku_module_present,
     }
 
-    allowed_report_keys = ["enabled", "password", "image", "server", "username"]
-    command_prefix = "registry"
-    required_present_fields = ["password", "server", "username"]
-    setable_fields = ["image", "password", "server", "username"]
-    RE_PREFIX = re.compile("^registry-")
+    allowed_report_keys = ["remote"]
+    command_prefix = "git-sync"
+    required_present_fields = ["remote"]
+    setable_fields = ["remote"]
+    RE_PREFIX = re.compile("^git-sync-")
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
     is_error, has_changed, result = choice_map.get(module.params["state"])(

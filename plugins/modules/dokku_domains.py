@@ -1,7 +1,9 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
 import pipes
 import subprocess
 

@@ -1,13 +1,16 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
 import subprocess
+
+from ansible.module_utils.basic import AnsibleModule
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
 
 DOCUMENTATION = """
 ---
-module: dokku_letsencrypt
-short_description: Enable or disable the letsencrypt plugin for a dokku app
+module: dokku_http_auth
+short_description: Manage HTTP Basic Authentication for a dokku app
 options:
   app:
     description:
@@ -17,50 +20,70 @@ options:
     aliases: []
   state:
     description:
-      - The state of the letsencrypt plugin
+      - The state of the http-auth plugin
     required: False
     default: present
     choices: [ "present", "absent" ]
     aliases: []
-author: Gavin Ballard
+  username:
+    description:
+      - The HTTP Auth Username (required for 'present' state)
+    required: False
+    aliases: []
+  password:
+    description:
+      - The HTTP Auth Password (required for 'present' state)
+    required: False
+    aliases: []
+author: Simo Aleksandrov
 requirements:
-  - the `dokku-letsencrypt` plugin
+  - the `dokku-http-auth` plugin
 """
 
 EXAMPLES = """
-- name: Enable the letsencrypt plugin
-  dokku_letsencrypt:
+- name: Enable the http-auth plugin
+  dokku_http_auth:
     app: hello-world
+    state: present
+    username: samsepi0l
+    password: hunter2
 
-- name: Disable the letsencrypt plugin
-  dokku_letsencrypt:
+- name: Disable the http-auth plugin
+  dokku_http_auth:
     app: hello-world
     state: absent
 """
 
 
-def dokku_letsencrypt_enabled(data):
-    command = "dokku --quiet letsencrypt:list | awk '{{print $1}}'"
+def dokku_http_auth_enabled(data):
+    command = "dokku --quiet http-auth:report {0}"
     response, error = subprocess_check_output(command.format(data["app"]))
 
     if error:
         return None, error
 
-    return data["app"] in response, error
+    report = response[0].split(":")[1]
+    return report.strip() == "true", error
 
 
-def dokku_letsencrypt_present(data):
+def dokku_http_auth_present(data):
     is_error = True
     has_changed = False
     meta = {"present": False}
 
-    enabled, error = dokku_letsencrypt_enabled(data)
+    enabled, error = dokku_http_auth_enabled(data)
+    if error:
+        meta["error"] = error
+        return (is_error, has_changed, meta)
+
     if enabled:
         is_error = False
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet letsencrypt:enable {0}".format(data["app"])
+    command = "dokku --quiet http-auth:on {0} {1} {2}".format(
+        data["app"], data["username"], data["password"]
+    )
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -72,18 +95,22 @@ def dokku_letsencrypt_present(data):
     return (is_error, has_changed, meta)
 
 
-def dokku_letsencrypt_absent(data=None):
+def dokku_http_auth_absent(data=None):
     is_error = True
     has_changed = False
     meta = {"present": True}
 
-    enabled, error = dokku_letsencrypt_enabled(data)
+    enabled, error = dokku_http_auth_enabled(data)
+    if error:
+        meta["error"] = error
+        return (is_error, has_changed, meta)
+
     if enabled is False:
         is_error = False
         meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet letsencrypt:disable {0}".format(data["app"])
+    command = "dokku --quiet http-auth:off {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -104,10 +131,12 @@ def main():
             "choices": ["present", "absent"],
             "type": "str",
         },
+        "username": {"required": False, "type": "str"},
+        "password": {"required": False, "type": "str", "no_log": True},
     }
     choice_map = {
-        "present": dokku_letsencrypt_present,
-        "absent": dokku_letsencrypt_absent,
+        "present": dokku_http_auth_present,
+        "absent": dokku_http_auth_absent,
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)

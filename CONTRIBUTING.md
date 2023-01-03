@@ -8,7 +8,7 @@ For general hints see the project-wide [contributing guide](https://github.com/d
 
  * The role's directory layout follows [standard Ansible practices](https://galaxy.ansible.com/docs/contributing/creating_role.html#roles).
  * Besides the yaml-based ansible instructions, the role includes several new Ansible *modules* in the `library/` folder (e.g. `dokku_app`).
- * The `README.md` of this repository is auto-generated: do *not* edit it directly.  
+ * The `README.md` of this repository is auto-generated: do *not* edit it directly.
    In order to update it, run `make generate`.
 
 ## Setting up a test environment

@@ -5,7 +5,7 @@ on:
   pull_request:
 
 env:
-  galaxy-name: "dokku_bot.ansible_dokku"
+  galaxy-name: "dokku_bot.dokku_collection"
 
 
 jobs:

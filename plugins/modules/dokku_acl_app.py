@@ -1,28 +1,24 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
 
 DOCUMENTATION = """
 ---
-module: dokku_acl_service
-short_description: Manage access control list for a given dokku service
+module: dokku_acl_app
+short_description: Manage access control list for a given dokku application
 options:
-  service:
+  app:
     description:
-      - The name of the service
-    required: True
-    default: null
-    aliases: []
-  type:
-    description:
-      - The type of the service
+      - The name of the app
     required: True
     default: null
     aliases: []
   users:
     description:
-      - The list of users who can manage the service
+      - The list of users who can manage the app
     required: True
     aliases: []
   state:
@@ -38,33 +34,29 @@ requirements:
 """
 
 EXAMPLES = """
-- name: let leopold manage mypostgres postgres service
-  dokku_acl_service:
-    service: mypostgres
-    type: postgres
+- name: let leopold manage hello-world
+  dokku_acl_app:
+    app: hello-world
     users:
       - leopold
-- name: remove leopold from mypostgres postgres service
-  dokku_acl_service:
-    service: hello-world
-    type: postgres
+- name: remove leopold from hello-world
+  dokku_acl_app:
+    app: hello-world
     users:
       - leopold
     state: absent
 """
 
 
-def dokku_acl_service_set(data):
+def dokku_acl_app_set(data):
     is_error = True
     has_changed = False
     meta = {"present": False}
 
     has_changed = False
 
-    # get users for service
-    command = "dokku --quiet acl:list-service {0} {1}".format(
-        data["type"], data["service"]
-    )
+    # get users for app
+    command = "dokku acl:list {0}".format(data["app"])
     output, error = subprocess_check_output(command, redirect_stderr=True)
 
     if error is not None:
@@ -78,9 +70,7 @@ def dokku_acl_service_set(data):
             if user not in users:
                 continue
 
-            command = "dokku --quiet acl:remove-service {0} {1} {2}".format(
-                data["type"], data["service"], user
-            )
+            command = "dokku --quiet acl:remove {0} {1}".format(data["app"], user)
             output, error = subprocess_check_output(command)
             has_changed = True
             if error is not None:
@@ -91,10 +81,8 @@ def dokku_acl_service_set(data):
             if user in users:
                 continue
 
-            command = "dokku --quiet acl:add-service {0} {1} {2}".format(
-                data["type"], data["service"], user
-            )
-            output, error = subprocess_check_output(command, redirect_stderr=True)
+            command = "dokku --quiet acl:add {0} {1}".format(data["app"], user)
+            output, error = subprocess_check_output(command)
             has_changed = True
             if error is not None:
                 meta["error"] = error
@@ -106,8 +94,7 @@ def dokku_acl_service_set(data):
 
 def main():
     fields = {
-        "service": {"required": True, "type": "str"},
-        "type": {"required": True, "type": "str"},
+        "app": {"required": True, "type": "str"},
         "users": {"required": True, "type": "list"},
         "state": {
             "required": False,
@@ -118,7 +105,7 @@ def main():
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
-    is_error, has_changed, result = dokku_acl_service_set(module.params)
+    is_error, has_changed, result = dokku_acl_app_set(module.params)
 
     if is_error:
         module.fail_json(msg=result["error"], meta=result)

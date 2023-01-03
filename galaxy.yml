@@ -1,0 +1,28 @@
+# See https://docs.ansible.com/ansible/latest/dev_guide/collections_galaxy_meta.html
+
+namespace: dokku_bot
+
+# The name of the collection. Has the same character restrictions as 'namespace'
+name: dokku_collection
+
+# The version of the collection. Must be compatible with semantic versioning
+version: 1.0.0
+readme: README.md
+authors:
+- Dokku (https://github.com/dokku)
+description: Collection for managing dokku with ansible
+license_file: LICENSE.md
+
+# A list of tags you want to associate with the collection for indexing/searching. A tag name has the same character
+# requirements as 'namespace' and 'name'
+tags: []
+
+# Collections that this collection requires to be installed for it to be usable. The key of the dict is the
+# collection label 'namespace.name'. The value is a version range
+# L(specifiers,https://python-semanticversion.readthedocs.io/en/latest/#requirement-specification). Multiple version
+# range specifiers can be set and are separated by ','
+dependencies: {}
+
+repository: https://github.com/dokku/ansible-dokku
+homepage: https://github.com/dokku/ansible-dokku
+issues: https://github.com/dokku/ansible-dokku/issues

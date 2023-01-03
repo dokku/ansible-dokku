@@ -1,6 +1,6 @@
 .PHONY: clean
 clean:
-	rm -f README.md defaults/main.yml ../dokku.tar.gz
+	rm -f README.md roles/install_dokku/defaults/main.yml ../dokku.tar.gz
 
 .PHONY: release
 release: generate

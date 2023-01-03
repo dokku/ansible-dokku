@@ -3,12 +3,14 @@
 import subprocess
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
 
 DOCUMENTATION = """
 ---
-module: dokku_http_auth
-short_description: Manage HTTP Basic Authentication for a dokku app
+module: dokku_checks
+short_description: Manage the Zero Downtime checks for a dokku app
 options:
   app:
     description:
@@ -18,58 +20,44 @@ options:
     aliases: []
   state:
     description:
-      - The state of the http-auth plugin
+      - The state of the checks functionality
     required: False
     default: present
     choices: [ "present", "absent" ]
     aliases: []
-  username:
-    description:
-      - The HTTP Auth Username (required for 'present' state)
-    required: False
-    aliases: []
-  password:
-    description:
-      - The HTTP Auth Password (required for 'present' state)
-    required: False
-    aliases: []
 author: Simo Aleksandrov
-requirements:
-  - the `dokku-http-auth` plugin
 """
 
 EXAMPLES = """
-- name: Enable the http-auth plugin
-  dokku_http_auth:
-    app: hello-world
-    state: present
-    username: samsepi0l
-    password: hunter2
-
-- name: Disable the http-auth plugin
-  dokku_http_auth:
+- name: Disable the zero downtime deployment
+  dokku_checks:
     app: hello-world
     state: absent
+
+- name: Re-enable the zero downtime deployment (enabled by default)
+  dokku_checks:
+    app: hello-world
+    state: present
 """
 
 
-def dokku_http_auth_enabled(data):
-    command = "dokku --quiet http-auth:report {0}"
+def dokku_checks_enabled(data):
+    command = "dokku --quiet checks:report {0}"
     response, error = subprocess_check_output(command.format(data["app"]))
 
     if error:
         return None, error
 
     report = response[0].split(":")[1]
-    return report.strip() == "true", error
+    return report.strip() != "_all_", error
 
 
-def dokku_http_auth_present(data):
+def dokku_checks_present(data):
     is_error = True
     has_changed = False
     meta = {"present": False}
 
-    enabled, error = dokku_http_auth_enabled(data)
+    enabled, error = dokku_checks_enabled(data)
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
@@ -79,9 +67,7 @@ def dokku_http_auth_present(data):
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet http-auth:on {0} {1} {2}".format(
-        data["app"], data["username"], data["password"]
-    )
+    command = "dokku --quiet checks:enable {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -93,12 +79,12 @@ def dokku_http_auth_present(data):
     return (is_error, has_changed, meta)
 
 
-def dokku_http_auth_absent(data=None):
+def dokku_checks_absent(data=None):
     is_error = True
     has_changed = False
     meta = {"present": True}
 
-    enabled, error = dokku_http_auth_enabled(data)
+    enabled, error = dokku_checks_enabled(data)
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
@@ -108,7 +94,7 @@ def dokku_http_auth_absent(data=None):
         meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet http-auth:off {0}".format(data["app"])
+    command = "dokku --quiet checks:disable {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -129,12 +115,10 @@ def main():
             "choices": ["present", "absent"],
             "type": "str",
         },
-        "username": {"required": False, "type": "str"},
-        "password": {"required": False, "type": "str", "no_log": True},
     }
     choice_map = {
-        "present": dokku_http_auth_present,
-        "absent": dokku_http_auth_absent,
+        "present": dokku_checks_present,
+        "absent": dokku_checks_absent,
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)

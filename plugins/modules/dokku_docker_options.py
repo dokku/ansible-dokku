@@ -1,18 +1,17 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
+import pipes
 import subprocess
 import re
 
 DOCUMENTATION = """
 ---
-module: dokku_certs
-short_description: Manages ssl configuration for an app.
-description:
-  - Manages ssl configuration for an app.
-  - Will not update certificates
-  - Only checks for presence of the crt file, not the key
+module: dokku_docker_options
+short_description: Manage docker-options for a given dokku application
 options:
   app:
     description:
@@ -20,21 +19,22 @@ options:
     required: True
     default: null
     aliases: []
-  key:
+  option:
     description:
-      - Path to the ssl certificate key
+      - A single docker option
     required: True
     default: null
     aliases: []
-  cert:
+  phase:
     description:
-      - Path to the ssl certificate
-    required: True
+      - The phase in which to set the options
+    required: False
     default: null
+    choices: [ "build", "deploy", "run" ]
     aliases: []
   state:
     description:
-      - The state of the ssl configuration
+      - The state of the docker options
     required: False
     default: present
     choices: [ "present", "absent" ]
@@ -44,73 +44,54 @@ requirements: [ ]
 """
 
 EXAMPLES = """
-- name: Adds an ssl certificate and key to an app
-  dokku_certs:
+- name: docker-options:add hello-world deploy
+  dokku_docker_options:
     app: hello-world
-    key: /etc/nginx/ssl/hello-world.key
-    cert: /etc/nginx/ssl/hello-world.crt
+    phase: deploy
+    option: "-v /var/run/docker.sock:/var/run/docker.sock"
 
-- name: Removes an ssl certificate and key from an app
-  dokku_certs:
+- name: docker-options:remove hello-world deploy
+  dokku_docker_options:
     app: hello-world
+    phase: deploy
+    option: "-v /var/run/docker.sock:/var/run/docker.sock"
     state: absent
 """
 
 
-def to_bool(v):
-    return v.lower() == "true"
-
-
-def dokku_certs_report(data):
-    command = "dokku --quiet certs:report {0}".format(data["app"])
+def dokku_docker_options(data):
+    options = {"build": "", "deploy": "", "run": ""}
+    command = "dokku --quiet docker-options:report {0}".format(data["app"])
     output, error = subprocess_check_output(command)
-    if error is not None:
-        return output, error
-    output = [re.sub(r"\s\s+", "", line) for line in output]
-    report = {}
-
-    allowed_keys = [
-        "dir",
-        "enabled",
-        "hostnames",
-        "expires at",
-        "issuer",
-        "starts at",
-        "subject",
-        "verified",
-    ]
-    RE_PREFIX = re.compile("^ssl-")
-    for line in output:
-        if ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        key = RE_PREFIX.sub(r"", key.replace(" ", "-").lower())
-        if key not in allowed_keys:
-            continue
-
-        if key == "enabled":
-            value = to_bool(value)
-        report[key] = value
-
-    return report, error
+    if error is None:
+        for line in output:
+            match = re.match(
+                "Docker options (?P<type>build|deploy|run):(?P<options>.+)",
+                line.strip(),
+            )
+            if match:
+                options[match.group("type")] = match.group("options").strip()
+    return options, error
 
 
-def dokku_certs_absent(data=None):
-    has_changed = False
+def dokku_docker_options_absent(data):
     is_error = True
+    has_changed = False
     meta = {"present": True}
 
-    report, error = dokku_certs_report(data)
+    existing, error = dokku_docker_options(data)
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
 
-    if not report["enabled"]:
+    if data["option"] not in existing[data["phase"]]:
         is_error = False
         meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet certs:remove {0}".format(data["app"])
+    command = "dokku --quiet docker-options:remove {0} {1} {2}".format(
+        data["app"], data["phase"], pipes.quote(data["option"])
+    )
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -122,23 +103,23 @@ def dokku_certs_absent(data=None):
     return (is_error, has_changed, meta)
 
 
-def dokku_certs_present(data):
+def dokku_docker_options_present(data):
     is_error = True
     has_changed = False
     meta = {"present": False}
 
-    report, error = dokku_certs_report(data)
+    existing, error = dokku_docker_options(data)
     if error:
         meta["error"] = error
         return (is_error, has_changed, meta)
 
-    if report["enabled"]:
+    if data["option"] in existing[data["phase"]]:
         is_error = False
-        meta["present"] = False
+        meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku certs:add {0} {1} {2}".format(
-        data["app"], data["cert"], data["key"]
+    command = "dokku --quiet docker-options:add {0} {1} {2}".format(
+        data["app"], data["phase"], pipes.quote(data["option"])
     )
     try:
         subprocess.check_call(command, shell=True)
@@ -154,18 +135,22 @@ def dokku_certs_present(data):
 def main():
     fields = {
         "app": {"required": True, "type": "str"},
-        "key": {"required": False, "type": "str"},
-        "cert": {"required": False, "type": "str"},
         "state": {
             "required": False,
             "default": "present",
             "choices": ["present", "absent"],
             "type": "str",
         },
+        "phase": {
+            "required": True,
+            "choices": ["build", "deploy", "run"],
+            "type": "str",
+        },
+        "option": {"required": True, "type": "str"},
     }
     choice_map = {
-        "present": dokku_certs_present,
-        "absent": dokku_certs_absent,
+        "present": dokku_docker_options_present,
+        "absent": dokku_docker_options_absent,
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)

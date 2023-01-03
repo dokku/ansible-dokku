@@ -1,14 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
-import subprocess
-
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.dokku_utils import subprocess_check_output
+from ansible_collections.dokku_bot.dokku_collection.plugins.module_utils.dokku_utils import (
+    subprocess_check_output,
+)
+import subprocess
 
 DOCUMENTATION = """
 ---
-module: dokku_checks
-short_description: Manage the Zero Downtime checks for a dokku app
+module: dokku_letsencrypt
+short_description: Enable or disable the letsencrypt plugin for a dokku app
 options:
   app:
     description:
@@ -18,54 +19,50 @@ options:
     aliases: []
   state:
     description:
-      - The state of the checks functionality
+      - The state of the letsencrypt plugin
     required: False
     default: present
     choices: [ "present", "absent" ]
     aliases: []
-author: Simo Aleksandrov
+author: Gavin Ballard
+requirements:
+  - the `dokku-letsencrypt` plugin
 """
 
 EXAMPLES = """
-- name: Disable the zero downtime deployment
-  dokku_checks:
+- name: Enable the letsencrypt plugin
+  dokku_letsencrypt:
+    app: hello-world
+
+- name: Disable the letsencrypt plugin
+  dokku_letsencrypt:
     app: hello-world
     state: absent
-
-- name: Re-enable the zero downtime deployment (enabled by default)
-  dokku_checks:
-    app: hello-world
-    state: present
 """
 
 
-def dokku_checks_enabled(data):
-    command = "dokku --quiet checks:report {0}"
+def dokku_letsencrypt_enabled(data):
+    command = "dokku --quiet letsencrypt:list | awk '{{print $1}}'"
     response, error = subprocess_check_output(command.format(data["app"]))
 
     if error:
         return None, error
 
-    report = response[0].split(":")[1]
-    return report.strip() != "_all_", error
+    return data["app"] in response, error
 
 
-def dokku_checks_present(data):
+def dokku_letsencrypt_present(data):
     is_error = True
     has_changed = False
     meta = {"present": False}
 
-    enabled, error = dokku_checks_enabled(data)
-    if error:
-        meta["error"] = error
-        return (is_error, has_changed, meta)
-
+    enabled, error = dokku_letsencrypt_enabled(data)
     if enabled:
         is_error = False
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet checks:enable {0}".format(data["app"])
+    command = "dokku --quiet letsencrypt:enable {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -77,22 +74,18 @@ def dokku_checks_present(data):
     return (is_error, has_changed, meta)
 
 
-def dokku_checks_absent(data=None):
+def dokku_letsencrypt_absent(data=None):
     is_error = True
     has_changed = False
     meta = {"present": True}
 
-    enabled, error = dokku_checks_enabled(data)
-    if error:
-        meta["error"] = error
-        return (is_error, has_changed, meta)
-
+    enabled, error = dokku_letsencrypt_enabled(data)
     if enabled is False:
         is_error = False
         meta["present"] = False
         return (is_error, has_changed, meta)
 
-    command = "dokku --quiet checks:disable {0}".format(data["app"])
+    command = "dokku --quiet letsencrypt:disable {0}".format(data["app"])
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
@@ -115,8 +108,8 @@ def main():
         },
     }
     choice_map = {
-        "present": dokku_checks_present,
-        "absent": dokku_checks_absent,
+        "present": dokku_letsencrypt_present,
+        "absent": dokku_letsencrypt_absent,
     }
 
     module = AnsibleModule(argument_spec=fields, supports_check_mode=False)
