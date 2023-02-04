@@ -94,6 +94,9 @@ def dokku_image(data):
             meta[
                 "error"
             ] = "Please upgrade to dokku>=0.24.0 in order to use the 'git:from-image' command."
+        elif "No changes detected, skipping git commit" in str(e.output):
+            is_error = False
+            has_changed = False
         else:
             meta["error"] = str(e.output)
         return (is_error, has_changed, meta)
