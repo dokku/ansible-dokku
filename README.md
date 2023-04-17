@@ -442,17 +442,19 @@ Manages domains for a given application
 |app<br /><sup>*required*</sup>||The name of the app. This is required only if global is set to False.|
 |domains<br /><sup>*required*</sup>||A list of domains|
 |global|*Default:* False|Whether to change the global domains or app-specific domains.|
-|state|*Choices:* <ul><li>enable</li><li>disable</li><li>clear</li><li>**present** (default)</li><li>absent</li></ul>|The state of the application's domains|
+|state|*Choices:* <ul><li>enable</li><li>disable</li><li>clear</li><li>**present** (default)</li><li>absent</li> <li>set</li></ul>|The state of the application's domains|
 
 #### Example
 
 ```yaml
+# Adds domain, inclusive
 - name: domains:add hello-world dokku.me
   dokku_domains:
     app: hello-world
     domains:
       - dokku.me
 
+# Removes listed domains, but leave others unchanged
 - name: domains:remove hello-world dokku.me
   dokku_domains:
     app: hello-world
@@ -460,20 +462,31 @@ Manages domains for a given application
       - dokku.me
     state: absent
 
+# Clears all domains
 - name: domains:clear hello-world
   dokku_domains:
     app: hello-world
     state: clear
 
+# Enables the VHOST domain
 - name: domains:enable hello-world
   dokku_domains:
     app: hello-world
     state: enable
 
+# Disables the VHOST domain
 - name: domains:disable hello-world
   dokku_domains:
     app: hello-world
     state: disable
+
+# Sets the domain for the app, clearing all others
+- name: domains:set hello-world dokku.me
+  dokku_domains:
+    app: hello-world
+    domains:
+      - dokku.me
+    state: set
 ```
 
 ### dokku_git_sync
