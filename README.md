@@ -454,7 +454,7 @@ Manages domains for a given application
     domains:
       - dokku.me
 
-# Removes listed domains, but leave others unchanged
+# Removes listed domains, but leaves others unchanged
 - name: domains:remove hello-world dokku.me
   dokku_domains:
     app: hello-world
