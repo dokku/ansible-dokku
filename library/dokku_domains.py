@@ -32,19 +32,21 @@ options:
       - The state of the application's domains
     required: False
     default: present
-    choices: [ "enable", "disable", "clear", "present", "absent" ]
+    choices: [ "enable", "disable", "clear", "present", "absent", "set" ]
     aliases: []
 author: Jose Diaz-Gonzalez
 requirements: [ ]
 """
 
 EXAMPLES = """
+# Adds domain, inclusive
 - name: domains:add hello-world dokku.me
   dokku_domains:
     app: hello-world
     domains:
       - dokku.me
 
+# Removes listed domains, but leaves others unchanged
 - name: domains:remove hello-world dokku.me
   dokku_domains:
     app: hello-world
@@ -52,20 +54,31 @@ EXAMPLES = """
       - dokku.me
     state: absent
 
+# Clears all domains
 - name: domains:clear hello-world
   dokku_domains:
     app: hello-world
     state: clear
 
+# Enables the VHOST domain
 - name: domains:enable hello-world
   dokku_domains:
     app: hello-world
     state: enable
 
+# Disables the VHOST domain
 - name: domains:disable hello-world
   dokku_domains:
     app: hello-world
     state: disable
+
+# Sets the domain for the app, clearing all others
+- name: domains:set hello-world dokku.me
+  dokku_domains:
+    app: hello-world
+    domains:
+      - dokku.me
+    state: set
 """
 
 
