@@ -1124,8 +1124,6 @@ Manage storage for dokku applications
       dokku_config:
         app: *appname
         config:
-          # specify a email for dokku-letsencrypt
-          DOKKU_LETSENCRYPT_EMAIL: email@example.com
           # specify port so `domains` can setup the port mapping properly
           PORT: "5000"
     - name: git clone
@@ -1138,6 +1136,9 @@ Manage storage for dokku applications
         app: *appname
         domains:
           - example.com
+    - name: add letsencrypt
+      dokku_letsencrypt:
+        app: *appname
 ```
 
 ## Contributing
