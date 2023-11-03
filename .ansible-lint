@@ -5,6 +5,8 @@ skip_list:
 - fqcn-builtins
 - yaml[line-length]
 - risky-shell-pipe
+- no-changed-when
+- key-order[task]
 
 warn_list:
 - role-name

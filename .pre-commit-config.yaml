@@ -24,7 +24,7 @@ repos:
   - id: flake8
 
 - repo: https://github.com/ansible/ansible-lint
-  rev: v6.5.2
+  rev: v6.21.1
   hooks:
   - id: ansible-lint
     files: \.(yaml|yml)$
