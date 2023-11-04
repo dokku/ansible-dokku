@@ -3,3 +3,4 @@ ansible-role-requirements.yml
 *swp
 .vscode
 .venv
+.python-version

@@ -2,6 +2,8 @@
 # -*- coding: utf-8 -*-
 """Utility functions for the dokku library"""
 import subprocess
+import re
+from typing import Tuple
 
 
 def force_list(var):
@@ -32,3 +34,17 @@ def subprocess_check_output(command, split="\n", redirect_stderr=False):
     except subprocess.CalledProcessError as e:
         error = str(e)
     return output, error
+
+
+# Get the version of dokku installed
+# Example: (0, 31, 4)
+def get_dokku_version() -> Tuple[int, int, int]:
+    command = "dokku --version"
+    output = subprocess.run(command, shell=True, stdout=subprocess.PIPE, text=True)
+    pattern = r"\d+\.\d+\.\d+"
+    match = re.search(pattern, output.stdout)
+    if match is None:
+        raise ValueError("Could not find Dokku version in command output.")
+    version_data = match.group().split(".")
+    version = tuple(map(int, version_data))
+    return version
