@@ -1,4 +1,6 @@
-- block:
+- name: Install dokku-daemon
+  when: dokku_daemon_install
+  block:
   - name: ensure github.com is a known host
     lineinfile:
       dest: /root/.ssh/known_hosts
@@ -10,7 +12,7 @@
     tags:
     - dokku-daemon
 
-  # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
+    # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
   - name: install socat package
     apt:
       name: socat
@@ -42,4 +44,3 @@
     - start dokku-daemon
     tags:
     - dokku-daemon
-  when: dokku_daemon_install

@@ -44,6 +44,7 @@
   - dokku
   - dokku-plugins
   when: dokku_plugins is defined and installed_dokku_plugins.stdout.find(item.name) == -1
+  changed_when: true
   with_items: "{{ dokku_plugins }}"
 
 - name: dokku plugin:update
@@ -60,7 +61,7 @@
   - dokku
   - dokku-plugins
 
-- name: dokku:plugin install-dependencies
+- name: dokku:plugin install-dependencies  # noqa: no-changed-when
   command: dokku plugin:install-dependencies
   tags:
   - dokku

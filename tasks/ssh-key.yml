@@ -10,3 +10,4 @@
   shell: echo "{{ ssh_key }}" | dokku ssh-keys:add {{ username }}
   no_log: true
   when: force_add or ssh_key_list.find(sha256.stdout) == -1
+  changed_when: true
