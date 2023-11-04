@@ -73,8 +73,6 @@ def dokku_proxy_port_mappings(data):
         else:
             if output:
                 mappings = output[0].strip().split(" ")
-            else:
-                mappings = []
 
     return mappings, error
 
