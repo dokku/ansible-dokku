@@ -32,7 +32,7 @@
     command: apt-get update
     register: apt_update
 
-  - name: Check that apt update output does not contain warnigns
+  - name: Check that apt update output does not contain warnings
     assert:
       that:
       - "'W:' not in apt_update.stderr"
