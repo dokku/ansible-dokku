@@ -722,20 +722,20 @@ Manage ports for a given dokku application
 #### Example
 
 ```yaml
-- name: proxy:ports-set hello-world http:80:80
+- name: ports:set hello-world http:80:80
   dokku_ports:
     app: hello-world
     mappings:
         - http:80:8080
 
-- name: proxy:ports-remove hello-world http:80:80
+- name: ports:remove hello-world http:80:80
   dokku_ports:
     app: hello-world
     mappings:
         - http:80:8080
     state: absent
 
-- name: proxy:ports-clear hello-world
+- name: ports:clear hello-world
   dokku_ports:
     app: hello-world
     state: clear

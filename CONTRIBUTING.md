@@ -21,6 +21,7 @@ Setting up a test environment involves the following steps:
  * (optional) Create a python virtual environment
  * Run `pip install -r  requirements.txt`
  * Run `pre-commit install`
+ * Run `make generate`
 
 After this, you'll be able to test any changes made to the role using:
 

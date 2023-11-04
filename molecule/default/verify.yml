@@ -199,7 +199,7 @@
       - http:8080:5000
 
   - name: Get proxy output
-    command: dokku proxy:report example-app
+    command: dokku ports:report example-app --ports-map
     register: dokku_proxy_ports
 
   - name: Check that port mapping was set
@@ -208,7 +208,7 @@
       - "'http:80:5000' in dokku_proxy_ports.stdout"
       - "'http:8080:5000' in dokku_proxy_ports.stdout"
       msg: |-
-        port mapping 'http:80:5000' or 'http:8080:5000' was not set in output of 'dokku proxy:report':
+        port mapping 'http:80:5000' or 'http:8080:5000' was not set in output of 'dokku ports:report':
         {{ dokku_proxy_ports.stdout }}
 
   - name: Set port mapping that already exists
@@ -233,7 +233,7 @@
       state: absent
 
   - name: Get proxy output
-    command: dokku proxy:report example-app
+    command: dokku ports:report example-app --ports-map
     register: dokku_proxy_ports
 
   - name: Check that the port mapping was removed
@@ -241,7 +241,7 @@
       that:
       - "'http:8080:5000' not in dokku_proxy_ports.stdout"
       msg: |-
-        port mapping 'http:8080:5000' was not removed in output of 'dokku proxy:report':
+        port mapping 'http:8080:5000' was not removed in output of 'dokku ports:report':
         {{ dokku_proxy_ports.stdout }}
 
   # Testing dokku_ps_scale
