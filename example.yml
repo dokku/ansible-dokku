@@ -76,3 +76,6 @@ examples:
             app: *appname
             domains:
               - example.com
+        - name: add letsencrypt
+          dokku_letsencrypt:
+            app: *appname
