@@ -81,9 +81,9 @@ def dokku_clone(data):
     except subprocess.CalledProcessError as e:
         is_error = True
         if "is not a dokku command" in str(e.output):
-            meta[
-                "error"
-            ] = "Please upgrade to dokku>=0.23.0 in order to use the 'git:sync' command."
+            meta["error"] = (
+                "Please upgrade to dokku>=0.23.0 in order to use the 'git:sync' command."
+            )
         else:
             meta["error"] = str(e.output)
         return (is_error, has_changed, meta)

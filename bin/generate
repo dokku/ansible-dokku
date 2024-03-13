@@ -18,7 +18,7 @@ def section_header(text, level=1):
 def get_libraries(role_path):
     libraries_path = os.path.join(role_path, "library")
     files = []
-    for (dirpath, dirnames, filenames) in os.walk(libraries_path):
+    for dirpath, dirnames, filenames in os.walk(libraries_path):
         files.extend(filenames)
         break
 

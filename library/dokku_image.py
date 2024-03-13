@@ -91,9 +91,9 @@ def dokku_image(data):
     except subprocess.CalledProcessError as e:
         is_error = True
         if "is not a dokku command" in str(e.output):
-            meta[
-                "error"
-            ] = "Please upgrade to dokku>=0.24.0 in order to use the 'git:from-image' command."
+            meta["error"] = (
+                "Please upgrade to dokku>=0.24.0 in order to use the 'git:from-image' command."
+            )
         elif "No changes detected, skipping git commit" in str(e.output):
             is_error = False
             has_changed = False
