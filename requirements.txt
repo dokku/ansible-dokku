@@ -1,5 +1,5 @@
 # for running tests
-molecule~=24.2.1
+molecule~=24.7.0
 molecule-plugins[docker]~=23.5.3
 docker~=7.0.0
 ansible~=9.5.1
