@@ -1,5 +1,5 @@
 # for running tests
-molecule~=24.2.1
+molecule~=24.9.0
 molecule-plugins[docker]~=23.5.3
 requests==2.30.0
 docker~=7.0.0
