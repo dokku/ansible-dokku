@@ -1,9 +1,9 @@
 # for running tests
-molecule~=24.2.1
+molecule~=24.9.0
 molecule-plugins[docker]~=23.5.3
 requests==2.30.0
 docker~=7.1.0
-ansible~=9.5.1
+ansible~=10.4.0
 # for development
 pre-commit
 # for README generation
