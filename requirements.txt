@@ -1,7 +1,7 @@
 # for running tests
 molecule~=24.2.1
 molecule-plugins[docker]~=23.5.3
-requests==2.30.0
+requests==2.32.2
 docker~=7.0.0
 ansible~=10.4.0
 # for development
