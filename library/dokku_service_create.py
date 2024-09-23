@@ -20,6 +20,12 @@ options:
     required: True
     default: null
     aliases: []
+  flags:
+    description:
+      - Additional flags to pass to the create command
+    required: False
+    default: {}
+    aliases: []
 author: Jose Diaz-Gonzalez
 requirements: [ ]
 """
@@ -43,6 +49,15 @@ EXAMPLES = """
     name: default
     service: postgres
 
+# see flags for mysql https://github.com/dokku/dokku-mysql#create-a-mysql-service
+- name: mysql:create default with custom image and password
+  dokku_service_create:
+    name: default
+    service: mysql
+    flags:
+      '--image': 'mariadb'
+      '--password': 'secretpassword'
+      '--memory': '512'
 """
 
 
@@ -69,7 +84,8 @@ def dokku_service_create(data):
         meta["present"] = True
         return (is_error, has_changed, meta)
 
-    command = "dokku {0}:create {1}".format(data["service"], data["name"])
+    flags = ['{} {}'.format(k,v) for k,v in data['flags'].iteritems()]
+    command = "dokku {0}:create {1} {2}".format(data["service"], data["name"], flags)
     try:
         subprocess.check_call(command, shell=True)
         is_error = False
