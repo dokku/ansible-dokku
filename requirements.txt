@@ -3,7 +3,7 @@ molecule~=24.9.0
 molecule-plugins[docker]~=23.5.3
 requests==2.30.0
 docker~=7.1.0
-ansible~=10.4.0
+ansible~=10.5.0
 # for development
 pre-commit
 # for README generation
