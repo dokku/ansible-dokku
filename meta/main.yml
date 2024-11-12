@@ -12,16 +12,12 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
-    - xenial
-    - yakkety
-    - zesty
-    - artful
-    - bionic
+    - numbat
+    - jammy
     - focal
   - name: Debian
     versions:
-    - stretch
-    - buster
+    - bookworm
     - bullseye
   galaxy_tags:
   - networking
