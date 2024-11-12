@@ -12,7 +12,7 @@ galaxy_info:
   platforms:
   - name: Ubuntu
     versions:
-    - numbat
+    - noble
     - jammy
     - focal
   - name: Debian

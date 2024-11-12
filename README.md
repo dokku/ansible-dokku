@@ -25,7 +25,7 @@ Minimum Ansible Version: 2.2
 
 Supported Platforms
 
-- Ubuntu: numbat
+- Ubuntu: noble
 - Ubuntu: jammy
 - Ubuntu: focal
 - Debian: bookworm
