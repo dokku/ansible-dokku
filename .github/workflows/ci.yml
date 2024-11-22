@@ -51,9 +51,7 @@ jobs:
 
     strategy:
       matrix:
-        # Remove debian10 until dependency gets re-added.
-        # https://github.com/dokku/docker-container-healthchecker/issues/129
-        distro: [ubuntu2004, ubuntu2204, debian11, debian12]
+        distro: [ubuntu2004, ubuntu2204, ubuntu2404, debian11, debian12]
       fail-fast: false
 
     steps:
