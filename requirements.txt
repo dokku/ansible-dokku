@@ -1,6 +1,6 @@
 # for running tests
-molecule~=24.12.0
-molecule-plugins[docker]~=23.5.3
+molecule~=25.2.0
+molecule-plugins[docker]~=23.7.0
 requests==2.30.0
 docker~=7.1.0
 ansible~=10.4.0
