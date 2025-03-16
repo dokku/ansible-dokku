@@ -280,6 +280,33 @@ Manage the builder configuration for a given dokku application
     value: herokuish
 ```
 
+### dokku_buildpacks
+
+Manage buildpack settings for a given dokku application
+
+#### Parameters
+
+|Parameter|Choices/Defaults|Comments|
+|---------|----------------|--------|
+|app<br /><sup>*required*</sup>||The name of the app|
+|buildpacks<br /><sup>*required*</sup>||A list of buildpacks to set on the app|
+
+#### Example
+
+```yaml
+- name: buildpacks:add hello-world […], buildpacks:add hello-world […]
+  dokku_buildpacks:
+    app: hello-world
+    buildpacks:
+      - https://github.com/heroku/heroku-buildpack-ruby.git
+      - https://github.com/heroku/heroku-buildpack-nodejs.git
+
+- name: buildpacks:clear hello-world
+  dokku_buildpacks:
+    app: hello-world
+    buildpacks: []
+```
+
 ### dokku_certs
 
 Manages ssl configuration for an app.
