@@ -19,6 +19,23 @@ jobs:
       uses: actions/setup-python@v5
       with:
         python-version: "3.12"
+    # required to install ansible role dependencies
+    - name: Install requirements
+      run: |
+        pip install -r requirements.txt
+
+    - name: Create and install role requirements
+      run: |
+        make ansible-role-requirements.yml
+        ansible-galaxy install -r ansible-role-requirements.yml
+
+    - name: Clean up recursive role installation
+      run: |
+        # Remove any recursive installations that might cause ansible-lint loops
+        if [ -d ".ansible/roles/${{ env.galaxy-name }}" ]; then
+          rm -rf ".ansible/roles/${{ env.galaxy-name }}"
+        fi
+
     - uses: pre-commit/action@v3.0.1
 
   readme:

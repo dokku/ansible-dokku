@@ -10,11 +10,11 @@
 
   # Testing dokku_global_cert
   - name: Check that dokku_global_cert module can parse output
-    dokku_global_cert:
+    dokku_global_cert:  # noqa unknown-module
       state: absent
 
   # Testing dokku_hostname
-  - name: Get dokku_hostname    # noqa 301
+  - name: Get dokku_hostname    # noqa no-changed-when
     command: dokku domains:report --global
     register: dokku_domains
 
@@ -28,7 +28,7 @@
 
   # check apt sources configuration
   # Note: cannot use apt module for this https://stackoverflow.com/questions/51410696
-  - name: Run apt update  # noqa 303 301
+  - name: Run apt update  # noqa no-changed-when commmand-instead-of-module
     command: apt-get update
     register: apt_update
 
