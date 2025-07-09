@@ -18,3 +18,6 @@ provisioner:
   name: ansible
   playbooks:
     converge: converge.yml
+  config_options:
+    defaults:
+      library: "$MOLECULE_PROJECT_DIRECTORY/.."
