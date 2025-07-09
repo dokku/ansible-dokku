@@ -20,4 +20,4 @@ provisioner:
     converge: converge.yml
   config_options:
     defaults:
-      roles_path: "$MOLECULE_PROJECT_DIRECTORY/.."
+      library: "$MOLECULE_PROJECT_DIRECTORY/.."
