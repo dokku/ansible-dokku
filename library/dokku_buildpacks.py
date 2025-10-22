@@ -3,7 +3,7 @@
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
 from shlex import quote as shell_escape
-from typing import TypedDict
+from typing import List, Optional, Tuple, TypedDict, Union
 
 DOCUMENTATION = """
 ---
@@ -41,12 +41,12 @@ EXAMPLES = """
 """
 
 Diff = TypedDict("Diff", {"before": str, "after": str})
-Params = TypedDict("Params", {"app": str, "buildpacks": list[str]})
+Params = TypedDict("Params", {"app": str, "buildpacks": List[str]})
 
 
 def dokku_buildpacks(
     params: Params, check_mode: bool
-) -> tuple[str, None] | tuple[None, None | Diff]:
+) -> Union[Tuple[str, None], Tuple[None, Optional[Diff]]]:
     app, expected = params["app"], params["buildpacks"]
 
     error, actual = dokku_buildpacks_list(app)
@@ -72,7 +72,7 @@ def dokku_buildpacks(
     return None, {"before": "\n".join(actual), "after": "\n".join(expected)}
 
 
-def dokku_buildpacks_add(app: str, buildpack: str) -> None | str:
+def dokku_buildpacks_add(app: str, buildpack: str) -> Optional[str]:
     command = "dokku --quiet buildpacks:add {} {}".format(
         shell_escape(app), shell_escape(buildpack)
     )
@@ -82,7 +82,7 @@ def dokku_buildpacks_add(app: str, buildpack: str) -> None | str:
     return error
 
 
-def dokku_buildpacks_clear(app: str) -> None | str:
+def dokku_buildpacks_clear(app: str) -> Optional[str]:
     command = "dokku --quiet buildpacks:clear {}".format(shell_escape(app))
 
     _, error = subprocess_check_output(command)
@@ -90,7 +90,7 @@ def dokku_buildpacks_clear(app: str) -> None | str:
     return error
 
 
-def dokku_buildpacks_list(app: str) -> tuple[str, None] | tuple[None, list[str]]:
+def dokku_buildpacks_list(app: str) -> Union[Tuple[str, None], Tuple[None, List[str]]]:
     command = "dokku --quiet buildpacks:list {}".format(shell_escape(app))
 
     lines, error = subprocess_check_output(command)
