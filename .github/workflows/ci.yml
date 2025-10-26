@@ -14,11 +14,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: "3.12"
+        python-version: "3.13"
     # required to install ansible role dependencies
     - name: Install requirements
       run: |
@@ -42,12 +42,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
 
     - name: Set up Python
       uses: actions/setup-python@v6
       with:
-        python-version: "3.12"
+        python-version: "3.13"
 
     - name: Install requirements
       run: pip install -r requirements.txt
@@ -73,14 +73,14 @@ jobs:
 
     steps:
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         path: ${{ env.galaxy-name }}
 
-    - name: Set up Python 3.12
+    - name: Set up Python 3.13
       uses: actions/setup-python@v6
       with:
-        python-version: "3.12"
+        python-version: "3.13"
 
     - name: Upgrade pip
       run: |
@@ -116,7 +116,7 @@ jobs:
     needs: [pre-commit, molecule]
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - uses: robertdebock/galaxy-action@1.2.1
       with:
         galaxy_api_key: ${{ secrets.GALAXY_API_KEY }}
