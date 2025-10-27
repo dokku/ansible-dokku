@@ -308,6 +308,79 @@
         build-dir '/app' not found in output of 'dokku builder':
         {{ dokku_builder.stdout }}
 
+  # Testing dokku_buildpacks
+  - name: Set buildpacks
+    dokku_buildpacks:
+      app: example-app
+      buildpacks:
+      - https://github.com/heroku/heroku-buildpack-ruby.git
+      - https://github.com/heroku/heroku-buildpack-nodejs.git
+    register: dokku_buildpacks_set_changed
+    diff: true
+
+  - name: Expect that setting buildpacks is registered as a change
+    assert:
+      that:
+      - dokku_buildpacks_set_changed.changed
+      msg: |
+        Setting buildpacks didn't register as a change
+
+  - name: List buildpacks
+    command: dokku --quiet buildpacks:list example-app
+    register: dokku_buildpacks_list
+    changed_when: false
+
+  - name: Expect set buildpacks
+    assert:
+      that:
+      - dokku_buildpacks_list.stdout_lines | map('trim') | list == ["https://github.com/heroku/heroku-buildpack-ruby.git", "https://github.com/heroku/heroku-buildpack-nodejs.git"]
+      msg: |-
+        Expected buildpacks not found in output of 'dokku buildpacks:list':
+        {{ dokku_buildpacks_list.stdout }}
+
+  - name: Set the same buildpacks
+    dokku_buildpacks:
+      app: example-app
+      buildpacks:
+      - https://github.com/heroku/heroku-buildpack-ruby.git
+      - https://github.com/heroku/heroku-buildpack-nodejs.git
+    register: dokku_buildpacks_set_unchanged
+    diff: true
+
+  - name: Expect that setting the same buildpacks is not registered as a change
+    assert:
+      that:
+      - not dokku_buildpacks_set_unchanged.changed
+      msg: |
+        Setting the same buildpacks registered as a change
+
+  - name: Clear buildpacks
+    dokku_buildpacks:
+      app: example-app
+      buildpacks: []
+    register: dokku_buildpacks_clear
+    diff: true
+
+  - name: Expect that clearing buildpacks is registered as a change
+    assert:
+      that:
+      - dokku_buildpacks_clear.changed
+      msg: |
+        Clearing buildpacks didn't register as a change
+
+  - name: List buildpacks
+    command: dokku --quiet buildpacks:list example-app
+    register: dokku_buildpacks_list
+    changed_when: false
+
+  - name: Expect cleared buildpacks
+    assert:
+      that:
+      - dokku_buildpacks_list.stdout_lines | map('trim') | list == []
+      msg: |-
+        Expected clearing not found in output of 'dokku buildpacks:list':
+        {{ dokku_buildpacks_list.stdout }}
+
   # Testing dokku_http_auth
   - name: Enabling http-auth for an app
     dokku_http_auth:
