@@ -110,13 +110,6 @@ Supported Platforms
   ssh_key: CAMILLAS_PUBLIC_SSH_KEY
 ```
 
-### dokku_version (deprecated)
-
-- default: `''`
-- type: `string`
-- description: The version of dokku to install.
-Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
-
 ### dokku_vhost_enable
 
 - default: `true`
@@ -128,27 +121,6 @@ Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 - default: `false`
 - type: `string`
 - description: Use web-based config for hostname and keyfile
-
-### herokuish_version (deprecated)
-
-- default: `''`
-- type: `string`
-- description: The version of herokuish to install.
-Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
-
-### plugn_version (deprecated)
-
-- default: `''`
-- type: `string`
-- description: The version of plugn to install.
-Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
-
-### sshcommand_version (deprecated)
-
-- default: `''`
-- type: `string`
-- description: The version of sshcommand to install.
-Scheduled for deletion after 07/2021. Use `dokku_packages_state` instead.
 
 ## Libraries
 
