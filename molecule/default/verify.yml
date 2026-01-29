@@ -1,6 +1,7 @@
 - name: Verify
   hosts: all
   become: true
+  gather_facts: true
 
   tasks:
   - name: Run role without running any tasks
@@ -62,7 +63,7 @@
       # Note: As of Nov 2021, `dokku acl:list` writes to stderr
       # Feel free to remove this the stderr case when the following issue is fixed
       # https://github.com/dokku-community/dokku-acl/issues/34
-      - ("'gverdi' in dokku_acl_list.stdout") or ("'gverdi' in dokku_acl_list.stderr")
+      - "'gverdi' in dokku_acl_list.stdout or 'gverdi' in dokku_acl_list.stderr"
       msg: |-
         'gverdi' not found in output of 'dokku acl:list example-app':
         {{ dokku_acl_list.stdout }}
@@ -84,22 +85,24 @@
       # Note: As of Nov 2021, `dokku acl:list` writes to stderr
       # Feel free to remove this the stderr case when the following issue is fixed
       # https://github.com/dokku-community/dokku-acl/issues/34
-      - ("'gverdi' not in dokku_acl_list.stdout") and ("'gverdi' not in dokku_acl_list.stderr")
+      - "'gverdi' not in dokku_acl_list.stdout and 'gverdi' not in dokku_acl_list.stderr"
       msg: |-
         'gverdi' found in output of 'dokku acl:list example-app':
         {{ dokku_acl_list.stdout }}
 
 
-  # Testing dokku_clone
+  # Testing dokku_clone (skipped on arm64 - herokuish not supported)
   - name: clone example-app
     dokku_clone:
       app: example-app
       repository: https://github.com/heroku/node-js-getting-started
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
+    when: ansible_facts['architecture'] != 'aarch64'
 
   - name: Get list of apps  # noqa 301
     command: dokku apps:list
     register: dokku_apps
+    when: ansible_facts['architecture'] != 'aarch64'
 
   - name: Check that example-app is in list of apps
     assert:
@@ -108,6 +111,7 @@
       msg: |
         'example-app' not found in output of 'dokku apps:list':
         {{ dokku_apps.stdout }}
+    when: ansible_facts['architecture'] != 'aarch64'
 
   - name: clone example app again
     dokku_clone:
@@ -116,6 +120,7 @@
       version: b10a4d7a20a6bbe49655769c526a2b424e0e5d0b
       build: false
     register: example_app
+    when: ansible_facts['architecture'] != 'aarch64'
 
   - name: Check that re-cloning example app did not change anything
     assert:
@@ -123,6 +128,7 @@
       - not example_app.changed
       msg: |
         Re-cloning example app resulted in changed status
+    when: ansible_facts['architecture'] != 'aarch64'
 
   # Testing dokku_network
   - name: Create a network # noqa 301

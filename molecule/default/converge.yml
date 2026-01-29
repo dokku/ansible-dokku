@@ -1,8 +1,14 @@
 - name: Converge
   hosts: all
   become: true
+  gather_facts: false
+  vars:
+    ansible_python_interpreter: /usr/bin/python3
 
   pre_tasks:
+  - name: Gather facts
+    ansible.builtin.setup:
+
   - name: Update apt cache.
     apt: update_cache=yes cache_valid_time=600
     when: ansible_facts["os_family"] == 'Debian'
