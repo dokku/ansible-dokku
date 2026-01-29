@@ -7,7 +7,7 @@
   - dokku-ssh-keys
   ignore_errors: true
 
-- name: add ssh key for user {{ item.username }}
+- name: add ssh key for user
   include_tasks: ssh-key.yml
   tags:
   - dokku

@@ -1,10 +1,10 @@
-- name: remove pin from {{ item.key }} package
+- name: remove pin from package
   file:
     path: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
     state: absent
-  when: not item.value
+  when: item.value | default('') == ''
 
-- name: pin {{ item.key }} package
+- name: pin package
   copy:
     dest: /etc/apt/preferences.d/ansible-hold-{{ item.key }}
     content: |
@@ -12,4 +12,4 @@
       Pin: version {{ item.value }}
       Pin-Priority: 1001
     mode: 0644
-  when: item.value
+  when: item.value | default('') != ''
