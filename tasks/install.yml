@@ -10,7 +10,7 @@
 - name: dokku repo
   apt_repository:
     filename: dokku
-    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_distribution | lower }} {{ ansible_distribution_release }} main'
+    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_facts["distribution"] | lower }} {{ ansible_facts["distribution_release"] }} main'
     state: present
   tags:
   - dokku
@@ -77,7 +77,7 @@
 # does *not* check whether the package version agrees with the pinned version.
 # Cannot be done in the pinning loop since all packages need to be unpinned
 # (or you can get version conflicts).
-- name: install pinned {{ item.key }} package
+- name: install pinned package
   apt:
     name: "{{ item.key }}={{ item.value }}"
   with_dict:
@@ -85,7 +85,7 @@
     sshcommand: "{{ sshcommand_version }}"
     herokuish: "{{ herokuish_version }}"
     dokku: "{{ dokku_version }}"
-  when: item.value
+  when: item.value | default('') != ''
 
 - name: install dokku packages
   apt:
