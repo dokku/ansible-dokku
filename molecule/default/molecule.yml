@@ -2,11 +2,12 @@ dependency:
   name: galaxy
   options:
     role-file: ansible-role-requirements.yml
+    requirements-file: collections.yml
 driver:
   name: docker
 platforms:
 - name: instance
-  image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2004}-ansible:latest"
+  image: "geerlingguy/docker-${MOLECULE_DISTRO:-ubuntu2404}-ansible:latest"
   command: ${MOLECULE_DOCKER_COMMAND:-""}
   volumes:
   - /sys/fs/cgroup:/sys/fs/cgroup:rw
@@ -18,6 +19,12 @@ provisioner:
   name: ansible
   playbooks:
     converge: converge.yml
+  inventory:
+    group_vars:
+      all:
+        ansible_python_interpreter: /usr/bin/python3
+  env:
+    ANSIBLE_LIBRARY: ${MOLECULE_PROJECT_DIRECTORY}/library
   config_options:
     defaults:
-      library: "$MOLECULE_PROJECT_DIRECTORY/.."
+      interpreter_python: /usr/bin/python3
