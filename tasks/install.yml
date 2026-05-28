@@ -7,11 +7,28 @@
   tags:
   - dokku
 
+# apt_repository is deprecated (removal in ansible-core 2.25) and its
+# suggested replacement, deb822_repository, requires ansible-core 2.15+,
+# which would break this role's min_ansible_version. Writing the sources
+# file directly avoids both the deprecation and the version bump.
 - name: dokku repo
-  apt_repository:
-    filename: dokku
-    repo: 'deb https://packagecloud.io/dokku/dokku/{{ ansible_facts["distribution"] | lower }} {{ ansible_facts["distribution_release"] }} main'
-    state: present
+  copy:
+    dest: /etc/apt/sources.list.d/dokku.list
+    content: |
+      deb https://packagecloud.io/dokku/dokku/{{ ansible_facts["distribution"] | lower }} {{ ansible_facts["distribution_release"] }} main
+    mode: '0644'
+  register: dokku_repo
+  tags:
+  - dokku
+
+# apt_repository refreshed the cache by default (update_cache: yes); do the
+# same here so the package install tasks below see the new repo. This can't
+# be a handler: the cache must be refreshed before the install tasks run,
+# whereas handlers only fire at the end of the play.
+- name: update apt cache for dokku repo  # noqa: no-handler
+  apt:
+    update_cache: true
+  when: dokku_repo is changed
   tags:
   - dokku
 
