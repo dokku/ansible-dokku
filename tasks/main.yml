@@ -6,11 +6,19 @@
   - dokku-nginx
 
 - import_tasks: install.yml
+  when: not dokku_docker_install
+  tags:
+  - dokku
+  - dokku-install
+
+- import_tasks: install-docker.yml
+  when: dokku_docker_install
   tags:
   - dokku
   - dokku-install
 
 - import_tasks: dokku-daemon.yml
+  when: dokku_daemon_install
   tags:
   - dokku
   - dokku-daemon
@@ -22,6 +30,7 @@
   - dokku-ssh-keys
 
 - name: dokku plugin:list
+  when: not dokku_docker_install
   command: dokku plugin:list
   changed_when: false
   register: installed_dokku_plugins
@@ -29,8 +38,21 @@
   - dokku
   - dokku-plugins
 
-- name: install apt packages
-  apt:
+- name: dokku plugin:list
+  when: dokku_docker_install
+  community.docker.docker_container_exec:
+    container: dokku
+    command: dokku plugin:list
+  changed_when: false
+  register: installed_dokku_plugins
+  tags:
+  - dokku
+  - dokku-plugins
+
+
+- name: install packages
+  when: not dokku_docker_install
+  ansible.builtin.package:
     name:
     - moreutils    # for plugin updates
     - rsync        # for dokku git:sync
@@ -38,33 +60,70 @@
   tags:
   - dokku-plugins
 
-- name: dokku:plugin install
-  command: dokku plugin:install {{ item.url }} --name {{ item.name }}
-  tags:
-  - dokku
-  - dokku-plugins
-  when: dokku_plugins is defined and installed_dokku_plugins.stdout.find(item.name) == -1
-  changed_when: true
-  with_items: "{{ dokku_plugins }}"
+- name: Plugin installation for package installation
+  when: not dokku_docker_install and dokku_plugins is defined
+  block:
+    - name: dokku:plugin install
+      command: dokku plugin:install {{ item.url }} --name {{ item.name }}
+      tags:
+      - dokku
+      - dokku-plugins
+      when: installed_dokku_plugins.stdout.find(item.name) == -1
+      changed_when: true
+      with_items: "{{ dokku_plugins }}"
+    
+    - name: dokku plugin:update
+      cron:
+        name: "dokku plugin:update {{ item.name }}"
+        minute: "0"
+        hour: "12"
+        user: "root"
+        job: "/usr/bin/chronic /usr/bin/dokku plugin:update {{ item.name }}"
+        cron_file: "dokku-plugin-update-{{ item.name }}"
+      when: not item.url.endswith(".tar.gz")
+      with_items: "{{ dokku_plugins }}"
+      tags:
+      - dokku
+      - dokku-plugins
 
-- name: dokku plugin:update
-  cron:
-    name: "dokku plugin:update {{ item.name }}"
-    minute: "0"
-    hour: "12"
-    user: "root"
-    job: "/usr/bin/chronic /usr/bin/dokku plugin:update {{ item.name }}"
-    cron_file: "dokku-plugin-update-{{ item.name }}"
-  when: dokku_plugins is defined and not item.url.endswith(".tar.gz")
-  with_items: "{{ dokku_plugins }}"
-  tags:
-  - dokku
-  - dokku-plugins
+    - name: dokku:plugin install-dependencies  # noqa: no-changed-when
+      command: dokku plugin:install-dependencies
+      tags:
+      - dokku
+      - dokku-plugins
+      - molecule-idempotence-notest
+    
+- name: Plugin update for Docker installation
+  when: dokku_docker_install and dokku_plugins is defined
+  block:
+    - name: dokku:plugin install-dependencies  # noqa: no-changed-when
+      community.docker.docker_container_exec:
+        container: dokku
+        command: dokku plugin:install-dependencies
+      tags:
+      - dokku
+      - dokku-plugins
+      - molecule-idempotence-notest
 
-- name: dokku:plugin install-dependencies  # noqa: no-changed-when
-  command: dokku plugin:install-dependencies
-  tags:
-  - dokku
-  - dokku-plugins
-  - molecule-idempotence-notest
-  when: dokku_plugins is defined
+    - name: dokku plugin:update
+      cron:
+        name: "dokku plugin:update {{ item.name }}"
+        minute: "0"
+        hour: "12"
+        user: "root"
+        job: "docker exec /usr/bin/chronic /usr/bin/dokku plugin:update {{ item.name }}"
+        cron_file: "dokku-plugin-update-{{ item.name }}"
+      when: dokku_plugins is defined and not item.url.endswith(".tar.gz")
+      with_items: "{{ dokku_plugins }}"
+      tags:
+      - dokku
+      - dokku-plugins
+    
+    - name: dokku:plugin install-dependencies  # noqa: no-changed-when
+      community.docker.docker_container_exec:
+        container: dokku
+        command: dokku plugin:install-dependencies
+      tags:
+      - dokku
+      - dokku-plugins
+      - molecule-idempotence-notest

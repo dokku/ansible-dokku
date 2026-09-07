@@ -1,20 +1,49 @@
-- name: sshcommand list dokku
-  command: sshcommand list dokku
-  changed_when: false
-  register: sshcommand_users
-  tags:
-  - dokku
-  - dokku-ssh-keys
-  ignore_errors: true
+- name: SSH command for Package installation
+  when: not dokku_docker_install
+  block:
+  - name: sshcommand list dokku
+    command: sshcommand list dokku
+    changed_when: false
+    register: sshcommand_users
+    tags:
+    - dokku
+    - dokku-ssh-keys
+    ignore_errors: true
+  
+  - name: add ssh key for user {{ item.username }}
+    include_tasks: ssh-key.yml
+    tags:
+    - dokku
+    - dokku-ssh-keys
+    with_items: "{{ dokku_users }}"
+    vars:
+      username: "{{ item.username }}"
+      ssh_key: "{{ item.ssh_key }}"
+      ssh_key_list: "{{ sshcommand_users.stdout }}"
+      force_add: "{{ sshcommand_users is skipped or sshcommand_users is failed or sshcommand_users.stdout.find(item.username) == -1 }}"
 
-- name: add ssh key for user
-  include_tasks: ssh-key.yml
-  tags:
-  - dokku
-  - dokku-ssh-keys
-  with_items: "{{ dokku_users }}"
-  vars:
-    username: "{{ item.username }}"
-    ssh_key: "{{ item.ssh_key }}"
-    ssh_key_list: "{{ sshcommand_users.stdout }}"
-    force_add: "{{ sshcommand_users is skipped or sshcommand_users is failed or sshcommand_users.stdout.find(item.username) == -1 }}"
+- name: SSH command for Docker installation
+  when: dokku_docker_install
+  block:
+    - name: sshcommand list dokku
+      community.docker.docker_container_exec:
+        container: dokku
+        command: sshcommand list dokku
+      changed_when: false
+      register: sshcommand_users
+      tags:
+      - dokku
+      - dokku-ssh-keys
+      ignore_errors: true
+    
+    - name: add ssh key for user {{ item.username }}
+      include_tasks: ssh-key.yml
+      tags:
+      - dokku
+      - dokku-ssh-keys
+      with_items: "{{ dokku_users }}"
+      vars:
+        username: "{{ item.username }}"
+        ssh_key: "{{ item.ssh_key }}"
+        ssh_key_list: "{{ sshcommand_users.stdout }}"
+        force_add: "{{ sshcommand_users is skipped or sshcommand_users is failed or sshcommand_users.stdout.find(item.username) == -1 }}"

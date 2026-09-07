@@ -1,0 +1,4 @@
+{% for plugin in dokku_plugins %}
+{{ plugin.name }}: {{ plugin.url }}
+{% endfor %}
+

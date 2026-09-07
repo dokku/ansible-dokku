@@ -1,0 +1,29 @@
+- name: Create dokku dir
+  ansible.builtin.file:
+    path: "{{ dokku_docker_host_dir }}"
+    state: directory
+
+- name: Create Plugin File
+  ansible.builtin.template:
+    src: plugin-list.j2
+    dest: "{{ dokku_docker_host_dir }}/plugin-list"
+
+- name: deploy dokku container
+  ansible.builtin.docker_container:
+    name: dokku
+    restart_policy: always
+    image: "{{ dokku_docker_image }}"
+    env:
+      DOKKU_HOSTNAME: "{{ dokku_hostname }}"
+      DOKKU_HOST_ROOT: "{{ dokku_docker_host_root }}"
+      DOKKU_LIB_HOST_ROOT: "{{ dokku_docker_lib_host_root }}"
+    ports:
+      - "{{ dokku_ssh_port | default(3022) }}:22"
+      - "{{ dokku_http_port | default(8080) }}:80"
+      - "{{ dokku_https_port | default(8443) }}: 443"
+    volumes:
+      - "{{ dokku_docker_host_dir }}:/mnt/dokku"
+      - /var/run/docker.sock:/var/run/docker.sock
+    healthcheck:
+      test: /usr/bin/docker exec dokku curl -fsS http://127.0.0.1:18080/_dokku/health
+    

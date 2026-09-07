@@ -7,7 +7,16 @@
   register: sha256
 
 - name: dokku ssh-keys:add for user {{ username }}
-  shell: echo "{{ ssh_key }}" | dokku ssh-keys:add {{ username }}
+  shell: "echo '{{ ssh_key }}' | dokku ssh-keys:add {{ username }}"
   no_log: true
-  when: force_add or ssh_key_list.find(sha256.stdout) == -1
+  when: force_add or ssh_key_list.find(sha256.stdout) == -1 and not dokku_docker_install
+  changed_when: true
+
+- name: dokku ssh-keys:add for user {{ username }} (Docker)
+  community.docker.docker_container_exec:
+    container: dokku
+    command: >-
+      /bin/bash -c "echo '{{ ssh_key }}' | dokku ssh-keys:add {{ username }}"
+  no_log: true
+  when: force_add or ssh_key_list.find(sha256.stdout) == -1  and dokku_docker_install
   changed_when: true
