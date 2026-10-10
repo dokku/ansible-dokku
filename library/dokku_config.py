@@ -3,7 +3,7 @@
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
 import json
-import pipes
+from shlex import quote as shell_escape
 import subprocess
 
 try:
@@ -85,7 +85,7 @@ def dokku_config_set(data):
 
         if value == existing.get(key, None):
             continue
-        values.append("{0}={1}".format(key, pipes.quote(value)))
+        values.append("{0}={1}".format(key, shell_escape(value)))
 
     if invalid_values:
         template = "All values must be strings, found invalid types for {0}"

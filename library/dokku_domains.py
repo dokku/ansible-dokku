@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
-import pipes
+from shlex import quote as shell_escape
 import subprocess
 
 DOCUMENTATION = """
@@ -164,7 +164,7 @@ def dokku_domains_absent(data):
         return (is_error, has_changed, meta)
 
     to_remove = [d for d in data["domains"] if d in existing]
-    to_remove = [pipes.quote(d) for d in to_remove]
+    to_remove = [shell_escape(d) for d in to_remove]
 
     if len(to_remove) == 0:
         is_error = False
@@ -199,7 +199,7 @@ def dokku_domains_present(data):
         return (is_error, has_changed, meta)
 
     to_add = [d for d in data["domains"] if d not in existing]
-    to_add = [pipes.quote(d) for d in to_add]
+    to_add = [shell_escape(d) for d in to_add]
 
     if len(to_add) == 0:
         is_error = False
@@ -253,7 +253,7 @@ def dokku_domains_set(data):
         meta["error"] = error
         return (is_error, has_changed, meta)
 
-    to_set = [pipes.quote(d) for d in data["domains"]]
+    to_set = [shell_escape(d) for d in data["domains"]]
 
     if data["global"]:
         command = "dokku --quiet domains:set-global {0}".format(" ".join(to_set))

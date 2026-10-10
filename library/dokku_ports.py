@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output, get_dokku_version
-import pipes
+from shlex import quote as shell_escape
 import re
 import subprocess
 
@@ -92,7 +92,7 @@ def dokku_proxy_ports_absent(data):
         return (is_error, has_changed, meta)
 
     to_remove = [m for m in data["mappings"] if m in existing]
-    to_remove = [pipes.quote(m) for m in to_remove]
+    to_remove = [shell_escape(m) for m in to_remove]
 
     if len(to_remove) == 0:
         is_error = False
@@ -155,7 +155,7 @@ def dokku_proxy_ports_present(data):
         return (is_error, has_changed, meta)
 
     to_add = [m for m in data["mappings"] if m not in existing]
-    to_set = [pipes.quote(m) for m in data["mappings"]]
+    to_set = [shell_escape(m) for m in data["mappings"]]
 
     if len(to_add) == 0:
         is_error = False
