@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
-import pipes
+from shlex import quote as shell_escape
 import re
 import subprocess
 
@@ -62,7 +62,7 @@ def dokku_module_set(command_prefix, data, key, value=None):
 
     if value:
         command = "dokku --quiet {0}:set {1} {2} {3}".format(
-            command_prefix, data["app"], key, pipes.quote(value)
+            command_prefix, data["app"], key, shell_escape(value)
         )
     else:
         command = "dokku --quiet {0}:set {1} {2}".format(
