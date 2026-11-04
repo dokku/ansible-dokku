@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
-import re
+import json
 import subprocess
 
 DOCUMENTATION = """
@@ -55,37 +55,19 @@ def to_bool(v):
 
 
 def dokku_global_cert(data):
-    command = "dokku --quiet global-cert:report"
-    output, error = subprocess_check_output(command)
-    if error is not None:
-        return output, error
-    output = [re.sub(r"\s\s+", "", line) for line in output]
-    report = {}
+    command = "dokku global-cert:report --global --format json"
+    output, error = subprocess_check_output(command, split=None)
 
-    allowed_keys = [
-        "dir",
-        "enabled",
-        "hostnames",
-        "expires at",
-        "issuer",
-        "starts at",
-        "subject",
-        "verified",
-    ]
-    RE_PREFIX = re.compile("^global-cert-")
-    for line in output:
-        if ":" not in line:
-            continue
-        key, value = line.split(":", 1)
-        key = RE_PREFIX.sub(r"", key.replace(" ", "-").lower())
-        if key not in allowed_keys:
-            continue
+    if error is None:
+        try:
+            output = json.loads(output)
+        except ValueError as e:
+            error = str(e)
 
-        if key == "enabled":
-            value = to_bool(value)
-        report[key] = value
+    if "enabled" in output:
+        output["enabled"] = to_bool(output["enabled"])
 
-    return report, error
+    return output, error
 
 
 def dokku_global_cert_absent(data=None):
