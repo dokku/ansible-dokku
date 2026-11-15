@@ -37,10 +37,10 @@ def get_libraries(role_path):
                         continue
                     if "DOCUMENTATION" == theid:
                         data[f]["docs"] = yaml.load(
-                            child.value.s[1:].strip(), Loader=yaml.SafeLoader
+                            child.value.value[1:].strip(), Loader=yaml.SafeLoader
                         )
                     elif "EXAMPLES" == theid:
-                        data[f]["examples"] = child.value.s[1:].strip()
+                        data[f]["examples"] = child.value.value[1:].strip()
 
     return data
 

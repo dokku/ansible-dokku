@@ -1,4 +1,5 @@
-- block:
+- when: dokku_manage_nginx | bool
+  block:
   - name: nginx:disable default site
     file:
       dest: /etc/nginx/{{ item }}/default
@@ -41,4 +42,3 @@
     - reload nginx
     tags:
     - dokku
-    when: dokku_manage_nginx

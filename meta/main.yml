@@ -14,11 +14,9 @@ galaxy_info:
     versions:
     - noble
     - jammy
-    - focal
   - name: Debian
     versions:
     - bookworm
-    - bullseye
   galaxy_tags:
   - networking
   - packaging
