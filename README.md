@@ -27,9 +27,7 @@ Supported Platforms
 
 - Ubuntu: noble
 - Ubuntu: jammy
-- Ubuntu: focal
 - Debian: bookworm
-- Debian: bullseye
 
 ## Dependencies
 
@@ -294,7 +292,7 @@ Manage buildpack settings for a given dokku application
 #### Example
 
 ```yaml
-- name: buildpacks:add hello-world […], buildpacks:add hello-world […]
+- name: buildpacks:set --replace hello-world [...]
   dokku_buildpacks:
     app: hello-world
     buildpacks:

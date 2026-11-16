@@ -27,6 +27,37 @@
         hostname 'test.domain' not found in output of 'dokku domains':
         {{ dokku_domains.stdout }}
 
+  # Testing dokku_manage_nginx: false
+  - name: Create marker default nginx site
+    copy:
+      content: "# custom default\n"
+      dest: /etc/nginx/sites-available/default
+      mode: "0644"
+
+  - name: Run nginx tasks with dokku_manage_nginx disabled
+    include_role:
+      name: dokku_bot.ansible_dokku
+      tasks_from: nginx.yml
+    vars:
+      dokku_manage_nginx: false
+
+  - name: Check marker default nginx site still exists
+    stat:
+      path: /etc/nginx/sites-available/default
+    register: nginx_default_marker
+
+  - name: Assert nginx tasks were skipped when dokku_manage_nginx is false
+    assert:
+      that:
+      - nginx_default_marker.stat.exists
+      msg: |
+        /etc/nginx/sites-available/default was removed even though dokku_manage_nginx is false
+
+  - name: Clean up marker default nginx site
+    file:
+      path: /etc/nginx/sites-available/default
+      state: absent
+
   # check apt sources configuration
   # Note: cannot use apt module for this https://stackoverflow.com/questions/51410696
   - name: Run apt update  # noqa no-changed-when commmand-instead-of-module
@@ -359,6 +390,34 @@
       - not dokku_buildpacks_set_unchanged.changed
       msg: |
         Setting the same buildpacks registered as a change
+
+  - name: Replace existing buildpacks with a new list
+    dokku_buildpacks:
+      app: example-app
+      buildpacks:
+      - https://github.com/heroku/heroku-buildpack-python.git
+    register: dokku_buildpacks_replace_changed
+    diff: true
+
+  - name: Expect that replacing buildpacks is registered as a change
+    assert:
+      that:
+      - dokku_buildpacks_replace_changed.changed
+      msg: |
+        Replacing buildpacks didn't register as a change
+
+  - name: List replaced buildpacks
+    command: dokku --quiet buildpacks:list example-app
+    register: dokku_buildpacks_replaced_list
+    changed_when: false
+
+  - name: Expect replaced buildpacks
+    assert:
+      that:
+      - dokku_buildpacks_replaced_list.stdout_lines | map('trim') | list == ["https://github.com/heroku/heroku-buildpack-python.git"]
+      msg: |-
+        Expected replaced buildpacks not found in output of 'dokku buildpacks:list':
+        {{ dokku_buildpacks_replaced_list.stdout }}
 
   - name: Clear buildpacks
     dokku_buildpacks:
