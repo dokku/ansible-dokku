@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils.dokku_utils import subprocess_check_output
-import pipes
+from shlex import quote as shell_escape
 import subprocess
 import re
 
@@ -88,7 +88,7 @@ def dokku_docker_options_absent(data):
         return (is_error, has_changed, meta)
 
     command = "dokku --quiet docker-options:remove {0} {1} {2}".format(
-        data["app"], data["phase"], pipes.quote(data["option"])
+        data["app"], data["phase"], shell_escape(data["option"])
     )
     try:
         subprocess.check_call(command, shell=True)
@@ -117,7 +117,7 @@ def dokku_docker_options_present(data):
         return (is_error, has_changed, meta)
 
     command = "dokku --quiet docker-options:add {0} {1} {2}".format(
-        data["app"], data["phase"], pipes.quote(data["option"])
+        data["app"], data["phase"], shell_escape(data["option"])
     )
     try:
         subprocess.check_call(command, shell=True)
