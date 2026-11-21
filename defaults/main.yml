@@ -12,3 +12,8 @@ dokku_web_config: 'false'
 herokuish_version: ''
 plugn_version: ''
 sshcommand_version: ''
+dokku_docker_host_dir: /data/dokku
+dokku_docker_host_root: /data/dokku/home/dokku
+dokku_docker_lib_host_root: /data/dokku/var/lib/dokku
+dokku_docker_image: dokku/dokku:0.38.25
+dokku_docker_install: false

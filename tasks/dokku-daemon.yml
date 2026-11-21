@@ -1,46 +1,43 @@
-- name: Install dokku-daemon
-  when: dokku_daemon_install
-  block:
-  - name: ensure github.com is a known host
-    lineinfile:
-      dest: /root/.ssh/known_hosts
-      create: true
-      state: present
-      line: "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
-      regexp: "^github\\.com"
-      mode: 0644
-    tags:
-    - dokku-daemon
+- name: ensure github.com is a known host
+  lineinfile:
+    dest: /root/.ssh/known_hosts
+    create: true
+    state: present
+    line: "github.com ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABgQCj7ndNxQowgcQnjshcLrqPEiiphnt+VTTvDP6mHBL9j1aNUkY4Ue1gvwnGLVlOhGeYrnZaMgRK6+PKCUXaDbC7qtbW8gIkhL7aGCsOr/C56SJMy/BCZfxd1nWzAOxSDPgVsmerOBYfNqltV9/hWCqBywINIR+5dIg6JTJ72pcEpEjcYgXkE2YEFXV1JHnsKgbLWNlhScqb2UmyRkQyytRLtL+38TGxkxCflmO+5Z8CSSNY7GidjMIZ7Q4zMjA2n1nGrlTDkzwDCsw+wqFPGQA179cnfGWOWRVruj16z6XyvxvjJwbz0wQZ75XK5tKSb7FNyeIEs4TT4jk+S4dhPeAUC5y+bDYirYgM4GC7uEnztnZyaVWQ7B381AK4Qdrwt51ZqExKbQpTUNn+EjqoTwvqNj4kqx5QUCI0ThS/YkOxJCXmPUWZbhjpCg56i+2aB6CmK2JGhn57K5mj0MNdBXA4/WnwH6XoPWJzK5Nyu2zB3nAZp+S5hpQs+p1vN1/wsjk="
+    regexp: "^github\\.com"
+    mode: 0644
+  tags:
+  - dokku-daemon
 
-    # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
-  - name: install socat package
-    apt:
-      name: socat
-    tags:
-    - dokku-daemon
+  # Needed for Debian, see https://github.com/dokku/dokku-daemon/issues/27
+- name: install socat package
+  apt:
+    name: socat
+  tags:
+  - dokku-daemon
 
-  - name: clone dokku-daemon
-    git:
-      repo: https://github.com/dokku/dokku-daemon.git
-      dest: /var/lib/dokku-daemon
-      update: false
-      version: "{{ dokku_daemon_version }}"
-    tags:
-    - dokku-daemon
+- name: clone dokku-daemon
+  git:
+    repo: https://github.com/dokku/dokku-daemon.git
+    dest: /var/lib/dokku-daemon
+    update: false
+    version: "{{ dokku_daemon_version }}"
+  tags:
+  - dokku-daemon
 
-  - name: install make for building dokku-daemon
-    apt:
-      name: make
-      state: present
-    tags:
-    - dokku-daemon
+- name: install make for building dokku-daemon
+  apt:
+    name: make
+    state: present
+  tags:
+  - dokku-daemon
 
-  - name: install dokku-daemon
-    command: make install
-    args:
-      chdir: /var/lib/dokku-daemon
-      creates: /usr/bin/dokku-daemon
-    notify:
-    - start dokku-daemon
-    tags:
-    - dokku-daemon
+- name: install dokku-daemon
+  command: make install
+  args:
+    chdir: /var/lib/dokku-daemon
+    creates: /usr/bin/dokku-daemon
+  notify:
+  - start dokku-daemon
+  tags:
+  - dokku-daemon
